@@ -17,6 +17,8 @@ run: all
 
 build:
 	go build \
+	    -trimpath \
+		-v \
     	-ldflags "-s -w" \
         -o $(BIN_NAME) \
     	$(PKG_NAME)

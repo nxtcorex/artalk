@@ -2,3 +2,15 @@ packages:
   - "ui/*"
   - "docs/*"
   - "test/*"
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  core-js: true
+  esbuild: true
+  protobufjs: true
+  unrs-resolver: true
+
+overrides:
+  eslint-plugin-import>eslint: "10"
+  eslint-plugin-react>eslint: "10"
