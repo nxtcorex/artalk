@@ -9,7 +9,11 @@
       - pnpm-store:/root/.local/share/pnpm/store:rw
   services:
     - docker
-  env: !reference [.ci-nightly-env]
+  env:
+    ARTALK_NIGHTLY_WRITES: "true"
+    ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
+    PNPM_VERSION: 11.13.1
+    TZ: Asia/Shanghai
   lock:
     key: nightly
     wait: true

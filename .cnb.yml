@@ -1,5 +1,4 @@
 include:
-  - .ci/shared.yml
   - .ci/checks.yml
   - .ci/docs.yml
   - .ci/release.yml

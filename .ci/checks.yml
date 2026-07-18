@@ -1,7 +1,17 @@
 .ci-go-check: &ci-go-check
   name: Go checks
-  docker: !reference [.ci-go-docker]
-  ifModify: !reference [.ci-go-paths]
+  docker:
+    image: golang:1.26.2
+    volumes:
+      - go-mod:/go/pkg/mod:rw
+      - go-build:/root/.cache/go-build:rw
+  ifModify:
+    - "**/*.go"
+    - go.mod
+    - go.sum
+    - Makefile
+    - .cnb.yml
+    - .ci/checks.yml
   env:
     REPORT_DIR: .ci-reports/go
   stages:
@@ -34,8 +44,24 @@
 
 .ci-frontend-check: &ci-frontend-check
   name: Frontend checks
-  docker: !reference [.ci-node-docker]
-  ifModify: !reference [.ci-frontend-paths]
+  docker:
+    image: node:24
+    volumes:
+      - node_modules
+      - pnpm-store:/root/.local/share/pnpm/store:rw
+  ifModify:
+    - "ui/**"
+    - package.json
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - "scripts/**"
+    - "*.json"
+    - "*.js"
+    - "*.mjs"
+    - "*.ts"
+    - Makefile
+    - .cnb.yml
+    - .ci/checks.yml
   env:
     CI: "true"
   stages:
@@ -54,8 +80,26 @@
 
 .ci-docs-check: &ci-docs-check
   name: Documentation checks
-  docker: !reference [.ci-node-docker]
-  ifModify: !reference [.ci-docs-paths]
+  docker:
+    image: node:24
+    volumes:
+      - node_modules
+      - pnpm-store:/root/.local/share/pnpm/store:rw
+  ifModify:
+    - "docs/**"
+    - "ui/**"
+    - package.json
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - "scripts/**"
+    - "*.json"
+    - "*.js"
+    - "*.mjs"
+    - "*.ts"
+    - Makefile
+    - .cnb.yml
+    - .ci/checks.yml
+    - .ci/docs.yml
   env:
     CI: "true"
   stages:

@@ -1,14 +1,16 @@
 # CNB migration
 
-The CNB pipeline is split by responsibility:
+The CNB pipeline is split by responsibility and intentionally avoids
+`!reference`; CNB expands the complete include graph before a Web Trigger and
+limits nested custom tags to 10 levels.
 
 - `checks.yml`: Go, frontend, and documentation checks for push and PR events.
 - `docs.yml`: builds the `master` documentation site as a commit attachment.
 - `release.yml`: prepares release PRs and builds tag release artifacts.
 - `nightly.yml`: scheduled and manually triggered nightly builds.
 
-Registry writes are enabled in `shared.yml`. A `vX.Y.Z` tag publishes the CNB
-Release, public npm package, and the private multi-architecture image at
+Registry writes are enabled directly in the release and nightly pipelines. A
+`vX.Y.Z` tag publishes the CNB Release, public npm package, and the private multi-architecture image at
 `docker.cnb.cool/pw.sh.cn/artalk`. The scheduled nightly build also updates the
 private `nightly` image and CNB prerelease. Manual buttons default to dry-run.
 
