@@ -9,7 +9,6 @@ mkdir -p "$dist"
 cp local/release_includes/artalk_ui.tar.gz \
   "$dist/artalk_ui_nightly_${date_stamp}.tar.gz"
 
-docker run --privileged --rm tonistiigi/binfmt --install arm64
 docker buildx create --name artalk-nightly --use
 trap 'docker buildx rm artalk-nightly >/dev/null 2>&1 || true' EXIT
 

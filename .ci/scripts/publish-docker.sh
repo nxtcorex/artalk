@@ -7,7 +7,6 @@ set -eu
 version="${CNB_BRANCH#v}"
 major_minor="${version%.*}"
 
-docker run --privileged --rm tonistiigi/binfmt --install arm64
 docker buildx create --name artalk-release --use
 trap 'docker buildx rm artalk-release >/dev/null 2>&1 || true' EXIT
 
