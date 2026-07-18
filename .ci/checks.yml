@@ -1,7 +1,7 @@
 .ci-go-check: &ci-go-check
   name: Go checks
   docker:
-    image: golang:1.26.2
+    image: golang:1.26.5
     volumes:
       - go-mod:/go/pkg/mod:rw
       - go-build:/root/.cache/go-build:rw

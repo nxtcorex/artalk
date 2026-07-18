@@ -8,7 +8,7 @@
     cancel-in-wait: true
   stages:
     - name: Resolve version
-      image: golang:1.26.2
+      image: golang:1.26.5
       script: .ci/scripts/resolve-version.sh
       exports:
         VERSION: VERSION
@@ -124,7 +124,7 @@
       script: .ci/scripts/publish-npm.sh
 
 .ci-release-docker: &ci-release-docker
-  name: Build multi-architecture image
+  name: Build amd64 image
   runner:
     cpus: 16
   docker:

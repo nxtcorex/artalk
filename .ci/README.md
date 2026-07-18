@@ -10,9 +10,10 @@ limits nested custom tags to 10 levels.
 - `nightly.yml`: scheduled and manually triggered nightly builds.
 
 Registry writes are enabled directly in the release and nightly pipelines. A
-`vX.Y.Z` tag publishes the CNB Release, public npm package, and the private multi-architecture image at
-`docker.cnb.cool/pw.sh.cn/artalk`. The scheduled nightly build also updates the
-private `nightly` image and CNB prerelease. Manual buttons default to dry-run.
+`vX.Y.Z` tag publishes the CNB Release, public npm package, and the private
+amd64 image at `docker.cnb.cool/pw.sh.cn/artalk`. The scheduled nightly build
+also updates the private amd64 `nightly` image and CNB prerelease. Manual
+buttons default to dry-run.
 
 The obsolete GitHub Actions, Dependabot configuration, funding metadata,
 comment action, and GitHub changelog template were removed. Release notes are
