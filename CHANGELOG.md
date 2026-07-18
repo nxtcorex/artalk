@@ -1,3 +1,56 @@
+## v2.10.0 (2026-07-18)
+
+### Features
+
+* migrate CI and releases to CNB
+* **captcha:** support Cap captcha
+* **server:** support listen ipv6 (#1094)
+* **auth:** add SSO token exchange endpoint (#1134)
+* **db:** add TLS support for MySQL with Google Cloud SQL (#1104)
+* **go:** upgrade golang to v1.26.2 and some deps
+* add 'ugc' to link rel attributes (#1120)
+* **plugins:** add plugin registry fetch script
+* **ui/conf:** add `preferRemoteConf` option (#1000) (#1011)
+* **ui/eslint:** update `eslint-plugin-artalk` to v1.0.2 (#1010)
+* **ui:** add dependency injection container (#1006)
+* **ui/page_vote:** add page voting feature (#983)
+* **api/vote:** add get vote status endpoint (#998)
+* **ui:** add npm published version check script
+* **ui/eslint:** add eslint plugin for artalk ui development (#995)
+* **config:** enhance config file and data dir retrieval (#992)
+
+### Bug Fixes
+
+* build amd64 images without buildx
+* limit documentation site builds
+* avoid nested CNB references
+* **ui/ua:** support OpenHarmony and more browsers (#1087)
+
+### Code Refactoring
+
+* **ui/auth:** ensure compatibility with new client types (#1009)
+* **ui/sidebar:** ensure compatibility with new client types (#1008)
+* **ui:** improve modularity, lifecycle, and types (#1007)
+* **api/vote:** refactor vote http endpoint and logic (#997)
+* **ui/conf:** introduce `DeepPartial` type for ui config (#996)
+* **ui/comment:** update reply button to use component
+
+### Documentation
+
+* add Japanese README (#1145)
+* **i18n:** add Turkish (tr-TR) language support (#1119)
+* **landing:** redesign landing page (#1020)
+* integrate git changelog plugin
+* **landing:** add more translations
+* **i18n:** add `zh-TW` translation for config template
+* **landing:** optimize responsive font size
+
+### BREAKING CHANGE
+
+* UI client now prioritizes local config in the latest version, whereas previously, the remote config would override it. (See #1011)
+* This update changes the UI client's export Types. Although we aim to maintain backward compatibility, it may still affect downstream UI programs. Please refer to the [TypeDoc](https://artalk.js.org/typedoc/).
+* Vote HTTP API endpoint have been updated. (See #997)
+
 
 ## [v2.9.1](https://github.com/ArtalkJS/Artalk/compare/v2.9.0...v2.9.1) (2024-09-18)
 
