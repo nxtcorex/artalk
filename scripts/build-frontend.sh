@@ -2,17 +2,12 @@
 
 set -e
 
-if ! command -v pnpm &>/dev/null && command -v apt-get &>/dev/null;
+if ! command -v pnpm &>/dev/null;
 then
-    apt-get update && apt-get install --no-install-recommends -y -q curl ca-certificates
-
-    # Install volta
-    bash -c "$(curl -fsSL https://get.volta.sh)" -- --skip-setup
-    export VOLTA_HOME="${HOME}/.volta"
-    export PATH="${VOLTA_HOME}/bin:${PATH}"
-
-    volta install node@22.19.0
-    volta install pnpm@10.33.2
+    curl https://mise.run | sh
+    eval "$("${HOME}/.local/bin/mise" activate bash)"
+    mise install
+    npm install -g pnpm@11.13.1
 fi
 
 # build

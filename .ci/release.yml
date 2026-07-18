@@ -1,0 +1,141 @@
+.ci-prepare-release: &ci-prepare-release
+  name: Prepare release
+  docker:
+    image: cnbcool/default-build-env:latest
+  lock:
+    key: prepare-release
+    wait: true
+    cancel-in-wait: true
+  stages:
+    - name: Resolve version
+      image: golang:1.26.2
+      script: .ci/scripts/resolve-version.sh
+      exports:
+        VERSION: VERSION
+        PREV_VERSION: PREV_VERSION
+    - name: Generate changelog
+      image: node:24
+      script: node .ci/scripts/generate-changelog.mjs "$VERSION" "$PREV_VERSION" --prepend
+    - name: Update version files
+      image: node:24
+      script: node .ci/scripts/set-version.mjs "$VERSION"
+    - name: Validate release changes
+      script: |
+        set -eu
+        git diff --check
+        git diff -- CHANGELOG.md internal/config/version.go \
+          ui/artalk/package.json docs/docs/code/ArtalkVersion.json
+    - name: Push release branch and create PR
+      if: '[ "${DRY_RUN:-true}" = "false" ]'
+      script: .ci/scripts/create-release-pr.sh
+
+.ci-tag-release: &ci-tag-release
+  name: Tag merged release PR
+  docker:
+    image: cnbcool/default-build-env:latest
+  env: !reference [.ci-release-env]
+  stages:
+    - name: Inspect merged PR
+      script: .ci/scripts/tag-merged-release.sh
+
+.ci-release-artifacts: &ci-release-artifacts
+  name: Build release artifacts
+  runner:
+    cpus: 16
+  docker:
+    image: cnbcool/default-build-env:latest
+    volumes:
+      - node_modules
+      - pnpm-store:/root/.local/share/pnpm/store:rw
+  services:
+    - docker
+  env: !reference [.ci-release-env]
+  stages:
+    - name: Validate release tag
+      script: .ci/scripts/validate-release-tag.sh
+    - name: Generate release notes
+      image: node:24
+      script: |
+        set -eu
+        git fetch --force --tags origin
+        mkdir -p local
+        node .ci/scripts/generate-changelog.mjs \
+          "$CNB_BRANCH" "" --output local/release-notes.md
+        cp conf/artalk.example.yml artalk.yml
+    - name: Build release UI
+      image: node:24
+      script: |
+        set -eu
+        npm install -g "pnpm@$PNPM_VERSION"
+        make build-frontend
+        make pack-frontend
+    - name: Build binaries with GoReleaser
+      script: .ci/scripts/build-release-binaries.sh
+    - name: Create CNB Release
+      if: '[ "$ARTALK_RELEASE_WRITES" = "true" ]'
+      type: git:release
+      options:
+        title: Artalk $CNB_BRANCH
+        descriptionFromFile: local/release-notes.md
+        latest: true
+    - name: Upload release files
+      if: '[ "$ARTALK_RELEASE_WRITES" = "true" ]'
+      image: cnbcool/attachments:latest
+      settings:
+        attachments:
+          - "dist/*.tar.gz"
+          - "dist/*.zip"
+          - dist/checksums.txt
+          - "local/release_includes/*.tar.gz"
+
+.ci-release-npm: &ci-release-npm
+  name: Publish npm package
+  docker: !reference [.ci-node-docker]
+  env: !reference [.ci-release-env]
+  stages:
+    - name: Validate release tag
+      script: .ci/scripts/validate-release-tag.sh
+    - name: Install and build
+      script: |
+        set -eu
+        npm install -g "pnpm@$PNPM_VERSION"
+        pnpm install --frozen-lockfile
+        pnpm build
+    - name: Publish to CNB npm
+      script: .ci/scripts/publish-npm.sh
+
+.ci-release-docker: &ci-release-docker
+  name: Build multi-architecture image
+  runner:
+    cpus: 16
+  docker:
+    image: cnbcool/default-build-env:latest
+    volumes:
+      - node_modules
+      - pnpm-store:/root/.local/share/pnpm/store:rw
+  services:
+    - docker
+  env: !reference [.ci-release-env]
+  stages:
+    - name: Validate release tag
+      script: .ci/scripts/validate-release-tag.sh
+    - name: Build UI
+      image: node:24
+      script: |
+        set -eu
+        npm install -g "pnpm@$PNPM_VERSION"
+        make build-frontend
+    - name: Build and publish image
+      script: .ci/scripts/publish-docker.sh
+
+$:
+  web_trigger_prepare_release:
+    prepare-release: *ci-prepare-release
+  tag_push:
+    artifacts: *ci-release-artifacts
+    npm: *ci-release-npm
+    docker: *ci-release-docker
+
+master:
+  pull_request.merged:
+    tag-release: *ci-tag-release

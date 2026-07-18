@@ -1,3 +1,10 @@
+include:
+  - .ci/shared.yml
+  - .ci/checks.yml
+  - .ci/docs.yml
+  - .ci/release.yml
+  - .ci/nightly.yml
+
 $:
   vscode:
     - docker:
@@ -19,11 +26,11 @@ $:
             apt-get install libatomic1 make gcc -y || true
             eval "$(/root/.local/bin/mise activate bash)"
             mise install
-            npm install -g pnpm@latest-11
+            npm install -g pnpm@11.13.1
         - name: pnpm install
           script: |
             eval "$(/root/.local/bin/mise activate bash)"
-            pnpm ci || true
+            pnpm install --frozen-lockfile
         - name: codex
           script: |
             eval "$(/root/.local/bin/mise activate bash)"
@@ -52,7 +59,7 @@ $:
             base_url = "${OPENAI_BASE_URL}/v1"
             wire_api = "responses"
             requires_openai_auth = true
-            
+
             [features]
             goals = true
             multi_agent = true

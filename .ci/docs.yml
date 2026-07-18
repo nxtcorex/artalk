@@ -1,0 +1,24 @@
+.ci-docs-site: &ci-docs-site
+  name: Build documentation site
+  docker: !reference [.ci-node-docker]
+  ifModify: !reference [.ci-docs-paths]
+  env:
+    CI: "true"
+  stages:
+    - name: Build site
+      script: |
+        set -eu
+        npm install -g pnpm@11.13.1
+        pnpm install --frozen-lockfile
+        pnpm build:docs
+        tar -czf "docs-site-$CNB_COMMIT_SHORT.tar.gz" \
+          -C docs/docs/.vitepress/dist .
+    - name: Upload site archive
+      image: cnbcool/attachments:latest
+      settings:
+        attachments:
+          - docs-site-$CNB_COMMIT_SHORT.tar.gz
+
+master:
+  push:
+    docs-site: *ci-docs-site

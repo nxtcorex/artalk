@@ -167,12 +167,3 @@ snapshot:
 #       - '^docs:'
 #       - '^test:'
 #       - '^chore:'
-
-release:
-  github:
-    owner: ArtalkJS
-    name: Artalk
-  prerelease: auto
-  draft: false
-  extra_files:
-    - glob: ./local/release_includes/*

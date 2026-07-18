@@ -1,0 +1,67 @@
+.ci-node-docker:
+  image: node:24
+  volumes:
+    - node_modules
+    - pnpm-store:/root/.local/share/pnpm/store:rw
+
+.ci-go-docker:
+  image: golang:1.26.2
+  volumes:
+    - go-mod:/go/pkg/mod:rw
+    - go-build:/root/.cache/go-build:rw
+
+.ci-go-paths:
+  - "**/*.go"
+  - go.mod
+  - go.sum
+  - Makefile
+  - .cnb.yml
+  - .ci/shared.yml
+  - .ci/checks.yml
+
+.ci-frontend-paths:
+  - "ui/**"
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
+  - "scripts/**"
+  - "*.json"
+  - "*.js"
+  - "*.mjs"
+  - "*.ts"
+  - Makefile
+  - .cnb.yml
+  - .ci/shared.yml
+  - .ci/checks.yml
+
+.ci-docs-paths:
+  - "docs/**"
+  - "ui/**"
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
+  - "scripts/**"
+  - "*.json"
+  - "*.js"
+  - "*.mjs"
+  - "*.ts"
+  - Makefile
+  - .cnb.yml
+  - .ci/shared.yml
+  - .ci/checks.yml
+  - .ci/docs.yml
+
+# Registry writes are enabled. Web-triggered release preparation still defaults
+# to dry-run and can only write after the operator explicitly disables it.
+.ci-release-env:
+  ARTALK_RELEASE_WRITES: "true"
+  ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
+  ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
+  GO_VERSION: 1.26.2
+  PNPM_VERSION: 11.13.1
+
+.ci-nightly-env:
+  ARTALK_NIGHTLY_WRITES: "true"
+  ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
+  PNPM_VERSION: 11.13.1
+  TZ: Asia/Shanghai

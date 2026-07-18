@@ -1,0 +1,63 @@
+.ci-nightly: &ci-nightly
+  name: Build nightly
+  runner:
+    cpus: 16
+  docker:
+    image: cnbcool/default-build-env:latest
+    volumes:
+      - node_modules
+      - pnpm-store:/root/.local/share/pnpm/store:rw
+  services:
+    - docker
+  env: !reference [.ci-nightly-env]
+  lock:
+    key: nightly
+    wait: true
+    cancel-in-wait: true
+  stages:
+    - name: Check for recent commits
+      script: .ci/scripts/check-nightly.sh
+    - name: Build UI
+      image: node:24
+      script: |
+        set -eu
+        npm install -g "pnpm@$PNPM_VERSION"
+        make build-frontend
+        make pack-frontend
+    - name: Build nightly artifacts
+      script: .ci/scripts/build-nightly.sh
+    - name: Update nightly tag
+      if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_NIGHTLY_WRITES" = "true" ]'
+      script: .ci/scripts/update-nightly-tag.sh
+    - name: Create nightly Release
+      if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_NIGHTLY_WRITES" = "true" ]'
+      type: git:release
+      options:
+        tag: nightly
+        title: Artalk Nightly
+        descriptionFromFile: nightly-dist/release-notes.md
+        preRelease: true
+        latest: false
+    - name: Upload nightly files
+      if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_NIGHTLY_WRITES" = "true" ]'
+      image: cnbcool/attachments:latest
+      settings:
+        tag: nightly
+        attachments:
+          - "nightly-dist/*.tar.gz"
+          - nightly-dist/checksums.txt
+
+$:
+  web_trigger_nightly:
+    nightly: *ci-nightly
+
+master:
+  "crontab: 0 18 * * *":
+    nightly:
+      <<: *ci-nightly
+      env:
+        ARTALK_NIGHTLY_WRITES: "true"
+        ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
+        PNPM_VERSION: 11.13.1
+        TZ: Asia/Shanghai
+        DRY_RUN: "false"

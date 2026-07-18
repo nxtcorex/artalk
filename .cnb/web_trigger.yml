@@ -1,0 +1,46 @@
+branch:
+  - reg: ^master$
+    buttons:
+      - name: Prepare release
+        description: Prepare a release branch and CNB pull request
+        event: web_trigger_prepare_release
+        groupName: Release
+        permissions:
+          roles: [owner, master]
+        inputs:
+          SEMVER:
+            name: Version increment
+            type: select
+            required: true
+            default: patch
+            options:
+              - { name: Patch, value: patch }
+              - { name: Minor, value: minor }
+              - { name: Major, value: major }
+          CUSTOM_VERSION:
+            name: Custom version
+            description: Optional vX.Y.Z version; overrides the increment
+            type: input
+            required: false
+            placeholder: v3.0.0
+          DRY_RUN:
+            name: Dry run
+            type: switch
+            default: "true"
+            options:
+              - { name: Enabled, value: "true" }
+              - { name: Disabled, value: "false" }
+      - name: Build nightly
+        description: Build nightly release artifacts
+        event: web_trigger_nightly
+        groupName: Nightly
+        permissions:
+          roles: [owner, master]
+        inputs:
+          DRY_RUN:
+            name: Dry run
+            type: switch
+            default: "true"
+            options:
+              - { name: Enabled, value: "true" }
+              - { name: Disabled, value: "false" }

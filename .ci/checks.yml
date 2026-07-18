@@ -1,0 +1,79 @@
+.ci-go-check: &ci-go-check
+  name: Go checks
+  docker: !reference [.ci-go-docker]
+  ifModify: !reference [.ci-go-paths]
+  env:
+    REPORT_DIR: .ci-reports/go
+  stages:
+    - name: Vet and test
+      script: |
+        set -eu
+        go install gotest.tools/gotestsum@v1.13.0
+        go mod download
+        go vet ./...
+        mkdir -p "$REPORT_DIR"
+        gotestsum \
+          --junitfile "$REPORT_DIR/unit-tests.xml" \
+          --jsonfile "$REPORT_DIR/unit-tests.json" \
+          -- -coverprofile="$REPORT_DIR/coverage.out" ./...
+        tar -czf "$REPORT_DIR/go-test-results-$CNB_COMMIT_SHORT.tar.gz" \
+          -C "$REPORT_DIR" unit-tests.xml unit-tests.json coverage.out
+    - name: Report coverage
+      type: testing:coverage
+      options:
+        key: backend
+        name: Go coverage
+        pattern: .ci-reports/go/coverage.out
+        lang: go
+        breakIfNoCoverage: true
+    - name: Upload test report
+      image: cnbcool/attachments:latest
+      settings:
+        attachments:
+          - .ci-reports/go/go-test-results-$CNB_COMMIT_SHORT.tar.gz
+
+.ci-frontend-check: &ci-frontend-check
+  name: Frontend checks
+  docker: !reference [.ci-node-docker]
+  ifModify: !reference [.ci-frontend-paths]
+  env:
+    CI: "true"
+  stages:
+    - name: Install dependencies
+      script: |
+        npm install -g pnpm@11.13.1
+        pnpm install --frozen-lockfile
+    - name: Build and test
+      script: |
+        pnpm build:all
+        pnpm test
+        pnpm build:plugins
+        pnpm -F artalk test:attw || true
+    - name: Lint
+      script: pnpm eslint ui && pnpm prettier --check ui
+
+.ci-docs-check: &ci-docs-check
+  name: Documentation checks
+  docker: !reference [.ci-node-docker]
+  ifModify: !reference [.ci-docs-paths]
+  env:
+    CI: "true"
+  stages:
+    - name: Install dependencies
+      script: |
+        npm install -g pnpm@11.13.1
+        pnpm install --frozen-lockfile
+    - name: Build documentation
+      script: pnpm build:docs
+    - name: Lint documentation
+      script: pnpm eslint docs && pnpm prettier --check docs
+
+"**":
+  push:
+    go: *ci-go-check
+    frontend: *ci-frontend-check
+    docs: *ci-docs-check
+  pull_request:
+    go: *ci-go-check
+    frontend: *ci-frontend-check
+    docs: *ci-docs-check
