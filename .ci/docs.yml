@@ -7,19 +7,6 @@
       - pnpm-store:/root/.local/share/pnpm/store:rw
   ifModify:
     - "docs/**"
-    - "ui/**"
-    - package.json
-    - pnpm-lock.yaml
-    - pnpm-workspace.yaml
-    - "scripts/**"
-    - "*.json"
-    - "*.js"
-    - "*.mjs"
-    - "*.ts"
-    - Makefile
-    - .cnb.yml
-    - .ci/checks.yml
-    - .ci/docs.yml
   env:
     CI: "true"
   stages:
