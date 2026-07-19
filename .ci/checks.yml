@@ -37,6 +37,10 @@
         lang: go
         breakIfNoCoverage: true
     - name: Upload test report
+      # PR 场景下 CI 默认 Token 缺少 repo-code:rw 权限，
+      # 无法写入 commit assets，故仅在 push（非 PR）事件下上传测试报告。
+      if: |
+        [ -z "$CNB_PULL_REQUEST_IID" ]
       image: cnbcool/attachments:latest
       settings:
         attachments:
