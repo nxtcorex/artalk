@@ -1,14 +1,17 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/artalkjs/artalk/v2/internal/core"
+	"github.com/artalkjs/artalk/v2/internal/dao"
 	"github.com/artalkjs/artalk/v2/internal/entity"
 	"github.com/artalkjs/artalk/v2/internal/log"
 	"github.com/artalkjs/artalk/v2/internal/sync"
+	"github.com/artalkjs/artalk/v2/internal/utils"
 	"github.com/artalkjs/artalk/v2/server/common"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
@@ -57,34 +60,13 @@ func AuthMergeApply(app *core.App, router fiber.Router) {
 			return resp
 		}
 
-		// Get all users with same email
-		sameEmailUsers := app.Dao().FindUsersByEmail(user.Email)
-		if len(sameEmailUsers) == 0 {
-			return common.RespError(c, 500, "No user with same email")
-		}
-
-		targetUser, err := app.Dao().FindCreateUser(p.UserName, user.Email, user.Link)
-		if err != nil {
-			return common.RespError(c, 500, "Failed to create user")
-		}
-
-		// Check target if admin and recover
-		isAdmin := false
-		for _, u := range sameEmailUsers {
-			if u.IsAdmin {
-				isAdmin = true
-				break
-			}
-		}
-		if targetUser.IsAdmin != isAdmin {
-			targetUser.IsAdmin = isAdmin
-			app.Dao().UpdateUser(&targetUser)
-		}
-
 		resp := ResponseAuthDataMergeApply{}
-		otherUsers := lo.Filter(sameEmailUsers, func(u entity.User, _ int) bool {
-			return u.ID != targetUser.ID
-		})
+		var (
+			sameEmailUsers []entity.User
+			targetUser     entity.User
+			otherUsers     []entity.User
+			movedComments  []entity.Comment
+		)
 
 		// Functions for log
 		getMergeLogSummary := func() string {
@@ -97,56 +79,120 @@ func AuthMergeApply(app *core.App, router fiber.Router) {
 			return " | " + getUsersInfo(otherUsers) + " -> " + getUserInfo(targetUser)
 		}
 
-		// Begin a transaction to Merge all user data to target user
+		// Merge all user data, including user rows, in one transaction.
 		if err := app.Dao().DB().Transaction(func(tx *gorm.DB) error {
+			if err := tx.Where("LOWER(email) = LOWER(?)", user.Email).Find(&sameEmailUsers).Error; err != nil {
+				return err
+			}
+			if len(sameEmailUsers) == 0 {
+				return errors.New("no user with same email")
+			}
+
+			targetName := strings.TrimSpace(p.UserName)
+			targetEmail := strings.TrimSpace(user.Email)
+			targetLink := strings.TrimSpace(user.Link)
+			if targetName == "" || targetEmail == "" {
+				return errors.New("name and email are required")
+			}
+			if targetLink != "" && !utils.ValidateURL(targetLink) {
+				targetLink = ""
+			}
+
+			findTarget := tx.Where(
+				"LOWER(name) = LOWER(?) AND LOWER(email) = LOWER(?)",
+				targetName,
+				targetEmail,
+			).First(&targetUser)
+			if errors.Is(findTarget.Error, gorm.ErrRecordNotFound) {
+				targetUser = entity.User{Name: targetName, Email: targetEmail, Link: targetLink}
+				if err := tx.Create(&targetUser).Error; err != nil {
+					return err
+				}
+			} else if findTarget.Error != nil {
+				return findTarget.Error
+			}
+
+			// Recover administrator permission on the selected target user.
+			isAdmin := false
+			for _, u := range sameEmailUsers {
+				if u.IsAdmin {
+					isAdmin = true
+					break
+				}
+			}
+			targetUser.IsAdmin = isAdmin
+			if result := tx.Model(&entity.User{}).Where("id = ?", targetUser.ID).Update("is_admin", isAdmin); result.Error != nil {
+				return result.Error
+			}
+
+			otherUsers = lo.Filter(sameEmailUsers, func(u entity.User, _ int) bool {
+				return u.ID != targetUser.ID
+			})
+			otherUserIDs := lo.Map(otherUsers, func(u entity.User, _ int) uint { return u.ID })
+			if len(otherUserIDs) == 0 {
+				return nil
+			}
+
+			if err := tx.Where("user_id IN ?", otherUserIDs).Find(&movedComments).Error; err != nil {
+				return err
+			}
+
 			// Merge all user data to target user
 			// @note Search code files under `./internal/entity` keyword 'UserID` to find all related tables
 			for _, u := range otherUsers {
 				// comments
-				if tx := app.Dao().DB().Model(&entity.Comment{}).
-					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); tx.Error != nil {
-					return tx.Error // if error the whole transaction will be rollback
+				if result := tx.Model(&entity.Comment{}).
+					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); result.Error != nil {
+					return result.Error // if error the whole transaction will be rollback
 				} else {
-					resp.UpdatedComment += tx.RowsAffected
+					resp.UpdatedComment += result.RowsAffected
 				}
 
 				// notifies
-				if tx := app.Dao().DB().Model(&entity.Notify{}).
-					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); tx.Error != nil {
-					return tx.Error
+				if result := tx.Model(&entity.Notify{}).
+					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); result.Error != nil {
+					return result.Error
 				} else {
-					resp.UpdatedNotify += tx.RowsAffected
+					resp.UpdatedNotify += result.RowsAffected
 				}
 
 				// votes
-				if tx := app.Dao().DB().Model(&entity.Vote{}).
-					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); tx.Error != nil {
-					return tx.Error
+				if result := tx.Model(&entity.Vote{}).
+					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); result.Error != nil {
+					return result.Error
 				} else {
-					resp.UpdatedVote += tx.RowsAffected
+					resp.UpdatedVote += result.RowsAffected
 				}
 
 				// auth_identities
-				if tx := app.Dao().DB().Model(&entity.AuthIdentity{}).
-					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); tx.Error != nil {
-					return tx.Error
+				if result := tx.Model(&entity.AuthIdentity{}).
+					Where("user_id = ?", u.ID).Update("user_id", targetUser.ID); result.Error != nil {
+					return result.Error
 				}
 			}
+
+			deleted := tx.Unscoped().Where("id IN ?", otherUserIDs).Delete(&entity.User{})
+			if deleted.Error != nil {
+				return deleted.Error
+			}
+			resp.DeletedUser = deleted.RowsAffected
 
 			return nil
 		}); err != nil {
 			log.Error("Failed to merge user data: ", err.Error(), getMergeLogSummary())
 			return common.RespError(c, 500, "Failed to merge data")
 		}
-
-		// Delete other users except target user
-		for _, u := range otherUsers {
-			if err := app.Dao().DelUser(&u); err != nil {
-				log.Error("Failed to delete other user [id=", u.ID, "]: ", err.Error(), getMergeLogSummary())
-			} else {
-				resp.DeletedUser++
+		// Invalidate caches only after the transaction has committed.
+		app.Dao().CacheAction(func(cache *dao.DaoCache) {
+			cache.UserCacheDel(&targetUser)
+			_ = cache.UserCacheSave(&targetUser)
+			for _, u := range otherUsers {
+				cache.UserCacheDel(&u)
 			}
-		}
+			for _, comment := range movedComments {
+				cache.CommentCacheDel(&comment)
+			}
+		})
 
 		// Re-login
 		jwtToken, err := common.LoginGetUserToken(targetUser, app.Conf().AppKey, app.Conf().LoginTimeout)
