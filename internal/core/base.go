@@ -18,10 +18,11 @@ import (
 )
 
 type App struct {
-	conf    *config.Config
-	dao     *dao.Dao
-	cache   *cache.Cache
-	service *map[string]Service
+	conf     *config.Config
+	dao      *dao.Dao
+	cache    *cache.Cache
+	service  *map[string]Service
+	location *time.Location
 
 	onTerminate   *hook.Hook[*TerminateEvent]
 	onConfUpdated *hook.Hook[*ConfUpdatedEvent]
@@ -67,14 +68,19 @@ func (app *App) Bootstrap() error {
 		return fmt.Errorf("app.conf cannot be nil while bootstrap")
 	}
 
-	// 时区设置
+	// Load the configured timezone without changing the process-wide default.
 	timezone := app.Conf().TimeZone
+	location := time.Local
 	if timezone != "" {
-		if local, err := time.LoadLocation(timezone); err == nil {
-			time.Local = local
-		} else {
+		var err error
+		location, err = time.LoadLocation(timezone)
+		if err != nil {
 			return fmt.Errorf("timezone load error: %w (please check config or system env)", err)
 		}
+	}
+	app.location = location
+	if app.dao != nil {
+		app.dao.SetLocation(location)
 	}
 
 	// i18n
@@ -192,6 +198,13 @@ func (app *App) Conf() *config.Config {
 	return app.conf
 }
 
+func (app *App) Location() *time.Location {
+	if app.location != nil {
+		return app.location
+	}
+	return time.Local
+}
+
 func (app *App) SetConf(conf *config.Config) {
 	app.conf = conf
 	app.onConfUpdated.Trigger(&ConfUpdatedEvent{App: app, Conf: conf})
@@ -269,6 +282,7 @@ func (app *App) initDao() error {
 
 	// create new dao instance
 	app.SetDao(dao.NewDao(dbInstance))
+	app.Dao().SetLocation(app.Location())
 
 	// patch: switch comment email hash algorithm by config
 	app.Dao().SetCommentEmailHashFunc(func(email string) string {

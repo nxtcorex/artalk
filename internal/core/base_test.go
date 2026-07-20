@@ -2,6 +2,7 @@ package core
 
 import (
 	"testing"
+	"time"
 
 	"github.com/artalkjs/artalk/v2/internal/config"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +25,9 @@ func TestNewApp(t *testing.T) {
 }
 
 func TestAppBootstrap(t *testing.T) {
+	globalLocation := time.Local
 	conf := &config.Config{
+		TimeZone: "Asia/Shanghai",
 		Cache: config.CacheConf{
 			Enabled: true,
 			Type:    config.CacheTypeBuiltin,
@@ -44,6 +47,9 @@ func TestAppBootstrap(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	assert.Same(t, globalLocation, time.Local)
+	assert.Equal(t, "Asia/Shanghai", app.Location().String())
+	assert.Equal(t, "Asia/Shanghai", app.Dao().Location().String())
 	assert.Equal(t, conf, app.conf)
 	assert.NotNil(t, app.dao)
 	assert.NotNil(t, app.cache)
