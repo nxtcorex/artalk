@@ -149,7 +149,11 @@ export async function getCorrectUserAgent() {
     console.error(err)
     return uaRaw
   }
-  const majorPlatformVersion = Number(uaGot.platformVersion.split('.')[0])
+  const platformVersion = uaGot?.platformVersion
+  if (typeof platformVersion !== 'string') {
+    return uaRaw
+  }
+  const majorPlatformVersion = Number(platformVersion.split('.')[0])
 
   if (uaData.platform === 'Windows') {
     if (majorPlatformVersion >= 13) {
@@ -167,7 +171,7 @@ export async function getCorrectUserAgent() {
       // (Arm Chip) macOS 样本："Mozilla/5.0 (Macintosh; ARM Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
       return uaRaw.replace(
         /(Mac OS X \d+_\d+_\d+|Mac OS X)/,
-        `Mac OS X ${uaGot.platformVersion.replace(/\./g, '_')}`,
+        `Mac OS X ${platformVersion.replace(/\./g, '_')}`,
       )
     }
   }
