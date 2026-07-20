@@ -4,7 +4,14 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "artalk": ["./ui/artalk/src/main.ts"],
+      "artalk/Artalk.css": ["./ui/artalk/src/style/main.scss"],
+      "@artalk/plugin-auth": ["./ui/plugin-auth/main.tsx"],
+      "@artalk/plugin-katex": ["./ui/plugin-katex/src/main.ts"],
+      "@artalk/plugin-lightbox": ["./ui/plugin-lightbox/src/main.ts"]
+    }
   },
   "files": [
     "eslint.config.mjs",
