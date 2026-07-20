@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"net/url"
 	"strings"
 
 	"github.com/artalkjs/artalk/v2/internal/core"
@@ -20,6 +21,25 @@ type RequestUserInfoUpdate struct {
 
 type ResponseUserInfoUpdate struct {
 	User entity.CookedUser `json:"user"`
+}
+
+func normalizeProfileLink(link string) (string, bool) {
+	if link == "" {
+		return "", true
+	}
+
+	candidate := link
+	parsed, err := url.ParseRequestURI(candidate)
+	if err != nil || parsed.Scheme == "" {
+		candidate = "https://" + candidate
+	}
+
+	parsed, err = url.ParseRequestURI(candidate)
+	if err != nil || parsed.Host == "" || !utils.ValidateURL(candidate) {
+		return "", false
+	}
+
+	return candidate, true
 }
 
 // @Id           UpdateProfile
@@ -83,15 +103,12 @@ func UserInfoUpdate(app *core.App, router fiber.Router) {
 			user.Email = p.Email
 		}
 
-		// Modify link
-		if p.Link != "" {
-			// Check link format
-			if !utils.ValidateURL(p.Link) {
-				user.Link = "https://" + p.Link
-			}
-
-			user.Link = p.Link
+		// Modify link. An empty link explicitly clears the current value.
+		link, valid := normalizeProfileLink(p.Link)
+		if !valid {
+			return common.RespError(c, 400, i18n.T("Invalid {{name}}", map[string]interface{}{"name": i18n.T("Link")}))
 		}
+		user.Link = link
 
 		if err := app.Dao().UpdateUser(&user); err != nil {
 			return common.RespError(c, 500, "Failed to update user")
