@@ -49,15 +49,61 @@ func TestCache(t *testing.T) {
 			}(i)
 		}
 		wg.Wait()
+		if got := cache.len.Load(); got != 100 {
+			t.Errorf("cache length should be 100, but got %d", got)
+		}
+
+		for i := 0; i < 100; i++ {
+			cache.Delete(fmt.Sprint(i))
+		}
+		if got := cache.len.Load(); got != 0 {
+			t.Errorf("cache length should be 0 after deleting all keys, but got %d", got)
+		}
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cache := New()
 		cache.Set("key", "value")
 		cache.Delete("key")
+		cache.Delete("key")
 		_, ok := cache.Get("key")
 		if ok {
 			t.Error("cache should be deleted")
+		}
+		if got := cache.len.Load(); got != 0 {
+			t.Errorf("cache length should be 0, but got %d", got)
+		}
+	})
+
+	t.Run("Overwrite does not increase length", func(t *testing.T) {
+		cache := New()
+		cache.Set("key", "first")
+		cache.Set("key", "second")
+		if got := cache.len.Load(); got != 1 {
+			t.Errorf("cache length should be 1, but got %d", got)
+		}
+		if value, ok := cache.Get("key"); !ok || value != "second" {
+			t.Errorf("cache value should be replaced, got (%v, %v)", value, ok)
+		}
+	})
+
+	t.Run("Delete missing key does not decrease length", func(t *testing.T) {
+		cache := New()
+		cache.Delete("missing")
+		if got := cache.len.Load(); got != 0 {
+			t.Errorf("cache length should be 0, but got %d", got)
+		}
+	})
+
+	t.Run("Expired Get decreases length", func(t *testing.T) {
+		cache := New()
+		cache.Set("key", "value", time.Millisecond)
+		time.Sleep(2 * time.Millisecond)
+		if _, ok := cache.Get("key"); ok {
+			t.Error("cache should be expired")
+		}
+		if got := cache.len.Load(); got != 0 {
+			t.Errorf("cache length should be 0, but got %d", got)
 		}
 	})
 

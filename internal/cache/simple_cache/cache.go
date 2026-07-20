@@ -8,22 +8,23 @@ import (
 
 type Cache struct {
 	data sync.Map
+	mu   sync.Mutex
 	// when the number of entries reaches gcThold, GC will be triggered
 	gcThold int
-	len	 atomic.Int32
+	len     atomic.Int32
 }
 
 func New() *Cache {
 	return &Cache{
 		gcThold: 1000,
-		len: atomic.Int32{},
+		len:     atomic.Int32{},
 	}
 }
 
 func NewWithGCThold(gcThold int) *Cache {
 	return &Cache{
 		gcThold: gcThold,
-		len: atomic.Int32{},
+		len:     atomic.Int32{},
 	}
 }
 
@@ -33,7 +34,6 @@ type cacheEntry struct {
 }
 
 func (c *Cache) Set(key string, value interface{}, expirationParam ...time.Duration) {
-	defer c.GC(false)
 	var expirationTime time.Time
 	if len(expirationParam) > 0 && expirationParam[0] > 0 {
 		expirationTime = time.Now().Add(expirationParam[0])
@@ -42,39 +42,63 @@ func (c *Cache) Set(key string, value interface{}, expirationParam ...time.Durat
 		value:      value,
 		expiration: expirationTime,
 	}
+
+	c.mu.Lock()
+	_, exists := c.data.Load(key)
 	c.data.Store(key, entry)
-	c.len.Add(1)
+	if !exists {
+		c.len.Add(1)
+	}
+	c.mu.Unlock()
+
+	c.GC(false)
 }
 
 func (c *Cache) Get(key string) (interface{}, bool) {
-	defer c.GC(false)
+	c.mu.Lock()
 	if val, found := c.data.Load(key); found {
 		entry := val.(cacheEntry)
 		if !isExpired(entry) {
+			c.mu.Unlock()
 			return entry.value, true
 		}
-		c.data.Delete(key)
+		c.deleteLocked(key)
 	}
+	c.mu.Unlock()
+
+	c.GC(false)
 	return nil, false
 }
 
 func (c *Cache) Delete(key string) {
-	c.data.Delete(key)
-	c.len.Add(-1)
+	c.mu.Lock()
+	c.deleteLocked(key)
+	c.mu.Unlock()
 }
 
-func (c* Cache) GC(force bool) {
+func (c *Cache) GC(force bool) {
 	if int(c.len.Load()) < c.gcThold && !force {
 		return
 	}
+
+	c.mu.Lock()
 	c.data.Range(func(key, value interface{}) bool {
 		entry := value.(cacheEntry)
 		if !isExpired(entry) {
 			return true
 		}
-		c.Delete(key.(string))
+		c.deleteLocked(key.(string))
 		return true
 	})
+	c.mu.Unlock()
+}
+
+func (c *Cache) deleteLocked(key string) {
+	if _, found := c.data.Load(key); !found {
+		return
+	}
+	c.data.Delete(key)
+	c.len.Add(-1)
 }
 
 func isExpired(entry cacheEntry) bool {
