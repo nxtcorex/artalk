@@ -12,10 +12,9 @@ $:
         - vscode
         - docker
       stages:
-        - name: ls
-          script: ls -al
         - name: mise
           script: |
+            export MISE_INSTALL_FROM_GITHUB=1
             curl https://mise.run | sh
             echo "eval \"\$(/root/.local/bin/mise activate bash)\"" >> "/root/.bashrc"
             echo "eval \"\$(/root/.local/bin/mise activate zsh)\"" >> "/root/.zshrc"
@@ -30,45 +29,3 @@ $:
           script: |
             eval "$(/root/.local/bin/mise activate bash)"
             pnpm install --frozen-lockfile
-        - name: codex
-          script: |
-            eval "$(/root/.local/bin/mise activate bash)"
-            npm install -g @openai/codex
-        - name: codex config
-          imports:
-            - https://cnb.cool/pw.sh.cn/deploy-secrets/-/blob/main/ai_token.yaml
-          script: |
-            : "${OPENAI_BASE_URL:?OPENAI_BASE_URL is required}"
-            : "${OPENAI_API_KEY:?OPENAI_API_KEY is required}"
-
-            mkdir -p ~/.codex
-            cat > ~/.codex/config.toml <<EOF
-            model_provider = "OpenAI"
-            model = "gpt-5.6-sol"
-            review_model = "gpt-5.5"
-            model_reasoning_effort = "xhigh"
-            approval_policy = "never"
-            sandbox_mode = "danger-full-access"
-            disable_response_storage = true
-            network_access = "enabled"
-            windows_wsl_setup_acknowledged = true
-
-            [model_providers.OpenAI]
-            name = "OpenAI"
-            base_url = "${OPENAI_BASE_URL}/v1"
-            wire_api = "responses"
-            requires_openai_auth = true
-
-            [features]
-            goals = true
-            multi_agent = true
-
-            [agents]
-            max_threads = 10
-            max_depth = 2
-            job_max_runtime_seconds = 3600
-            EOF
-
-            cat > ~/.codex/auth.json <<EOF
-            {"OPENAI_API_KEY": "$OPENAI_API_KEY"}
-            EOF
