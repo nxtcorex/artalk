@@ -9,6 +9,8 @@
   "files": [
     "eslint.config.mjs",
     "vitest.workspace.ts",
+    ".ci/scripts/generate-changelog.mjs",
+    ".ci/scripts/set-version.mjs",
     "scripts/check-npm-publish.mjs",
     "scripts/fetch-registry.mjs"
   ],

@@ -95,6 +95,14 @@ export default defineConfig(
     },
   },
 
+  /* Node scripts */
+  {
+    files: ['.ci/scripts/**/*.mjs'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+
   /* Vue */
   {
     files: ['**/*.vue'],
