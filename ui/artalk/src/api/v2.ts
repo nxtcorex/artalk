@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -10,721 +11,743 @@
  */
 
 export interface AuthAuthProviderInfo {
-  icon: string
-  label: string
-  name: string
-  path?: string
+  icon: string;
+  label: string;
+  name: string;
+  path?: string;
 }
 
 export interface CommonApiVersionData {
-  app: string
-  commit_hash: string
-  version: string
+  app: string;
+  commit_hash: string;
+  version: string;
 }
 
 export interface CommonConfData {
-  frontend_conf: CommonMap
-  version: CommonApiVersionData
+  frontend_conf: CommonMap;
+  version: CommonApiVersionData;
 }
 
 export interface CommonJSONResult {
   /** Data */
-  data: any
+  data?: any;
   /** Message */
-  msg: string
+  msg?: string;
 }
 
-export type CommonMap = Record<string, any>
+export type CommonMap = Record<string, any>;
 
 export interface EntityCookedComment {
-  badge_color: string
-  badge_name: string
-  content: string
-  content_marked: string
-  date: string
-  email_encrypted: string
-  id: number
-  ip_region: string
-  is_allow_reply: boolean
-  is_collapsed: boolean
-  is_pending: boolean
-  is_pinned: boolean
-  is_verified: boolean
-  link: string
-  nick: string
-  page_key: string
-  page_url: string
-  rid: number
-  site_name: string
-  ua: string
-  user_id: number
-  visible: boolean
-  vote_down: number
-  vote_up: number
+  badge_color: string;
+  badge_name: string;
+  content: string;
+  content_marked: string;
+  date: string;
+  email_encrypted: string;
+  id: number;
+  ip_region?: string;
+  is_allow_reply: boolean;
+  is_collapsed: boolean;
+  is_pending: boolean;
+  is_pinned: boolean;
+  is_verified: boolean;
+  link: string;
+  nick: string;
+  page_key: string;
+  page_url: string;
+  rid: number;
+  site_name: string;
+  ua: string;
+  user_id: number;
+  visible: boolean;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface EntityCookedNotify {
-  comment_id: number
-  id: number
-  is_emailed: boolean
-  is_read: boolean
-  read_link: string
-  user_id: number
+  comment_id: number;
+  id: number;
+  is_emailed: boolean;
+  is_read: boolean;
+  read_link: string;
+  user_id: number;
 }
 
 export interface EntityCookedPage {
-  admin_only: boolean
-  date: string
-  id: number
-  key: string
-  pv: number
-  site_name: string
-  title: string
-  url: string
-  vote_down: number
-  vote_up: number
+  admin_only: boolean;
+  date: string;
+  id: number;
+  key: string;
+  pv: number;
+  site_name: string;
+  title: string;
+  url: string;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface EntityCookedSite {
-  first_url: string
-  id: number
-  name: string
-  urls: string[]
-  urls_raw: string
+  first_url: string;
+  id: number;
+  name: string;
+  urls: string[];
+  urls_raw: string;
 }
 
 export interface EntityCookedUser {
-  badge_color: string
-  badge_name: string
-  email: string
-  id: number
-  is_admin: boolean
-  link: string
-  name: string
-  receive_email: boolean
+  badge_color: string;
+  badge_name: string;
+  email: string;
+  id: number;
+  is_admin: boolean;
+  link: string;
+  name: string;
+  receive_email: boolean;
 }
 
 export interface EntityCookedUserForAdmin {
-  badge_color: string
-  badge_name: string
-  comment_count: number
-  email: string
-  id: number
-  is_admin: boolean
-  is_in_conf: boolean
-  last_ip: string
-  last_ua: string
-  link: string
-  name: string
-  receive_email: boolean
+  badge_color: string;
+  badge_name: string;
+  comment_count: number;
+  email: string;
+  id: number;
+  is_admin: boolean;
+  is_in_conf: boolean;
+  last_ip: string;
+  last_ua: string;
+  link: string;
+  name: string;
+  receive_email: boolean;
 }
 
-export type HandlerMap = Record<string, any>
+export type HandlerMap = Record<string, any>;
 
 export interface HandlerParamsAuthSSOExchange {
   /** External IdP access token (e.g. an Auth0 access token) */
-  token: string
+  token: string;
 }
 
 export interface HandlerParamsCaptchaVerify {
   /** The captcha value to check */
-  value: string
+  value: string;
 }
 
 export interface HandlerParamsCommentCreate {
   /** The comment content */
-  content: string
+  content: string;
   /** The comment email */
-  email: string
+  email: string;
   /** The comment link */
-  link?: string
+  link?: string;
   /** The comment name */
-  name: string
+  name: string;
   /** The comment page_key */
-  page_key: string
+  page_key: string;
   /** The comment page_title */
-  page_title?: string
+  page_title?: string;
   /** The comment rid */
-  rid?: number
+  rid?: number;
   /** The site name of your content scope */
-  site_name: string
+  site_name: string;
   /** The comment ua */
-  ua?: string
+  ua?: string;
 }
 
 export interface HandlerParamsCommentUpdate {
   /** The comment content */
-  content: string
+  content: string;
   /** The comment email */
-  email?: string
+  email?: string;
   /** The comment ip */
-  ip?: string
+  ip?: string;
   /** The comment is_collapsed */
-  is_collapsed: boolean
+  is_collapsed: boolean;
   /** The comment is_pending */
-  is_pending: boolean
+  is_pending: boolean;
   /** The comment is_pinned */
-  is_pinned: boolean
+  is_pinned: boolean;
   /** The comment link */
-  link?: string
+  link?: string;
   /** The comment nick */
-  nick?: string
+  nick?: string;
   /** The comment page_key */
-  page_key: string
+  page_key: string;
   /** The comment rid */
-  rid: number
+  rid: number;
   /** The site name of your content scope */
-  site_name: string
+  site_name: string;
   /** The comment ua */
-  ua?: string
+  ua?: string;
 }
 
 export interface HandlerParamsEmailSend {
   /** The body of email */
-  body: string
+  body: string;
   /** The subject of email */
-  subject: string
+  subject: string;
   /** The email address of the receiver */
-  to_addr: string
+  to_addr: string;
 }
 
 export interface HandlerParamsNotifyReadAll {
   /** The user email */
-  email: string
+  email: string;
   /** The username */
-  name: string
+  name: string;
 }
 
 export interface HandlerParamsPageFetchAll {
   /** If not empty, only fetch pages of this site */
-  site_name?: string
+  site_name?: string;
 }
 
 export interface HandlerParamsPagePV {
   /** The page key */
-  page_key: string
+  page_key: string;
   /** The page title */
-  page_title?: string
+  page_title?: string;
   /** The site name of your content scope */
-  site_name?: string
+  site_name?: string;
 }
 
 export interface HandlerParamsPageUpdate {
   /** Updated page admin_only option */
-  admin_only: boolean
+  admin_only: boolean;
   /** Updated page key */
-  key: string
+  key: string;
   /** The site name of your content scope */
-  site_name: string
+  site_name: string;
   /** Updated page title */
-  title: string
+  title: string;
 }
 
 export interface HandlerParamsSettingApply {
   /** The content of the config file in YAML format */
-  yaml: string
+  yaml: string;
 }
 
 export interface HandlerParamsSiteCreate {
   /** The site name */
-  name: string
+  name: string;
   /** The site urls */
-  urls: string[]
+  urls: string[];
 }
 
 export interface HandlerParamsSiteUpdate {
   /** Updated site name */
-  name: string
+  name: string;
   /** Updated site urls */
-  urls: string[]
+  urls: string[];
 }
 
 export interface HandlerParamsTransferImport {
   /** Automatically answer yes for all questions */
-  assumeyes?: boolean
+  assumeyes?: boolean;
   /** The JSON data */
-  json_data?: string
+  json_data?: string;
   /** The JSON file path */
-  json_file?: string
+  json_file?: string;
   /** The target site name */
-  target_site_name?: string
+  target_site_name?: string;
   /** The target site url */
-  target_site_url?: string
+  target_site_url?: string;
   /** Keep domain */
-  url_keep_domain?: boolean
+  url_keep_domain?: boolean;
   /** Enable URL resolver */
-  url_resolver?: boolean
+  url_resolver?: boolean;
 }
 
 export interface HandlerParamsUserCreate {
   /** The user badge color (hex format) */
-  badge_color?: string
+  badge_color?: string;
   /** The user badge name */
-  badge_name?: string
+  badge_name?: string;
   /** The user email */
-  email: string
+  email: string;
   /** The user is an admin */
-  is_admin: boolean
+  is_admin: boolean;
   /** The user link */
-  link?: string
+  link?: string;
   /** The user name */
-  name: string
+  name: string;
   /** The user password */
-  password?: string
+  password?: string;
   /** The user receive email */
-  receive_email: boolean
+  receive_email: boolean;
 }
 
 export interface HandlerParamsUserLogin {
   /** The user email */
-  email: string
+  email: string;
   /** The username */
-  name?: string
+  name?: string;
   /** The user password */
-  password: string
+  password: string;
 }
 
 export interface HandlerParamsUserUpdate {
   /** The user badge color (hex format) */
-  badge_color?: string
+  badge_color?: string;
   /** The user badge name */
-  badge_name?: string
+  badge_name?: string;
   /** The user email */
-  email: string
+  email: string;
   /** The user is an admin */
-  is_admin: boolean
+  is_admin: boolean;
   /** The user link */
-  link?: string
+  link?: string;
   /** The user name */
-  name: string
+  name: string;
   /** The user password */
-  password?: string
+  password?: string;
   /** The user receive email */
-  receive_email: boolean
+  receive_email: boolean;
 }
 
 export interface HandlerParamsVoteCreate {
   /** The user email */
-  email?: string
+  email?: string;
   /** The username */
-  name?: string
+  name?: string;
 }
 
 export interface HandlerRequestAuthDataMergeApply {
-  user_name: string
+  user_name: string;
 }
 
 export interface HandlerRequestAuthEmailLogin {
-  code?: string
-  email: string
-  password?: string
+  code?: string;
+  email: string;
+  password?: string;
 }
 
 export interface HandlerRequestAuthEmailRegister {
-  code: string
-  email: string
-  link?: string
-  name?: string
-  password: string
+  code: string;
+  email: string;
+  link?: string;
+  name?: string;
+  password: string;
 }
 
 export interface HandlerRequestAuthEmailSend {
-  email: string
+  email: string;
 }
 
 export interface HandlerRequestUserInfoUpdate {
-  code?: string
-  email: string
-  link?: string
-  name: string
+  code?: string;
+  email: string;
+  link?: string;
+  name: string;
 }
 
 export interface HandlerResponseAdminUserList {
-  count: number
-  users: EntityCookedUserForAdmin[]
+  count: number;
+  users: EntityCookedUserForAdmin[];
 }
 
 export interface HandlerResponseAuthDataMergeApply {
-  deleted_user_count: number
-  update_comments_count: number
-  update_notifies_count: number
-  update_votes_count: number
+  deleted_user_count: number;
+  update_comments_count: number;
+  update_notifies_count: number;
+  update_votes_count: number;
   /** Empty if login user is target user no need to re-login */
-  user_token: string
+  user_token: string;
 }
 
 export interface HandlerResponseAuthDataMergeCheck {
-  need_merge: boolean
-  user_names: string[]
+  need_merge: boolean;
+  user_names: string[];
 }
 
 export interface HandlerResponseCaptchaGet {
-  img_data: string
+  img_data: string;
 }
 
 export interface HandlerResponseCaptchaStatus {
-  is_pass: boolean
+  is_pass: boolean;
 }
 
 export interface HandlerResponseCommentCreate {
-  badge_color: string
-  badge_name: string
-  content: string
-  content_marked: string
-  date: string
-  email_encrypted: string
-  id: number
-  ip_region: string
-  is_allow_reply: boolean
-  is_collapsed: boolean
-  is_pending: boolean
-  is_pinned: boolean
-  is_verified: boolean
-  link: string
-  nick: string
-  page_key: string
-  page_url: string
-  rid: number
-  site_name: string
-  ua: string
-  user_id: number
-  visible: boolean
-  vote_down: number
-  vote_up: number
+  badge_color: string;
+  badge_name: string;
+  content: string;
+  content_marked: string;
+  date: string;
+  email_encrypted: string;
+  id: number;
+  ip_region?: string;
+  is_allow_reply: boolean;
+  is_collapsed: boolean;
+  is_pending: boolean;
+  is_pinned: boolean;
+  is_verified: boolean;
+  link: string;
+  nick: string;
+  page_key: string;
+  page_url: string;
+  rid: number;
+  site_name: string;
+  ua: string;
+  user_id: number;
+  visible: boolean;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface HandlerResponseCommentGet {
   /** The comment detail */
-  comment: EntityCookedComment
+  comment: EntityCookedComment;
   /** The reply comment if exists (like reply) */
-  reply_comment: EntityCookedComment
+  reply_comment: EntityCookedComment;
 }
 
 export interface HandlerResponseCommentList {
-  comments: EntityCookedComment[]
-  count: number
-  page: EntityCookedPage
-  roots_count: number
+  comments: EntityCookedComment[];
+  count: number;
+  page?: EntityCookedPage;
+  roots_count: number;
 }
 
 export interface HandlerResponseCommentUpdate {
-  badge_color: string
-  badge_name: string
-  content: string
-  content_marked: string
-  date: string
-  email_encrypted: string
-  id: number
-  ip_region: string
-  is_allow_reply: boolean
-  is_collapsed: boolean
-  is_pending: boolean
-  is_pinned: boolean
-  is_verified: boolean
-  link: string
-  nick: string
-  page_key: string
-  page_url: string
-  rid: number
-  site_name: string
-  ua: string
-  user_id: number
-  visible: boolean
-  vote_down: number
-  vote_up: number
+  badge_color: string;
+  badge_name: string;
+  content: string;
+  content_marked: string;
+  date: string;
+  email_encrypted: string;
+  id: number;
+  ip_region?: string;
+  is_allow_reply: boolean;
+  is_collapsed: boolean;
+  is_pending: boolean;
+  is_pinned: boolean;
+  is_verified: boolean;
+  link: string;
+  nick: string;
+  page_key: string;
+  page_url: string;
+  rid: number;
+  site_name: string;
+  ua: string;
+  user_id: number;
+  visible: boolean;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface HandlerResponseConfAuthProviders {
-  anonymous: boolean
-  providers: AuthAuthProviderInfo[]
+  anonymous: boolean;
+  providers: AuthAuthProviderInfo[];
 }
 
 export interface HandlerResponseConfDomain {
   /** Is the domain trusted */
-  is_trusted: boolean
+  is_trusted: boolean;
   /** The origin of the domain */
-  origin: string
+  origin: string;
 }
 
 export interface HandlerResponseNotifyList {
-  count: number
-  notifies: EntityCookedNotify[]
+  count: number;
+  notifies: EntityCookedNotify[];
 }
 
 export interface HandlerResponsePageFetch {
-  admin_only: boolean
-  date: string
-  id: number
-  key: string
-  pv: number
-  site_name: string
-  title: string
-  url: string
-  vote_down: number
-  vote_up: number
+  admin_only: boolean;
+  date: string;
+  id: number;
+  key: string;
+  pv: number;
+  site_name: string;
+  title: string;
+  url: string;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface HandlerResponsePageFetchStatus {
   /** The number of pages that have been fetched */
-  done: number
+  done: number;
   /** If the task is in progress */
-  is_progress: boolean
+  is_progress: boolean;
   /** The message of the task status */
-  msg: string
+  msg: string;
   /** The total number of pages */
-  total: number
+  total: number;
 }
 
 export interface HandlerResponsePageList {
-  count: number
-  pages: EntityCookedPage[]
+  count: number;
+  pages: EntityCookedPage[];
 }
 
 export interface HandlerResponsePagePV {
-  pv: number
+  pv: number;
 }
 
 export interface HandlerResponsePageUpdate {
-  admin_only: boolean
-  date: string
-  id: number
-  key: string
-  pv: number
-  site_name: string
-  title: string
-  url: string
-  vote_down: number
-  vote_up: number
+  admin_only: boolean;
+  date: string;
+  id: number;
+  key: string;
+  pv: number;
+  site_name: string;
+  title: string;
+  url: string;
+  vote_down: number;
+  vote_up: number;
 }
 
 export interface HandlerResponseSettingGet {
-  envs: string[]
-  yaml: string
+  envs: string[];
+  yaml: string;
 }
 
 export interface HandlerResponseSettingTemplate {
-  yaml: string
+  yaml: string;
 }
 
 export interface HandlerResponseSiteCreate {
-  first_url: string
-  id: number
-  name: string
-  urls: string[]
-  urls_raw: string
+  first_url: string;
+  id: number;
+  name: string;
+  urls: string[];
+  urls_raw: string;
 }
 
 export interface HandlerResponseSiteList {
-  count: number
-  sites: EntityCookedSite[]
+  count: number;
+  sites: EntityCookedSite[];
 }
 
 export interface HandlerResponseSiteUpdate {
-  first_url: string
-  id: number
-  name: string
-  urls: string[]
-  urls_raw: string
+  first_url: string;
+  id: number;
+  name: string;
+  urls: string[];
+  urls_raw: string;
 }
 
 export interface HandlerResponseTransferExport {
   /** The exported data which is a JSON string */
-  artrans: string
+  artrans: string;
 }
 
 export interface HandlerResponseTransferUpload {
   /** The uploaded file name which can be used to import */
-  filename: string
+  filename: string;
 }
 
 export interface HandlerResponseUpload {
-  file_name: string
-  file_type: string
-  public_url: string
+  file_name: string;
+  file_type: string;
+  public_url: string;
 }
 
 export interface HandlerResponseUserCreate {
-  badge_color: string
-  badge_name: string
-  comment_count: number
-  email: string
-  id: number
-  is_admin: boolean
-  is_in_conf: boolean
-  last_ip: string
-  last_ua: string
-  link: string
-  name: string
-  receive_email: boolean
+  badge_color: string;
+  badge_name: string;
+  comment_count: number;
+  email: string;
+  id: number;
+  is_admin: boolean;
+  is_in_conf: boolean;
+  last_ip: string;
+  last_ua: string;
+  link: string;
+  name: string;
+  receive_email: boolean;
 }
 
 export interface HandlerResponseUserInfo {
-  is_login: boolean
-  notifies: EntityCookedNotify[]
-  notifies_count: number
-  user: EntityCookedUser
+  is_login: boolean;
+  notifies: EntityCookedNotify[];
+  notifies_count: number;
+  user: EntityCookedUser;
 }
 
 export interface HandlerResponseUserInfoUpdate {
-  user: EntityCookedUser
+  user: EntityCookedUser;
 }
 
 export interface HandlerResponseUserLogin {
-  token: string
-  user: EntityCookedUser
+  token: string;
+  user: EntityCookedUser;
 }
 
 export interface HandlerResponseUserStatus {
-  is_admin: boolean
-  is_login: boolean
+  is_admin: boolean;
+  is_login: boolean;
 }
 
 export interface HandlerResponseUserUpdate {
-  badge_color: string
-  badge_name: string
-  comment_count: number
-  email: string
-  id: number
-  is_admin: boolean
-  is_in_conf: boolean
-  last_ip: string
-  last_ua: string
-  link: string
-  name: string
-  receive_email: boolean
+  badge_color: string;
+  badge_name: string;
+  comment_count: number;
+  email: string;
+  id: number;
+  is_admin: boolean;
+  is_in_conf: boolean;
+  last_ip: string;
+  last_ua: string;
+  link: string;
+  name: string;
+  receive_email: boolean;
 }
 
 export interface HandlerResponseVote {
-  down: number
-  is_down: boolean
-  is_up: boolean
-  up: number
+  down: number;
+  is_down: boolean;
+  is_up: boolean;
+  up: number;
 }
 
-export type QueryParamsType = Record<string | number, any>
-export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>
+export type QueryParamsType = Record<string | number, any>;
+export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
-export interface FullRequestParams extends Omit<RequestInit, 'body'> {
+export interface FullRequestParams extends Omit<RequestInit, "body"> {
   /** set parameter to `true` for call `securityWorker` for this request */
-  secure?: boolean
+  secure?: boolean;
   /** request path */
-  path: string
+  path: string;
   /** content type of request body */
-  type?: ContentType
+  type?: ContentType;
   /** query params */
-  query?: QueryParamsType
+  query?: QueryParamsType;
   /** format of response (i.e. response.json() -> format: "json") */
-  format?: ResponseFormat
+  format?: ResponseFormat;
   /** request body */
-  body?: unknown
+  body?: unknown;
   /** base url */
-  baseUrl?: string
+  baseUrl?: string;
   /** request cancellation token */
-  cancelToken?: CancelToken
+  cancelToken?: CancelToken;
 }
 
-export type RequestParams = Omit<FullRequestParams, 'body' | 'method' | 'query' | 'path'>
+export type RequestParams = Omit<
+  FullRequestParams,
+  "body" | "method" | "query" | "path"
+>;
 
 export interface ApiConfig<SecurityDataType = unknown> {
-  baseUrl?: string
-  baseApiParams?: Omit<RequestParams, 'baseUrl' | 'cancelToken' | 'signal'>
+  baseUrl?: string;
+  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
   securityWorker?: (
     securityData: SecurityDataType | null,
-  ) => Promise<RequestParams | void> | RequestParams | void
-  customFetch?: typeof fetch
+  ) => Promise<RequestParams | void> | RequestParams | void;
+  customFetch?: typeof fetch;
 }
 
-export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
-  data: D
-  error: E
+export interface HttpResponse<D extends unknown, E extends unknown = unknown>
+  extends Response {
+  data: D;
+  error: E;
 }
 
-type CancelToken = Symbol | string | number
+type CancelToken = Symbol | string | number;
 
 export enum ContentType {
-  Json = 'application/json',
-  FormData = 'multipart/form-data',
-  UrlEncoded = 'application/x-www-form-urlencoded',
-  Text = 'text/plain',
+  Json = "application/json",
+  JsonApi = "application/vnd.api+json",
+  FormData = "multipart/form-data",
+  UrlEncoded = "application/x-www-form-urlencoded",
+  Text = "text/plain",
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = '/api/v2'
-  private securityData: SecurityDataType | null = null
-  private securityWorker?: ApiConfig<SecurityDataType>['securityWorker']
-  private abortControllers = new Map<CancelToken, AbortController>()
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams)
+  public baseUrl: string = "/api/v2";
+  private securityData: SecurityDataType | null = null;
+  private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
+  private abortControllers = new Map<CancelToken, AbortController>();
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) =>
+    fetch(...fetchParams);
 
   private baseApiParams: RequestParams = {
-    credentials: 'same-origin',
+    credentials: "same-origin",
     headers: {},
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
-  }
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  };
 
   constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
-    Object.assign(this, apiConfig)
+    Object.assign(this, apiConfig);
   }
 
   public setSecurityData = (data: SecurityDataType | null) => {
-    this.securityData = data
-  }
+    this.securityData = data;
+  };
 
   protected encodeQueryParam(key: string, value: any) {
-    const encodedKey = encodeURIComponent(key)
-    return `${encodedKey}=${encodeURIComponent(typeof value === 'number' ? value : `${value}`)}`
+    const encodedKey = encodeURIComponent(key);
+    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
   }
 
   protected addQueryParam(query: QueryParamsType, key: string) {
-    return this.encodeQueryParam(key, query[key])
+    return this.encodeQueryParam(key, query[key]);
   }
 
   protected addArrayQueryParam(query: QueryParamsType, key: string) {
-    const value = query[key]
-    return value.map((v: any) => this.encodeQueryParam(key, v)).join('&')
+    const value = query[key];
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
   }
 
   protected toQueryString(rawQuery?: QueryParamsType): string {
-    const query = rawQuery || {}
-    const keys = Object.keys(query).filter((key) => 'undefined' !== typeof query[key])
+    const query = rawQuery || {};
+    const keys = Object.keys(query).filter(
+      (key) => "undefined" !== typeof query[key],
+    );
     return keys
       .map((key) =>
         Array.isArray(query[key])
           ? this.addArrayQueryParam(query, key)
           : this.addQueryParam(query, key),
       )
-      .join('&')
+      .join("&");
   }
 
   protected addQueryParams(rawQuery?: QueryParamsType): string {
-    const queryString = this.toQueryString(rawQuery)
-    return queryString ? `?${queryString}` : ''
+    const queryString = this.toQueryString(rawQuery);
+    return queryString ? `?${queryString}` : "";
   }
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
-      input !== null && (typeof input === 'object' || typeof input === 'string')
+      input !== null && (typeof input === "object" || typeof input === "string")
+        ? JSON.stringify(input)
+        : input,
+    [ContentType.JsonApi]: (input: any) =>
+      input !== null && (typeof input === "object" || typeof input === "string")
         ? JSON.stringify(input)
         : input,
     [ContentType.Text]: (input: any) =>
-      input !== null && typeof input !== 'string' ? JSON.stringify(input) : input,
-    [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((formData, key) => {
-        const property = input[key]
+      input !== null && typeof input !== "string"
+        ? JSON.stringify(input)
+        : input,
+    [ContentType.FormData]: (input: any) => {
+      if (input instanceof FormData) {
+        return input;
+      }
+
+      return Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
         formData.append(
           key,
           property instanceof Blob
             ? property
-            : typeof property === 'object' && property !== null
+            : typeof property === "object" && property !== null
               ? JSON.stringify(property)
               : `${property}`,
-        )
-        return formData
-      }, new FormData()),
+        );
+        return formData;
+      }, new FormData());
+    },
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
-  }
+  };
 
-  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+  protected mergeRequestParams(
+    params1: RequestParams,
+    params2?: RequestParams,
+  ): RequestParams {
     return {
       ...this.baseApiParams,
       ...params1,
@@ -734,31 +757,33 @@ export class HttpClient<SecurityDataType = unknown> {
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
-    }
+    };
   }
 
-  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+  protected createAbortSignal = (
+    cancelToken: CancelToken,
+  ): AbortSignal | undefined => {
     if (this.abortControllers.has(cancelToken)) {
-      const abortController = this.abortControllers.get(cancelToken)
+      const abortController = this.abortControllers.get(cancelToken);
       if (abortController) {
-        return abortController.signal
+        return abortController.signal;
       }
-      return void 0
+      return void 0;
     }
 
-    const abortController = new AbortController()
-    this.abortControllers.set(cancelToken, abortController)
-    return abortController.signal
-  }
+    const abortController = new AbortController();
+    this.abortControllers.set(cancelToken, abortController);
+    return abortController.signal;
+  };
 
   public abortRequest = (cancelToken: CancelToken) => {
-    const abortController = this.abortControllers.get(cancelToken)
+    const abortController = this.abortControllers.get(cancelToken);
 
     if (abortController) {
-      abortController.abort()
-      this.abortControllers.delete(cancelToken)
+      abortController.abort();
+      this.abortControllers.delete(cancelToken);
     }
-  }
+  };
 
   public request = async <T = any, E = any>({
     body,
@@ -772,55 +797,64 @@ export class HttpClient<SecurityDataType = unknown> {
     ...params
   }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
-      ((typeof secure === 'boolean' ? secure : this.baseApiParams.secure) &&
+      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
-      {}
-    const requestParams = this.mergeRequestParams(params, secureParams)
-    const queryString = query && this.toQueryString(query)
-    const payloadFormatter = this.contentFormatters[type || ContentType.Json]
-    const responseFormat = format || requestParams.format
+      {};
+    const requestParams = this.mergeRequestParams(params, secureParams);
+    const queryString = query && this.toQueryString(query);
+    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+    const responseFormat = format || requestParams.format;
 
     return this.customFetch(
-      `${baseUrl || this.baseUrl || ''}${path}${queryString ? `?${queryString}` : ''}`,
+      `${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`,
       {
         ...requestParams,
         headers: {
           ...(requestParams.headers || {}),
-          ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
+          ...(type && type !== ContentType.FormData
+            ? { "Content-Type": type }
+            : {}),
         },
-        signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
-        body: typeof body === 'undefined' || body === null ? null : payloadFormatter(body),
+        signal:
+          (cancelToken
+            ? this.createAbortSignal(cancelToken)
+            : requestParams.signal) || null,
+        body:
+          typeof body === "undefined" || body === null
+            ? null
+            : payloadFormatter(body),
       },
     ).then(async (response) => {
-      const r = response.clone() as HttpResponse<T, E>
-      r.data = null as unknown as T
-      r.error = null as unknown as E
+      const r = response as HttpResponse<T, E>;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
 
+      const responseToParse = responseFormat ? response.clone() : response;
       const data = !responseFormat
         ? r
-        : await response[responseFormat]()
+        : await responseToParse[responseFormat]()
             .then((data) => {
               if (r.ok) {
-                r.data = data
+                r.data = data;
               } else {
-                r.error = data
+                r.error = data;
               }
-              return r
+              return r;
             })
             .catch((e) => {
-              r.error = e
-              return r
-            })
+              r.error = e;
+              return r;
+            });
 
       if (cancelToken) {
-        this.abortControllers.delete(cancelToken)
+        this.abortControllers.delete(cancelToken);
       }
 
-      if (!response.ok) throw data
-      return data
-    })
-  }
+      if (!response.ok) throw data;
+      return data;
+    });
+  };
 }
 
 /**
@@ -832,7 +866,9 @@ export class HttpClient<SecurityDataType = unknown> {
  *
  * Artalk is a modern comment system based on Golang.
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType extends unknown,
+> extends HttpClient<SecurityDataType> {
   auth = {
     /**
  * @description Login by email with verify code (Need send email verify code first) or password
@@ -851,18 +887,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    loginByEmail: (data: HandlerRequestAuthEmailLogin, params: RequestParams = {}) =>
+    loginByEmail: (
+      data: HandlerRequestAuthEmailLogin,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseUserLogin,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/auth/email/login`,
-        method: 'POST',
+        method: "POST",
         body: data,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -883,18 +922,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    registerByEmail: (data: HandlerRequestAuthEmailRegister, params: RequestParams = {}) =>
+    registerByEmail: (
+      data: HandlerRequestAuthEmailRegister,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseUserLogin,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/auth/email/register`,
-        method: 'POST',
+        method: "POST",
         body: data,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -918,20 +960,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    sendVerifyEmail: (data: HandlerRequestAuthEmailSend, params: RequestParams = {}) =>
+    sendVerifyEmail: (
+      data: HandlerRequestAuthEmailSend,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap & {
-          msg?: string
+          msg?: string;
         },
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/auth/email/send`,
-        method: 'POST',
+        method: "POST",
         body: data,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -957,13 +1002,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseAuthDataMergeCheck,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/auth/merge`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -985,22 +1030,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    applyDataMerge: (data: HandlerRequestAuthDataMergeApply, params: RequestParams = {}) =>
+    applyDataMerge: (
+      data: HandlerRequestAuthDataMergeApply,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseAuthDataMergeApply,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/auth/merge`,
-        method: 'POST',
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   cache = {
     /**
  * @description Flush all cache on the server
@@ -1026,16 +1074,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     flushCache: (params: RequestParams = {}) =>
       this.request<
         HandlerMap & {
-          msg?: string
+          msg?: string;
         },
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/cache/flush`,
-        method: 'POST',
+        method: "POST",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1063,19 +1111,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     warmUpCache: (params: RequestParams = {}) =>
       this.request<
         HandlerMap & {
-          msg?: string
+          msg?: string;
         },
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/cache/warm_up`,
-        method: 'POST',
+        method: "POST",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   captcha = {
     /**
  * @description Get a base64 encoded captcha image or a HTML page to verify for user
@@ -1094,12 +1142,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseCaptchaGet,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/captcha`,
-        method: 'GET',
-        format: 'json',
+        method: "GET",
+        format: "json",
         ...params,
       }),
 
@@ -1115,8 +1163,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getCaptchaStatus: (params: RequestParams = {}) =>
       this.request<HandlerResponseCaptchaStatus, any>({
         path: `/captcha/status`,
-        method: 'GET',
-        format: 'json',
+        method: "GET",
+        format: "json",
         ...params,
       }),
 
@@ -1133,21 +1181,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Forbidden
  */
-    verifyCaptcha: (data: HandlerParamsCaptchaVerify, params: RequestParams = {}) =>
+    verifyCaptcha: (
+      data: HandlerParamsCaptchaVerify,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap,
         HandlerMap & {
-          img_data?: string
+          img_data?: string;
         }
       >({
         path: `/captcha/verify`,
-        method: 'POST',
+        method: "POST",
         body: data,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   comments = {
     /**
  * @description Get a list of comments by some conditions
@@ -1166,44 +1217,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getComments: (
       query: {
         /** The user email */
-        email?: string
+        email?: string;
         /** Enable flat_mode */
-        flat_mode?: boolean
+        flat_mode?: boolean;
         /** The limit for pagination */
-        limit?: number
+        limit?: number;
         /** The username */
-        name?: string
+        name?: string;
         /** The offset for pagination */
-        offset?: number
+        offset?: number;
         /** The comment page_key */
-        page_key: string
+        page_key: string;
         /** The scope of comments */
-        scope?: 'page' | 'user' | 'site'
+        scope?: "page" | "user" | "site";
         /** Search keywords */
-        search?: string
+        search?: string;
         /** The site name of your content scope */
-        site_name?: string
+        site_name?: string;
         /** Sort by condition */
-        sort_by?: 'date_asc' | 'date_desc' | 'vote'
+        sort_by?: "date_asc" | "date_desc" | "vote";
         /** Message center show type */
-        type?: 'all' | 'mentions' | 'mine' | 'pending'
+        type?: "all" | "mentions" | "mine" | "pending";
         /** Only show comments by admin */
-        view_only_admin?: boolean
+        view_only_admin?: boolean;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseCommentList,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/comments`,
-        method: 'GET',
+        method: "GET",
         query: query,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1225,19 +1276,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    createComment: (comment: HandlerParamsCommentCreate, params: RequestParams = {}) =>
+    createComment: (
+      comment: HandlerParamsCommentCreate,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseCommentCreate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/comments`,
-        method: 'POST',
+        method: "POST",
         body: comment,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1262,13 +1316,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseCommentGet,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/comments/${id}`,
-        method: 'GET',
+        method: "GET",
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1298,19 +1352,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    updateComment: (id: number, comment: HandlerParamsCommentUpdate, params: RequestParams = {}) =>
+    updateComment: (
+      id: number,
+      comment: HandlerParamsCommentUpdate,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseCommentUpdate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/comments/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: comment,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1340,16 +1398,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/comments/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   conf = {
     /**
      * @description Get System Configs for UI
@@ -1363,8 +1421,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     conf: (params: RequestParams = {}) =>
       this.request<CommonConfData, any>({
         path: `/conf`,
-        method: 'GET',
-        format: 'json',
+        method: "GET",
+        format: "json",
         ...params,
       }),
 
@@ -1385,12 +1443,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseConfAuthProviders,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/conf/auth/providers`,
-        method: 'GET',
-        format: 'json',
+        method: "GET",
+        format: "json",
         ...params,
       }),
 
@@ -1406,18 +1464,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getDomain: (
       query?: {
         /** Domain URL */
-        url?: string
+        url?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<HandlerResponseConfDomain, any>({
         path: `/conf/domain`,
-        method: 'GET',
+        method: "GET",
         query: query,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   notifies = {
     /**
  * @description Get a list of notifies for user
@@ -1439,23 +1497,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getNotifies: (
       query: {
         /** The user email */
-        email: string
+        email: string;
         /** The user name */
-        name: string
+        name: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseNotifyList,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/notifies`,
-        method: 'GET',
+        method: "GET",
         query: query,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1476,18 +1534,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    markAllNotifyRead: (options: HandlerParamsNotifyReadAll, params: RequestParams = {}) =>
+    markAllNotifyRead: (
+      options: HandlerParamsNotifyReadAll,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/notifies/read`,
-        method: 'POST',
+        method: "POST",
         body: options,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1512,19 +1573,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    markNotifyRead: (commentId: number, notifyKey: string, params: RequestParams = {}) =>
+    markNotifyRead: (
+      commentId: number,
+      notifyKey: string,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/notifies/${commentId}/${notifyKey}`,
-        method: 'POST',
-        format: 'json',
+        method: "POST",
+        format: "json",
         ...params,
       }),
-  }
+  };
   pages = {
     /**
  * @description Get a list of pages by some conditions
@@ -1543,28 +1608,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getPages: (
       query?: {
         /** The limit for pagination */
-        limit?: number
+        limit?: number;
         /** The offset for pagination */
-        offset?: number
+        offset?: number;
         /** Search keywords */
-        search?: string
+        search?: string;
         /** The site name of your content scope */
-        site_name?: string
+        site_name?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponsePageList,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/pages`,
-        method: 'GET',
+        method: "GET",
         query: query,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1586,19 +1651,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    fetchAllPages: (options: HandlerParamsPageFetchAll, params: RequestParams = {}) =>
+    fetchAllPages: (
+      options: HandlerParamsPageFetchAll,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/pages/fetch`,
-        method: 'POST',
+        method: "POST",
         body: options,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1615,9 +1683,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getPageFetchStatus: (params: RequestParams = {}) =>
       this.request<HandlerResponsePageFetchStatus, any>({
         path: `/pages/fetch/status`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1633,10 +1701,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     logPv: (page: HandlerParamsPagePV, params: RequestParams = {}) =>
       this.request<HandlerResponsePagePV, any>({
         path: `/pages/pv`,
-        method: 'POST',
+        method: "POST",
         body: page,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1666,19 +1734,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    updatePage: (id: number, page: HandlerParamsPageUpdate, params: RequestParams = {}) =>
+    updatePage: (
+      id: number,
+      page: HandlerParamsPageUpdate,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponsePageUpdate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/pages/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: page,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1708,13 +1780,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/pages/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1740,17 +1812,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponsePageFetch,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/pages/${id}/fetch`,
-        method: 'POST',
+        method: "POST",
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   sendEmail = {
     /**
  * @description Send an email to test the email sender
@@ -1771,19 +1843,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         | (HandlerMap & {
-            msg?: string
+            msg?: string;
           })
         | HandlerMap
       >({
         path: `/send_email`,
-        method: 'POST',
+        method: "POST",
         body: email,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   settings = {
     /**
  * @description Get settings from app config file
@@ -1807,13 +1879,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseSettingGet,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/settings`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1835,19 +1907,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    applySettings: (settings: HandlerParamsSettingApply, params: RequestParams = {}) =>
+    applySettings: (
+      settings: HandlerParamsSettingApply,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/settings`,
-        method: 'PUT',
+        method: "PUT",
         body: settings,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1864,12 +1939,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getSettingsTemplate: (locale: string, params: RequestParams = {}) =>
       this.request<HandlerResponseSettingTemplate, any>({
         path: `/settings/template/${locale}`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   sites = {
     /**
      * @description Get a list of sites by some conditions
@@ -1884,9 +1959,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getSites: (params: RequestParams = {}) =>
       this.request<HandlerResponseSiteList, any>({
         path: `/sites`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1916,15 +1991,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseSiteCreate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/sites`,
-        method: 'POST',
+        method: "POST",
         body: site,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1938,14 +2013,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `200` `HandlerResponseSiteUpdate` OK
      */
-    updateSite: (id: number, site: HandlerParamsSiteUpdate, params: RequestParams = {}) =>
+    updateSite: (
+      id: number,
+      site: HandlerParamsSiteUpdate,
+      params: RequestParams = {},
+    ) =>
       this.request<HandlerResponseSiteUpdate, any>({
         path: `/sites/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: site,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -1975,16 +2054,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/sites/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   sso = {
     /**
  * @description Validates a third-party OIDC access token (currently Auth0)
@@ -2019,21 +2098,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Service Unavailable
  */
-    authSsoExchange: (body: HandlerParamsAuthSSOExchange, params: RequestParams = {}) =>
+    authSsoExchange: (
+      body: HandlerParamsAuthSSOExchange,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseUserLogin,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/sso/exchange`,
-        method: 'POST',
+        method: "POST",
         body: body,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   stats = {
     /**
  * @description Get the statistics of various data analysis
@@ -2062,40 +2144,40 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
  */
     getStats: (
       type:
-        | 'latest_comments'
-        | 'latest_pages'
-        | 'pv_most_pages'
-        | 'comment_most_pages'
-        | 'page_pv'
-        | 'site_pv'
-        | 'page_comment'
-        | 'site_comment'
-        | 'rand_comments'
-        | 'rand_pages',
+        | "latest_comments"
+        | "latest_pages"
+        | "pv_most_pages"
+        | "comment_most_pages"
+        | "page_pv"
+        | "site_pv"
+        | "page_comment"
+        | "site_comment"
+        | "rand_comments"
+        | "rand_pages",
       query?: {
         /** The limit for pagination */
-        limit?: number
+        limit?: number;
         /** multiple page keys separated by commas */
-        page_keys?: string
+        page_keys?: string;
         /** The site name of your content scope */
-        site_name?: string
+        site_name?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         CommonJSONResult,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/stats/${type}`,
-        method: 'GET',
+        method: "GET",
         query: query,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   transfer = {
     /**
  * @description Export data from Artalk
@@ -2115,30 +2197,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseTransferExport,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/transfer/export`,
-        method: 'GET',
+        method: "GET",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
     /**
-     * @description Import data to Artalk
-     *
-     * @tags Transfer
-     * @name ImportArtrans
-     * @summary Import Artrans
-     * @request POST:/transfer/import
-     * @secure
-     * @response `200` `string` OK
-     */
-    importArtrans: (data: HandlerParamsTransferImport, params: RequestParams = {}) =>
-      this.request<string, any>({
+ * @description Import data to Artalk
+ *
+ * @tags Transfer
+ * @name ImportArtrans
+ * @summary Import Artrans
+ * @request POST:/transfer/import
+ * @secure
+ * @response `200` `string` OK
+ * @response `400` `(HandlerMap & {
+    msg?: string,
+
+})` Bad Request
+ * @response `422` `string` Unprocessable Entity
+ */
+    importArtrans: (
+      data: HandlerParamsTransferImport,
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        string,
+        | (HandlerMap & {
+            msg?: string;
+          })
+        | string
+      >({
         path: `/transfer/import`,
-        method: 'POST',
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -2168,27 +2264,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * Upload file in preparation for import task
          * @format binary
          */
-        file: File
+        file: File;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseTransferUpload & {
-          filename?: string
+          filename?: string;
         },
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/transfer/upload`,
-        method: 'POST',
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.FormData,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   upload = {
     /**
  * @description Upload file from this endpoint
@@ -2218,25 +2314,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * Upload file
          * @format binary
          */
-        file: File
+        file: File;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseUpload,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/upload`,
-        method: 'POST',
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.FormData,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   user = {
     /**
  * @description Get user info to prepare for login or check current user status
@@ -2255,23 +2351,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getUser: (
       query?: {
         /** The user email */
-        email?: string
+        email?: string;
         /** The username */
-        name?: string
+        name?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseUserInfo,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/user`,
-        method: 'GET',
+        method: "GET",
         query: query,
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2293,19 +2389,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    updateProfile: (data: HandlerRequestUserInfoUpdate, params: RequestParams = {}) =>
+    updateProfile: (
+      data: HandlerRequestUserInfoUpdate,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseUserInfoUpdate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/user`,
-        method: 'POST',
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2339,19 +2438,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         HandlerResponseUserLogin,
         | (HandlerMap & {
             data?: {
-              need_name_select?: string[]
-            }
-            msg?: string
+              need_name_select?: string[];
+            };
+            msg?: string;
           })
         | (HandlerMap & {
-            msg?: string
+            msg?: string;
           })
       >({
         path: `/user/access_token`,
-        method: 'POST',
+        method: "POST",
         body: user,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2368,21 +2467,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getUserStatus: (
       query?: {
         /** The user email */
-        email?: string
+        email?: string;
         /** The username */
-        name?: string
+        name?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<HandlerResponseUserStatus, any>({
         path: `/user/status`,
-        method: 'GET',
+        method: "GET",
         query: query,
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   users = {
     /**
  * @description Create a new user
@@ -2410,15 +2509,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerResponseUserCreate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/users`,
-        method: 'POST',
+        method: "POST",
         body: user,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2448,19 +2547,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    updateUser: (id: number, user: HandlerParamsUserUpdate, params: RequestParams = {}) =>
+    updateUser: (
+      id: number,
+      user: HandlerParamsUserUpdate,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseUserUpdate,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/users/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: user,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2490,13 +2593,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/users/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2515,32 +2618,32 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 })` Forbidden
  */
     getUsers: (
-      type?: 'all' | 'admin' | 'in_conf',
+      type?: "all" | "admin" | "in_conf",
       query?: {
         /** The limit for pagination */
-        limit?: number
+        limit?: number;
         /** The offset for pagination */
-        offset?: number
+        offset?: number;
         /** Search keywords */
-        search?: string
+        search?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseAdminUserList,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/users/${type}`,
-        method: 'GET',
+        method: "GET",
         query: query,
         secure: true,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
   version = {
     /**
      * @description Get the version of Artalk
@@ -2554,11 +2657,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getVersion: (params: RequestParams = {}) =>
       this.request<CommonApiVersionData, any>({
         path: `/version`,
-        method: 'GET',
-        format: 'json',
+        method: "GET",
+        format: "json",
         ...params,
       }),
-  }
+  };
   votes = {
     /**
  * @description Sync the number of votes in the `comments` or `pages` data tables to keep them the same as the `votes` table
@@ -2578,13 +2681,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         HandlerMap,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/votes/sync`,
-        method: 'POST',
+        method: "POST",
         secure: true,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2609,17 +2712,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 
 })` Internal Server Error
  */
-    getVote: (targetName: 'comment' | 'page', targetId: number, params: RequestParams = {}) =>
+    getVote: (
+      targetName: "comment" | "page",
+      targetId: number,
+      params: RequestParams = {},
+    ) =>
       this.request<
         HandlerResponseVote,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/votes/${targetName}/${targetId}`,
-        method: 'GET',
+        method: "GET",
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
 
@@ -2645,24 +2752,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 })` Internal Server Error
  */
     createVote: (
-      targetName: 'comment' | 'page',
+      targetName: "comment" | "page",
       targetId: number,
-      choice: 'up' | 'down',
+      choice: "up" | "down",
       vote: HandlerParamsVoteCreate,
       params: RequestParams = {},
     ) =>
       this.request<
         HandlerResponseVote,
         HandlerMap & {
-          msg?: string
+          msg?: string;
         }
       >({
         path: `/votes/${targetName}/${targetId}/${choice}`,
-        method: 'POST',
+        method: "POST",
         body: vote,
         type: ContentType.Json,
-        format: 'json',
+        format: "json",
         ...params,
       }),
-  }
+  };
 }
