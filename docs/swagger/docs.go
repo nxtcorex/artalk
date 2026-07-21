@@ -2789,6 +2789,30 @@ const docTemplate = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -3944,10 +3968,6 @@ const docTemplate = `{
         },
         "common.JSONResult": {
             "type": "object",
-            "required": [
-                "data",
-                "msg"
-            ],
             "properties": {
                 "data": {
                     "description": "Data"
@@ -3972,7 +3992,6 @@ const docTemplate = `{
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",
@@ -4886,7 +4905,6 @@ const docTemplate = `{
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",
@@ -5009,7 +5027,6 @@ const docTemplate = `{
             "required": [
                 "comments",
                 "count",
-                "page",
                 "roots_count"
             ],
             "properties": {
@@ -5040,7 +5057,6 @@ const docTemplate = `{
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",

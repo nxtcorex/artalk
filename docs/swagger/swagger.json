@@ -2782,6 +2782,30 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -3937,10 +3961,6 @@
         },
         "common.JSONResult": {
             "type": "object",
-            "required": [
-                "data",
-                "msg"
-            ],
             "properties": {
                 "data": {
                     "description": "Data"
@@ -3965,7 +3985,6 @@
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",
@@ -4879,7 +4898,6 @@
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",
@@ -5002,7 +5020,6 @@
             "required": [
                 "comments",
                 "count",
-                "page",
                 "roots_count"
             ],
             "properties": {
@@ -5033,7 +5050,6 @@
                 "date",
                 "email_encrypted",
                 "id",
-                "ip_region",
                 "is_allow_reply",
                 "is_collapsed",
                 "is_pending",
