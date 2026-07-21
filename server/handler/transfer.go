@@ -6,7 +6,13 @@ import (
 )
 
 func Transfer(app *core.App, router fiber.Router) {
-	TransferImport(app, router)
-	TransferUpload(app, router)
+	files := newTransferFileStore(transferFileTTL)
+	app.OnTerminate().Add(func(_ *core.TerminateEvent) error {
+		files.Close()
+		return nil
+	})
+
+	TransferImport(app, router, files)
+	TransferUpload(app, router, files)
 	TransferExport(app, router)
 }

@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"io"
-	"os"
+	"errors"
 
 	"github.com/artalkjs/artalk/v2/internal/core"
 	"github.com/artalkjs/artalk/v2/internal/log"
@@ -26,7 +25,7 @@ type ResponseTransferUpload struct {
 // @Success      200  {object}  ResponseTransferUpload{filename=string}
 // @Failure      500  {object}  Map{msg=string}
 // @Router       /transfer/upload  [post]
-func TransferUpload(app *core.App, router fiber.Router) {
+func TransferUpload(app *core.App, router fiber.Router, files *transferFileStore) {
 	router.Post("/transfer/upload", common.AdminGuard(app, func(c *fiber.Ctx) error {
 		// Get file from FormData
 		file, err := c.FormFile("file")
@@ -43,27 +42,19 @@ func TransferUpload(app *core.App, router fiber.Router) {
 		}
 		defer src.Close()
 
-		// Read file to buffer
-		buf, err := io.ReadAll(src)
+		maxBytes := int64(app.Conf().HTTP.BodyLimit) * 1024 * 1024
+		filename, err := files.Save(src, maxBytes)
 		if err != nil {
 			log.Error(err)
-			return common.RespError(c, 500, "File read failed")
+			if errors.Is(err, errTransferFileTooLarge) {
+				return common.RespError(c, fiber.StatusRequestEntityTooLarge, "File is too large")
+			}
+			return common.RespError(c, fiber.StatusInternalServerError, "File save failed")
 		}
-
-		// Create temp file
-		tmpFile, err := os.CreateTemp("", "artalk-import-file-")
-		if err != nil {
-			log.Error(err)
-			return common.RespError(c, 500, "tmp file creation failed")
-		}
-		defer tmpFile.Close()
-
-		// Write buffer to temp file
-		tmpFile.Write(buf)
 
 		// Return filename
 		return common.RespData(c, ResponseTransferUpload{
-			Filename: tmpFile.Name(),
+			Filename: filename,
 		})
 	}))
 }

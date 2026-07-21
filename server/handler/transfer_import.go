@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"html"
+	"os"
 	"sync"
 
 	"github.com/artalkjs/artalk/v2/internal/artransfer"
@@ -24,8 +25,10 @@ type ParamsTransferImport struct {
 // @Accept       json
 // @Produce      html
 // @Success      200  {string}  string
+// @Failure      400  {object}  Map{msg=string}
+// @Failure      422  {string}  string
 // @Router       /transfer/import  [post]
-func TransferImport(app *core.App, router fiber.Router) {
+func TransferImport(app *core.App, router fiber.Router, files *transferFileStore) {
 	var mu sync.Mutex
 
 	router.Post("/transfer/import", common.AdminGuard(app, func(c *fiber.Ctx) error {
@@ -36,30 +39,29 @@ func TransferImport(app *core.App, router fiber.Router) {
 
 		var p ParamsTransferImport
 		if isOK, resp := common.ParamsDecode(c, &p); !isOK {
+			files.Discard(c.FormValue("json_file"))
 			return resp
 		}
 
-		// TODO: temporary solution: output real-time log by html format body stream
-		// consider using websocket or long polling in the future
-		r := c.Response()
+		if p.JsonFile != "" {
+			filename, ok := files.Take(p.JsonFile)
+			if !ok {
+				return common.RespError(c, fiber.StatusBadRequest, "Import file is missing, expired, or already consumed")
+			}
+			p.JsonFile = filename
+			defer os.Remove(filename)
+		}
 
-		r.Header.Add(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
-		r.SetStatusCode(fiber.StatusOK)
-
-		buf := bytes.NewBufferString("")
-		r.SetBodyStream(buf, -1)
-		r.ImmediateHeaderFlush = true
-
-		buf.Write([]byte(
-			`<style>* { font-family: Menlo, Consolas, Monaco, monospace;word-wrap: break-word;white-space: pre-wrap;font-size: 13px; }</style>
-		<script>function scroll() { if (!!document.body) { document.body.scrollTo(0, 999999999999); } }</script>`))
+		buf := bytes.NewBufferString("<style>* { font-family: Menlo, Consolas, Monaco, monospace;word-wrap: break-word;white-space: pre-wrap;font-size: 13px; }</style>")
 
 		p.Assumeyes = true
-		artransfer.RunImportArtrans(app.Dao(), &p.ImportParams, func(s string) {
-			buf.Write([]byte(html.EscapeString(s)))
-			buf.Write([]byte("<script>scroll();</script>"))
+		err := artransfer.RunImportArtrans(app.Dao(), &p.ImportParams, func(s string) {
+			buf.WriteString(html.EscapeString(s))
 		})
+		if err != nil {
+			return c.Status(fiber.StatusUnprocessableEntity).Type("html", "utf-8").SendString(buf.String())
+		}
 
-		return nil
+		return c.Status(fiber.StatusOK).Type("html", "utf-8").SendString(buf.String())
 	}))
 }
