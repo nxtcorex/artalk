@@ -64,7 +64,7 @@ export const PageVoteWidget: ArtalkPlugin = (ctx) => {
   // List fetched handler
   let currPageId = 0
   function listFetchedHandler({ data }: ListFetchedArgs) {
-    if (!conf.get().pageVote || !checkEls(state) || !data) return
+    if (!conf.get().pageVote || !checkEls(state) || !data?.page) return
 
     if (currPageId !== data.page.id) {
       // Initialize vote status in a new page

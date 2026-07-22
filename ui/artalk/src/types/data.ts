@@ -79,8 +79,8 @@ export interface ListData {
   /** 评论总数（包括所有子评论） */
   count: number
 
-  /** 页面信息 */
-  page: PageData
+  /** 页面信息（按站点、用户等范围查询时可能不存在） */
+  page?: PageData
 }
 
 export interface PageData {

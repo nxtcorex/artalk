@@ -11,7 +11,7 @@
 
 Artalk 是一款简单易用但功能丰富的评论系统，你可以开箱即用地部署并置入任何博客、网站、Web 应用。
 
-- 🍃 前端 ~40KB，纯天然 Vanilla JS
+- 🍃 前端 ~100KB，纯天然 Vanilla JS
 - 🍱 后端 Golang，高效轻量跨平台
 - 🐳 通过 Docker 一键部署，方便快捷
 - 🌈 开源程序，自托管，隐私至上
@@ -99,30 +99,6 @@ Artalk.init({
 
 有关如何使用代码库、设置本地开发环境和贡献更改的信息，请参阅 [开发文档](https://artalk.js.org/zh/develop/) 和 [贡献指南](./CONTRIBUTING.md)。
 
-## 贡献者们
-
-你的贡献丰富了开源社区，促进了学习、灵感和创新。我们非常重视你的参与。感谢你成为我们社区的重要一员！🥰
-
-[![](https://contrib.rocks/image?repo=ArtalkJS/Artalk)](https://github.com/ArtalkJS/Artalk/graphs/contributors)
-
-## 支持者们
-
-[![Stargazers repo roster for @ArtalkJS/Artalk](https://reporoster.com/stars/ArtalkJS/Artalk)](https://github.com/ArtalkJS/Artalk/stargazers)
-
-## Repobeats 分析
-
-![Alt](https://repobeats.axiom.co/api/embed/a9fc9191ac561bc5a8ee2cddc81e635ecaebafb6.svg 'Repobeats analytics image')
-
-## Star 趋势
-
-<a href="https://trendshift.io/repositories/6290" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6290" alt="ArtalkJS%2FArtalk | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-
-[![Stargazers over time](https://starchart.cc/ArtalkJS/Artalk.svg)](https://starchart.cc/ArtalkJS/Artalk)
-
 ## 开源许可协议
 
 [MIT](./LICENSE) (麻省理工学院许可证)
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FArtalkJS%2FArtalk.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FArtalkJS%2FArtalk?ref=badge_shield)
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FArtalkJS%2FArtalk.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FArtalkJS%2FArtalk?ref=badge_large)

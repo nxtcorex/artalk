@@ -41,26 +41,22 @@ export const Fetch: ArtalkPlugin = (ctx) => {
         ...ctx.getApi().getUserFields(),
       })
       .then(({ data }) => {
-        if (!data.page) throw new Error('Comment list response is missing page data')
-
-        const listData = { ...data, page: data.page }
-
         // Must before all other function call and event trigger,
         // because it will depend on the lastData
         // TODO: this is global variable, easy to use, but not good, consider to refactor.
         // refactor work is hard, because it is used in many places.
-        ctx.getData().setListLastFetch({ params, data: listData })
+        ctx.getData().setListLastFetch({ params, data })
 
         // 装置评论
-        ctx.getData().loadComments(listData.comments)
+        ctx.getData().loadComments(data.comments)
 
         // 更新页面数据
-        ctx.getData().updatePage(listData.page)
+        if (data.page) ctx.getData().updatePage(data.page)
 
         // trigger events when success
-        params.onSuccess && params.onSuccess(listData)
+        params.onSuccess && params.onSuccess(data)
 
-        ctx.trigger('list-fetched', { params, data: listData })
+        ctx.trigger('list-fetched', { params, data })
       })
       .catch((e) => {
         // 显示错误对话框

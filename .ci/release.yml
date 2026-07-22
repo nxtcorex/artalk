@@ -22,6 +22,7 @@
     - name: Validate release changes
       script: |
         set -eu
+        npm install -g @cnbcool/cnb-cli
         git diff --check
         git diff -- CHANGELOG.md internal/config/version.go \
           ui/artalk/package.json docs/docs/code/ArtalkVersion.json
@@ -76,7 +77,7 @@
       image: node:24
       script: |
         set -eu
-        npm install -g "pnpm@$PNPM_VERSION"
+        npm install -g "pnpm@$PNPM_VERSION" @cnbcool/cnb-cli
         make build-frontend
         make pack-frontend
     - name: Build binaries with GoReleaser
