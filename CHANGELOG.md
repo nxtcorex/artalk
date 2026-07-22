@@ -1,3 +1,10 @@
+## v2.10.2 (2026-07-22)
+
+### Bug Fixes
+
+* **ci:** fix pr
+* **ui:** allow comment lists without page data
+
 ## v2.10.1 (2026-07-22)
 
 ### Bug Fixes
