@@ -22,13 +22,15 @@
     - name: Validate release changes
       script: |
         set -eu
-        npm install -g @cnbcool/cnb-cli
         git diff --check
         git diff -- CHANGELOG.md internal/config/version.go \
           ui/artalk/package.json docs/docs/code/ArtalkVersion.json
     - name: Push release branch and create PR
+      image: node:24
       if: '[ "${DRY_RUN:-true}" = "false" ]'
-      script: .ci/scripts/create-release-pr.sh
+      script: |
+        npm install -g @cnbcool/cnb-cli
+        .ci/scripts/create-release-pr.sh
 
 .ci-tag-release: &ci-tag-release
   name: Tag merged release PR
