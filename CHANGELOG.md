@@ -1,3 +1,21 @@
+## v2.10.1 (2026-07-22)
+
+### Bug Fixes
+
+* **ui:** handle optional comment list page
+* **docs:** update Swagger client generator
+* **transfer:** manage import upload lifecycle
+* **editor:** 修复选择表情后面板未自动关闭的问题
+* **ui:** handle missing UA platform version
+* **lint:** resolve workspace packages from source
+* **auth:** merge user data transactionally
+* **core:** avoid mutating global timezone
+* **cache:** correct simple cache entry count
+* **auth:** validate profile links
+* **lint:** restore clean-install repository lint
+* **ci:** 跳过 PR 场景的测试报告上传步骤
+* 升级 jwt-go 至 v5.3.1 修复 CVE-2025-30204 (HIGH)
+
 ## v2.10.0 (2026-07-18)
 
 ### Features
