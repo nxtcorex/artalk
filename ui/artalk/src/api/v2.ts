@@ -2699,6 +2699,10 @@ export class Api<
  * @summary Get Vote Status
  * @request GET:/votes/{target_name}/{target_id}
  * @response `200` `HandlerResponseVote` OK
+ * @response `400` `(HandlerMap & {
+    msg?: string,
+
+})` Bad Request
  * @response `403` `(HandlerMap & {
     msg?: string,
 
