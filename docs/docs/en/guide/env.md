@@ -103,6 +103,7 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_ADMIN_NOTIFY_LINE_RECEIVERS** | `[USER_ID_1 GROUP_ID_1]` | Receivers | admin_notify.line.receivers (Multi-Push > LINE > Receivers) |
 | **ATK_ADMIN_NOTIFY_NOISE_MODE** | `false` | Noise mode | admin_notify.noise_mode (Multi-Push > Noise mode) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_PENDING** | `false` | Pending comment still send notification (notifications are still sent when comments are intercepted) | admin_notify.notify_pending (Multi-Push > Pending comment still send notification) |
+| **ATK_ADMIN_NOTIFY_NOTIFY_SUBJECT** | `"{{site_name}} - New comment"` | Notification subject | admin_notify.notify_subject (Multi-Push > Notification subject) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_TPL** | `"default"` | Notification template (set to file path to use custom template) | admin_notify.notify_tpl (Multi-Push > Notification template) |
 | **ATK_ADMIN_NOTIFY_SLACK_ENABLED** | `false` | 启用 | admin_notify.slack.enabled (Multi-Push > Slack > Enabled) |
 | **ATK_ADMIN_NOTIFY_SLACK_OAUTH_TOKEN** | `""` | OauthToken | admin_notify.slack.oauth_token (Multi-Push > Slack > OauthToken) |
@@ -140,6 +141,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GITEA_CLIENT_ID** | `""` | ClientId | auth.gitea.client_id (Social Login > Gitea > ClientId) |
 | **ATK_AUTH_GITEA_CLIENT_SECRET** | `""` | ClientSecret | auth.gitea.client_secret (Social Login > Gitea > ClientSecret) |
 | **ATK_AUTH_GITEA_ENABLED** | `false` | 启用 | auth.gitea.enabled (Social Login > Gitea > Enabled) |
+| **ATK_AUTH_GITEA_SELF_CLIENT_ID** | `""` | ClientId | auth.gitea_self.client_id (Social Login > Self-hosted Gitea > ClientId) |
+| **ATK_AUTH_GITEA_SELF_CLIENT_SECRET** | `""` | ClientSecret | auth.gitea_self.client_secret (Social Login > Self-hosted Gitea > ClientSecret) |
+| **ATK_AUTH_GITEA_SELF_ENABLED** | `false` | 启用 | auth.gitea_self.enabled (Social Login > Self-hosted Gitea > Enabled) |
+| **ATK_AUTH_GITEA_SELF_SITE_URL** | `""` | SiteUrl | auth.gitea_self.site_url (Social Login > Self-hosted Gitea > SiteUrl) |
 | **ATK_AUTH_GITHUB_CLIENT_ID** | `""` | ClientId | auth.github.client_id (Social Login > GitHub > ClientId) |
 | **ATK_AUTH_GITHUB_CLIENT_SECRET** | `""` | ClientSecret | auth.github.client_secret (Social Login > GitHub > ClientSecret) |
 | **ATK_AUTH_GITHUB_ENABLED** | `false` | 启用 | auth.github.enabled (Social Login > GitHub > Enabled) |
@@ -221,12 +226,16 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | Env | Default | Desc | Path |
 | --- | --- | --- | --- |
 | **ATK_DB_CHARSET** | `"utf8mb4"` | Database charset | db.charset (Database > Database charset) |
+| **ATK_DB_CLIENT_CERT_PATH** | `""` | Client certificate path | db.client_cert_path (Database > Client certificate path) |
+| **ATK_DB_CLIENT_KEY_PATH** | `""` | Client key path | db.client_key_path (Database > Client key path) |
+| **ATK_DB_DSN** | `""` | Database DSN (highest priority, overrides the split database parameters below) | db.dsn (Database > Database DSN) |
 | **ATK_DB_FILE** | `"./data/artalk.db"` | Database file (only for SQLite) | db.file (Database > Database file) |
 | **ATK_DB_HOST** | `"localhost"` | Host address | db.host (Database > Host address) |
 | **ATK_DB_NAME** | `"artalk"` | Database name | db.name (Database > Database name) |
 | **ATK_DB_PASSWORD** | `""` | Database password | db.password (Database > Database password) |
 | **ATK_DB_PORT** | `3306` | Host port | db.port (Database > Host port) |
 | **ATK_DB_PREPARE_STMT** | `true` | Prepared Statement | db.prepare_stmt (Database > Prepared Statement) |
+| **ATK_DB_SERVER_CA_PATH** | `""` | Server CA certificate path | db.server_ca_path (Database > Server CA certificate path) |
 | **ATK_DB_SSL** | `false` | Enable SSL mode | db.ssl (Database > Enable SSL mode) |
 | **ATK_DB_TABLE_PREFIX** | `""` | Table prefix (e.g. "atk_") | db.table_prefix (Database > Table prefix) |
 | **ATK_DB_TYPE** | `"sqlite"` | Database type (可选：`["sqlite", "mysql", "pgsql", "mssql"]`) | db.type (Database > Database type) |
@@ -240,9 +249,11 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_EMAIL_ALI_DM_ACCESS_KEY_ID** | `""` | AccessKeyId | email.ali_dm.access_key_id (Email > Aliyun mail push > AccessKeyId) |
 | **ATK_EMAIL_ALI_DM_ACCESS_KEY_SECRET** | `""` | AccessKeySecret | email.ali_dm.access_key_secret (Email > Aliyun mail push > AccessKeySecret) |
 | **ATK_EMAIL_ALI_DM_ACCOUNT_NAME** | `"noreply@example.com"` | AccountName | email.ali_dm.account_name (Email > Aliyun mail push > AccountName) |
+| **ATK_EMAIL_ALI_DM_REGION** | `"cn-hangzhou"` | Region | email.ali_dm.region (Email > Aliyun mail push > Region) |
 | **ATK_EMAIL_ENABLED** | `false` | Enable email notification | email.enabled (Email > Enable email notification) |
 | **ATK_EMAIL_MAIL_SUBJECT** | `"[{{site_name}}] You got a reply from @{{reply_nick}}"` | Email subject | email.mail_subject (Email > Email subject) |
 | **ATK_EMAIL_MAIL_TPL** | `"default"` | Email template file (set to file path to use custom template) | email.mail_tpl (Email > Email template file) |
+| **ATK_EMAIL_QUEUE_BUFFER_SIZE** | `0` | Queue buffer size | email.queue.buffer_size (Email > Email queue > Queue buffer size) |
 | **ATK_EMAIL_SEND_ADDR** | `"noreply@example.com"` | Email address of sender | email.send_addr (Email > Email address of sender) |
 | **ATK_EMAIL_SEND_NAME** | `"{{reply_nick}}"` | Nick name of sender | email.send_name (Email > Nick name of sender) |
 | **ATK_EMAIL_SEND_TYPE** | `"smtp"` | Send method (可选：`["smtp", "ali_dm", "sendmail"]`) | email.send_type (Email > Send method) |
@@ -303,6 +314,15 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_IMG_UPLOAD_UPGIT_DEL_LOCAL** | `true` | Delete local image after upload success | img_upload.upgit.del_local (Upload > Upgit config > Delete local image after upload success) |
 | **ATK_IMG_UPLOAD_UPGIT_ENABLED** | `false` | Enable Upgit | img_upload.upgit.enabled (Upload > Upgit config > Enable Upgit) |
 | **ATK_IMG_UPLOAD_UPGIT_EXEC** | `"upgit -c UPGIT_CONF_FILE_PATH -t /artalk-img"` | Command line arguments | img_upload.upgit.exec (Upload > Upgit config > Command line arguments) |
+
+
+## IP region
+
+| Env | Default | Desc | Path |
+| --- | --- | --- | --- |
+| **ATK_IP_REGION_DB_PATH** | `"./data/ip2region.xdb"` | Database file path (.xdb format) | ip_region.db_path (IP region > Database file path) |
+| **ATK_IP_REGION_ENABLED** | `false` | Enable IP region display | ip_region.enabled (IP region > Enable IP region display) |
+| **ATK_IP_REGION_PRECISION** | `"province"` | Display precision (可选：`["province", "city", "country"]`) | ip_region.precision (IP region > Display precision) |
 
 
 ## Logging

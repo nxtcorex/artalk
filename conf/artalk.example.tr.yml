@@ -31,6 +31,8 @@ login_timeout: 259200
 db:
   # Veritabanı türü ["sqlite", "mysql", "pgsql", "mssql"]
   type: sqlite
+  # Veritabanı DSN'i (en yüksek öncelik, aşağıdaki ayrılmış veritabanı parametrelerini geçersiz kılar)
+  dsn: ""
   # Veritabanı dosyası (yalnızca SQLite için)
   file: ./data/artalk.db
   # Tablo öneki (örn. "atk_")
@@ -52,6 +54,12 @@ db:
   ssl: false
   # Hazır İfadeler (Prepared Statement)
   prepare_stmt: true
+  # Sunucu CA sertifikası yolu
+  server_ca_path: ""
+  # İstemci sertifikası yolu
+  client_cert_path: ""
+  # İstemci anahtar yolu
+  client_key_path: ""
 
 # Web sunucusu
 http:
@@ -150,7 +158,7 @@ captcha:
   enabled: true
   # Her zaman doğrulama gerekli
   always: false
-  # Doğrulama türü ["image", "turnstile", "recaptcha", "hcaptcha", "geetest"]
+  # Doğrulama türü ["image", "turnstile", "recaptcha", "hcaptcha", "geetest", "capjs"]
   captcha_type: image
   # İşlem sınırı
   # (doğrulamayı etkinleştirmek için gereken işlem sayısı)
@@ -175,6 +183,20 @@ captcha:
   geetest:
     captcha_id: ""
     captcha_key: ""
+  # Cap (https://capjs.js.org/)
+  capjs:
+    key_id: ""
+    secret_key: ""
+    api_endpoint: ""
+
+# IP bölgesi
+ip_region:
+  # IP bölgesi görüntülemeyi etkinleştir
+  enabled: false
+  # Veritabanı dosya yolu (.xdb biçimi)
+  db_path: ./data/ip2region.xdb
+  # Görüntüleme hassasiyeti ["province", "city", "country"]
+  precision: province
 
 # Yükleme
 img_upload:
@@ -225,11 +247,18 @@ email:
     access_key_id: ""
     access_key_secret: ""
     account_name: noreply@example.com
+    region: cn-hangzhou
+  # E-posta kuyruğu
+  queue:
+    # Kuyruk tampon boyutu
+    buffer_size: 0
 
 # Çoklu Push
 admin_notify:
   # Bildirim şablonu (özel şablon kullanmak için dosya yolunu ayarlayın)
   notify_tpl: default
+  # Bildirim konusu
+  notify_subject: "{{site_name}} - Yeni yorum"
   # Bekleyen yorumlar için hala bildirim gönder (yorumlar engellendiğinde bile bildirimler gönderilir)
   notify_pending: false
   # Gürültü modu
@@ -316,6 +345,12 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # Kendi barındırılan Gitea
+  gitea_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   # Google
   google:
     enabled: false

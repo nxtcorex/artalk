@@ -10,7 +10,7 @@ app_key: ""
 # 调试模式
 debug: false
 
-# 语言 ["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru"]
+# 语言 ["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru", "tr"]
 locale: zh-CN
 
 # 时间区域
@@ -29,6 +29,8 @@ login_timeout: 259200
 db:
   # 数据库类型 ["sqlite", "mysql", "pgsql", "mssql"]
   type: sqlite
+  # 数据库 DSN (优先级最高，填写后会优先于下方拆分参数)
+  dsn: ""
   # 数据库文件 (仅 SQLite 数据库需填写)
   file: ./data/artalk.db
   # 数据库名称
@@ -49,6 +51,12 @@ db:
   ssl: false
   # 预编译语句
   prepare_stmt: true
+  # 服务端 CA 证书路径
+  server_ca_path: ""
+  # 客户端证书路径
+  client_cert_path: ""
+  # 客户端密钥路径
+  client_key_path: ""
 
 # 服务器
 http:
@@ -240,11 +248,18 @@ email:
     access_key_id: ""
     access_key_secret: ""
     account_name: noreply@example.com
+    region: cn-hangzhou
+  # 邮件发送队列
+  queue:
+    # 队列缓冲区大小
+    buffer_size: 0
 
 # 多元推送
 admin_notify:
   # 通知模版 (填入文件路径使用自定义模板)
   notify_tpl: default
+  # 通知标题
+  notify_subject: "{{site_name}} - 新评论"
   # 待审评论仍然发送通知 (当评论被拦截时仍然发送通知)
   notify_pending: false
   # 嘈杂模式
@@ -328,6 +343,12 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # 自建 Gitea
+  gitea_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   # Google
   google:
     enabled: false

@@ -225,7 +225,6 @@ type SMTPConf struct {
 	Port     int    `koanf:"port" json:"port"`
 	Username string `koanf:"username" json:"username"`
 	Password string `koanf:"password" json:"password"`
-	From     string `koanf:"from" json:"from"`
 }
 
 type AliDMConf struct {
@@ -296,7 +295,6 @@ type ImgUploadConf struct {
 	Enabled    bool      `koanf:"enabled" json:"enabled"`         // 总开关
 	Path       string    `koanf:"path" json:"path"`               // 图片存放路径
 	MaxSize    int64     `koanf:"max_size" json:"max_size"`       // 图片大小限制
-	Quality    string    `koanf:"quality" json:"quality"`         // 图片质量
 	PublicPath string    `koanf:"public_path" json:"public_path"` // 图片 URL 基础路径
 	Upgit      UpgitConf `koanf:"upgit" json:"upgit"`             // upgit
 }

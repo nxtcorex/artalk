@@ -4,7 +4,7 @@ package config
 
 import "github.com/artalkjs/artalk/v2/internal/config/meta"
 
-// Cache result of `meta.GetEnvPathMap(config.Config{}, config.Template("zh-cn"))`
+// Cache result of `meta.GetEnvPathMap(config.Config{}, config.Template("en"))`
 var EnvPathMapCache = map[string]string{
 	"ATK_ADMIN_NOTIFY_BARK_ENABLED": "admin_notify.bark.enabled",
 	"ATK_ADMIN_NOTIFY_BARK_SERVER": "admin_notify.bark.server",
@@ -262,7 +262,6 @@ var EnvPathMapCache = map[string]string{
 	"ATK_EMAIL_SEND__ADDR": "email.send_addr",
 	"ATK_EMAIL_SEND__NAME": "email.send_name",
 	"ATK_EMAIL_SEND__TYPE": "email.send_type",
-	"ATK_EMAIL_SMTP_FROM": "email.smtp.from",
 	"ATK_EMAIL_SMTP_HOST": "email.smtp.host",
 	"ATK_EMAIL_SMTP_PASSWORD": "email.smtp.password",
 	"ATK_EMAIL_SMTP_PORT": "email.smtp.port",
@@ -303,7 +302,6 @@ var EnvPathMapCache = map[string]string{
 	"ATK_IMG_UPLOAD_MAX_SIZE": "img_upload.max_size",
 	"ATK_IMG_UPLOAD_PATH": "img_upload.path",
 	"ATK_IMG_UPLOAD_PUBLIC_PATH": "img_upload.public_path",
-	"ATK_IMG_UPLOAD_QUALITY": "img_upload.quality",
 	"ATK_IMG_UPLOAD_UPGIT_DEL_LOCAL": "img_upload.upgit.del_local",
 	"ATK_IMG_UPLOAD_UPGIT_ENABLED": "img_upload.upgit.enabled",
 	"ATK_IMG_UPLOAD_UPGIT_EXEC": "img_upload.upgit.exec",
@@ -311,7 +309,6 @@ var EnvPathMapCache = map[string]string{
 	"ATK_IMG__UPLOAD_MAX__SIZE": "img_upload.max_size",
 	"ATK_IMG__UPLOAD_PATH": "img_upload.path",
 	"ATK_IMG__UPLOAD_PUBLIC__PATH": "img_upload.public_path",
-	"ATK_IMG__UPLOAD_QUALITY": "img_upload.quality",
 	"ATK_IMG__UPLOAD_UPGIT_DEL__LOCAL": "img_upload.upgit.del_local",
 	"ATK_IMG__UPLOAD_UPGIT_ENABLED": "img_upload.upgit.enabled",
 	"ATK_IMG__UPLOAD_UPGIT_EXEC": "img_upload.upgit.exec",
@@ -368,7 +365,7 @@ var EnvPathMapCache = map[string]string{
 	"ATK_TRUSTED__DOMAINS_$$": "trusted_domains.$$",
 }
 
-// Cache result of `meta.GetOptionsMetaData(config.Template("zh-cn"))`
+// Cache result of `meta.GetOptionsMetaData(config.Template("en"))`
 var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"Multi-Push", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY", Path:"admin_notify", PathText:"Multi-Push", Default:interface {}(nil), IsRoot:true, HasChild:true, AllowsSet:false, CommentRaw:"Multi-Push"},
 	meta.OptionsMeta{Title:"Bark", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_BARK", Path:"admin_notify.bark", PathText:"Multi-Push > Bark", Default:interface {}(nil), IsRoot:false, HasChild:true, AllowsSet:false, CommentRaw:"Bark"},
@@ -393,6 +390,7 @@ var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"Receivers", Desc:"", Type:"[]interface {}", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_LINE_RECEIVERS", Path:"admin_notify.line.receivers", PathText:"Multi-Push > LINE > Receivers", Default:[]interface {}{"USER_ID_1", "GROUP_ID_1"}, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Receivers"},
 	meta.OptionsMeta{Title:"Noise mode", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_NOISE_MODE", Path:"admin_notify.noise_mode", PathText:"Multi-Push > Noise mode", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Noise mode -- noise_mode is disabled by default. -- -- When this option is set to `false`, only messages sent to the administrator will be notified, -- -- such as \"user A\" replies to \"user B\", the communication between these two users will not be notified to the administrator. --"},
 	meta.OptionsMeta{Title:"Pending comment still send notification", Desc:"notifications are still sent when comments are intercepted", Type:"bool", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_NOTIFY_PENDING", Path:"admin_notify.notify_pending", PathText:"Multi-Push > Pending comment still send notification", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Pending comment still send notification (notifications are still sent when comments are intercepted)"},
+	meta.OptionsMeta{Title:"Notification subject", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_NOTIFY_SUBJECT", Path:"admin_notify.notify_subject", PathText:"Multi-Push > Notification subject", Default:"{{site_name}} - New comment", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Notification subject"},
 	meta.OptionsMeta{Title:"Notification template", Desc:"set to file path to use custom template", Type:"string", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_NOTIFY_TPL", Path:"admin_notify.notify_tpl", PathText:"Multi-Push > Notification template", Default:"default", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Notification template (set to file path to use custom template)"},
 	meta.OptionsMeta{Title:"Slack", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_SLACK", Path:"admin_notify.slack", PathText:"Multi-Push > Slack", Default:interface {}(nil), IsRoot:false, HasChild:true, AllowsSet:false, CommentRaw:"Slack"},
 	meta.OptionsMeta{Title:"Enabled", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_ADMIN_NOTIFY_SLACK_ENABLED", Path:"admin_notify.slack.enabled", PathText:"Multi-Push > Slack > Enabled", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enabled"},
@@ -435,6 +433,11 @@ var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"ClientId", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITEA_CLIENT_ID", Path:"auth.gitea.client_id", PathText:"Social Login > Gitea > ClientId", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientId"},
 	meta.OptionsMeta{Title:"ClientSecret", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITEA_CLIENT_SECRET", Path:"auth.gitea.client_secret", PathText:"Social Login > Gitea > ClientSecret", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientSecret"},
 	meta.OptionsMeta{Title:"Enabled", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_AUTH_GITEA_ENABLED", Path:"auth.gitea.enabled", PathText:"Social Login > Gitea > Enabled", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enabled"},
+	meta.OptionsMeta{Title:"Self-hosted Gitea", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_AUTH_GITEA_SELF", Path:"auth.gitea_self", PathText:"Social Login > Self-hosted Gitea", Default:interface {}(nil), IsRoot:false, HasChild:true, AllowsSet:false, CommentRaw:"Self-hosted Gitea"},
+	meta.OptionsMeta{Title:"ClientId", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITEA_SELF_CLIENT_ID", Path:"auth.gitea_self.client_id", PathText:"Social Login > Self-hosted Gitea > ClientId", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientId"},
+	meta.OptionsMeta{Title:"ClientSecret", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITEA_SELF_CLIENT_SECRET", Path:"auth.gitea_self.client_secret", PathText:"Social Login > Self-hosted Gitea > ClientSecret", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientSecret"},
+	meta.OptionsMeta{Title:"Enabled", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_AUTH_GITEA_SELF_ENABLED", Path:"auth.gitea_self.enabled", PathText:"Social Login > Self-hosted Gitea > Enabled", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enabled"},
+	meta.OptionsMeta{Title:"SiteUrl", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITEA_SELF_SITE_URL", Path:"auth.gitea_self.site_url", PathText:"Social Login > Self-hosted Gitea > SiteUrl", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"SiteUrl"},
 	meta.OptionsMeta{Title:"GitHub", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_AUTH_GITHUB", Path:"auth.github", PathText:"Social Login > GitHub", Default:interface {}(nil), IsRoot:false, HasChild:true, AllowsSet:false, CommentRaw:"GitHub"},
 	meta.OptionsMeta{Title:"ClientId", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITHUB_CLIENT_ID", Path:"auth.github.client_id", PathText:"Social Login > GitHub > ClientId", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientId"},
 	meta.OptionsMeta{Title:"ClientSecret", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_AUTH_GITHUB_CLIENT_SECRET", Path:"auth.github.client_secret", PathText:"Social Login > GitHub > ClientSecret", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"ClientSecret"},
@@ -520,12 +523,16 @@ var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"SiteKey", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_CAPTCHA_TURNSTILE_SITE_KEY", Path:"captcha.turnstile.site_key", PathText:"Captcha > Turnstile > SiteKey", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"SiteKey"},
 	meta.OptionsMeta{Title:"Database", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_DB", Path:"db", PathText:"Database", Default:interface {}(nil), IsRoot:true, HasChild:true, AllowsSet:false, CommentRaw:"Database"},
 	meta.OptionsMeta{Title:"Database charset", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_CHARSET", Path:"db.charset", PathText:"Database > Database charset", Default:"utf8mb4", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database charset"},
+	meta.OptionsMeta{Title:"Client certificate path", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_CLIENT_CERT_PATH", Path:"db.client_cert_path", PathText:"Database > Client certificate path", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Client certificate path"},
+	meta.OptionsMeta{Title:"Client key path", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_CLIENT_KEY_PATH", Path:"db.client_key_path", PathText:"Database > Client key path", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Client key path"},
+	meta.OptionsMeta{Title:"Database DSN", Desc:"highest priority, overrides the split database parameters below", Type:"string", Options:[]string(nil), Env:"ATK_DB_DSN", Path:"db.dsn", PathText:"Database > Database DSN", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database DSN (highest priority, overrides the split database parameters below)"},
 	meta.OptionsMeta{Title:"Database file", Desc:"only for SQLite", Type:"string", Options:[]string(nil), Env:"ATK_DB_FILE", Path:"db.file", PathText:"Database > Database file", Default:"./data/artalk.db", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database file (only for SQLite)"},
 	meta.OptionsMeta{Title:"Host address", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_HOST", Path:"db.host", PathText:"Database > Host address", Default:"localhost", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Host address"},
 	meta.OptionsMeta{Title:"Database name", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_NAME", Path:"db.name", PathText:"Database > Database name", Default:"artalk", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"-- The following is not necessary for SQLite -- Database name"},
 	meta.OptionsMeta{Title:"Database password", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_PASSWORD", Path:"db.password", PathText:"Database > Database password", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database password"},
 	meta.OptionsMeta{Title:"Host port", Desc:"", Type:"uint64", Options:[]string(nil), Env:"ATK_DB_PORT", Path:"db.port", PathText:"Database > Host port", Default:0xcea, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Host port"},
 	meta.OptionsMeta{Title:"Prepared Statement", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_DB_PREPARE_STMT", Path:"db.prepare_stmt", PathText:"Database > Prepared Statement", Default:true, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Prepared Statement"},
+	meta.OptionsMeta{Title:"Server CA certificate path", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_DB_SERVER_CA_PATH", Path:"db.server_ca_path", PathText:"Database > Server CA certificate path", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Server CA certificate path"},
 	meta.OptionsMeta{Title:"Enable SSL mode", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_DB_SSL", Path:"db.ssl", PathText:"Database > Enable SSL mode", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enable SSL mode"},
 	meta.OptionsMeta{Title:"Table prefix", Desc:"e.g. \"atk_\"", Type:"string", Options:[]string(nil), Env:"ATK_DB_TABLE_PREFIX", Path:"db.table_prefix", PathText:"Database > Table prefix", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Table prefix (e.g. \"atk_\")"},
 	meta.OptionsMeta{Title:"Database type", Desc:"", Type:"string", Options:[]string{"sqlite", "mysql", "pgsql", "mssql"}, Env:"ATK_DB_TYPE", Path:"db.type", PathText:"Database > Database type", Default:"sqlite", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database type [\"sqlite\", \"mysql\", \"pgsql\", \"mssql\"]"},
@@ -536,9 +543,12 @@ var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"AccessKeyId", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_ALI_DM_ACCESS_KEY_ID", Path:"email.ali_dm.access_key_id", PathText:"Email > Aliyun mail push > AccessKeyId", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"AccessKeyId"},
 	meta.OptionsMeta{Title:"AccessKeySecret", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_ALI_DM_ACCESS_KEY_SECRET", Path:"email.ali_dm.access_key_secret", PathText:"Email > Aliyun mail push > AccessKeySecret", Default:"", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"AccessKeySecret"},
 	meta.OptionsMeta{Title:"AccountName", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_ALI_DM_ACCOUNT_NAME", Path:"email.ali_dm.account_name", PathText:"Email > Aliyun mail push > AccountName", Default:"noreply@example.com", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"AccountName"},
+	meta.OptionsMeta{Title:"Region", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_ALI_DM_REGION", Path:"email.ali_dm.region", PathText:"Email > Aliyun mail push > Region", Default:"cn-hangzhou", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Region"},
 	meta.OptionsMeta{Title:"Enable email notification", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_EMAIL_ENABLED", Path:"email.enabled", PathText:"Email > Enable email notification", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enable email notification"},
 	meta.OptionsMeta{Title:"Email subject", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_MAIL_SUBJECT", Path:"email.mail_subject", PathText:"Email > Email subject", Default:"[{{site_name}}] You got a reply from @{{reply_nick}}", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Email subject"},
 	meta.OptionsMeta{Title:"Email template file", Desc:"set to file path to use custom template", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_MAIL_TPL", Path:"email.mail_tpl", PathText:"Email > Email template file", Default:"default", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Email template file (set to file path to use custom template)"},
+	meta.OptionsMeta{Title:"Email queue", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_EMAIL_QUEUE", Path:"email.queue", PathText:"Email > Email queue", Default:interface {}(nil), IsRoot:false, HasChild:true, AllowsSet:false, CommentRaw:"Email queue"},
+	meta.OptionsMeta{Title:"Queue buffer size", Desc:"", Type:"uint64", Options:[]string(nil), Env:"ATK_EMAIL_QUEUE_BUFFER_SIZE", Path:"email.queue.buffer_size", PathText:"Email > Email queue > Queue buffer size", Default:0x0, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Queue buffer size"},
 	meta.OptionsMeta{Title:"Email address of sender", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_SEND_ADDR", Path:"email.send_addr", PathText:"Email > Email address of sender", Default:"noreply@example.com", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Email address of sender"},
 	meta.OptionsMeta{Title:"Nick name of sender", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_EMAIL_SEND_NAME", Path:"email.send_name", PathText:"Email > Nick name of sender", Default:"{{reply_nick}}", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Nick name of sender"},
 	meta.OptionsMeta{Title:"Send method", Desc:"", Type:"string", Options:[]string{"smtp", "ali_dm", "sendmail"}, Env:"ATK_EMAIL_SEND_TYPE", Path:"email.send_type", PathText:"Email > Send method", Default:"smtp", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Send method [\"smtp\", \"ali_dm\", \"sendmail\"]"},
@@ -590,6 +600,10 @@ var OptionsMetaCache = []meta.OptionsMeta{
 	meta.OptionsMeta{Title:"Delete local image after upload success", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_IMG_UPLOAD_UPGIT_DEL_LOCAL", Path:"img_upload.upgit.del_local", PathText:"Upload > Upgit config > Delete local image after upload success", Default:true, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Delete local image after upload success"},
 	meta.OptionsMeta{Title:"Enable Upgit", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_IMG_UPLOAD_UPGIT_ENABLED", Path:"img_upload.upgit.enabled", PathText:"Upload > Upgit config > Enable Upgit", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enable Upgit"},
 	meta.OptionsMeta{Title:"Command line arguments", Desc:"", Type:"string", Options:[]string(nil), Env:"ATK_IMG_UPLOAD_UPGIT_EXEC", Path:"img_upload.upgit.exec", PathText:"Upload > Upgit config > Command line arguments", Default:"upgit -c UPGIT_CONF_FILE_PATH -t /artalk-img", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Command line arguments"},
+	meta.OptionsMeta{Title:"IP region", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_IP_REGION", Path:"ip_region", PathText:"IP region", Default:interface {}(nil), IsRoot:true, HasChild:true, AllowsSet:false, CommentRaw:"IP region"},
+	meta.OptionsMeta{Title:"Database file path", Desc:".xdb format", Type:"string", Options:[]string(nil), Env:"ATK_IP_REGION_DB_PATH", Path:"ip_region.db_path", PathText:"IP region > Database file path", Default:"./data/ip2region.xdb", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Database file path (.xdb format)"},
+	meta.OptionsMeta{Title:"Enable IP region display", Desc:"", Type:"bool", Options:[]string(nil), Env:"ATK_IP_REGION_ENABLED", Path:"ip_region.enabled", PathText:"IP region > Enable IP region display", Default:false, IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Enable IP region display"},
+	meta.OptionsMeta{Title:"Display precision", Desc:"", Type:"string", Options:[]string{"province", "city", "country"}, Env:"ATK_IP_REGION_PRECISION", Path:"ip_region.precision", PathText:"IP region > Display precision", Default:"province", IsRoot:false, HasChild:false, AllowsSet:true, CommentRaw:"Display precision [\"province\", \"city\", \"country\"]"},
 	meta.OptionsMeta{Title:"Language", Desc:"follow Unicode BCP 47", Type:"string", Options:[]string{"en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru", "tr"}, Env:"ATK_LOCALE", Path:"locale", PathText:"Language", Default:"en", IsRoot:true, HasChild:false, AllowsSet:true, CommentRaw:"Language (follow Unicode BCP 47) [\"en\", \"zh-CN\", \"zh-TW\", \"ja\", \"fr\", \"ko\", \"ru\", \"tr\"] -- see https://www.techonthenet.com/js/language_tags.php --"},
 	meta.OptionsMeta{Title:"Logging", Desc:"", Type:"<nil>", Options:[]string(nil), Env:"ATK_LOG", Path:"log", PathText:"Logging", Default:interface {}(nil), IsRoot:true, HasChild:true, AllowsSet:false, CommentRaw:"Logging"},
 	meta.OptionsMeta{Title:"Login timeout", Desc:"in seconds", Type:"uint64", Options:[]string(nil), Env:"ATK_LOGIN_TIMEOUT", Path:"login_timeout", PathText:"Login timeout", Default:0x3f480, IsRoot:true, HasChild:false, AllowsSet:true, CommentRaw:"Login timeout (in seconds)"},

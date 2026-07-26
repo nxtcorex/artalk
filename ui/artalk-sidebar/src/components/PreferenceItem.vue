@@ -12,7 +12,6 @@ const props = defineProps<{
 }>()
 
 const value = ref('')
-const disabled = ref(false)
 const sensitiveHidden = ref(true)
 
 const { t } = useI18n()
@@ -22,11 +21,12 @@ const isKeywordFileSeparator = computed(() => props.node.path === KEYWORD_FILE_S
 const separatorListId = computed(() =>
   isKeywordFileSeparator.value ? 'atk-keyword-separator-options' : undefined,
 )
+const envRef = computed(() => settings.get().getEnvRefByPath(props.node.path))
+const disabled = computed(() => envRef.value !== null)
 
 onBeforeMount(() => {
   // initial value
   value.value = formatOptionValue(settings.get().getCustom(props.node.path), props.node)
-  disabled.value = !!settings.get().getEnvByPath(props.node.path)
 })
 
 function onChange(event: Event) {
@@ -40,7 +40,7 @@ function onChange(event: Event) {
   // console.log('[SET]', props.node.path, v)
 }
 
-const envVariableName = computed(() => `ATK_${props.node.path.replace(/\./g, '_').toUpperCase()}`)
+const envVariableName = computed(() => settings.get().getEnvKeyByPath(props.node.path))
 const isSensitive = computed(() => isSensitiveConfigPath(props.node.path))
 
 function toggleSensitiveHidden() {
@@ -57,7 +57,7 @@ function toggleSensitiveHidden() {
 
     <div class="value">
       <div v-if="disabled" class="disable-note">
-        {{ t('envVarControlHint', { key: 'ATK_' + props.node.path.toUpperCase() }) }}
+        {{ t('envVarControlHint', { key: envVariableName }) }}
       </div>
 
       <!-- Array -->

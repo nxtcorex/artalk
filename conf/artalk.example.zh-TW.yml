@@ -10,7 +10,7 @@ app_key: ""
 # 偵錯模式
 debug: false
 
-# 語言 ["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru"]
+# 語言 ["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru", "tr"]
 locale: zh-TW
 
 # 時區
@@ -29,6 +29,8 @@ login_timeout: 259200
 db:
   # 資料庫類型 ["sqlite", "mysql", "pgsql", "mssql"]
   type: sqlite
+  # 資料庫 DSN (優先級最高，填寫後會優先於下方拆分參數)
+  dsn: ""
   # 資料庫文件 (僅 SQLite 資料庫需填寫)
   file: ./data/artalk.db
   # 資料庫名稱
@@ -49,6 +51,12 @@ db:
   ssl: false
   # 預編譯語句
   prepare_stmt: true
+  # 伺服器 CA 憑證路徑
+  server_ca_path: ""
+  # 用戶端憑證路徑
+  client_cert_path: ""
+  # 用戶端密鑰路徑
+  client_key_path: ""
 
 # 伺服器
 http:
@@ -152,7 +160,7 @@ captcha:
   enabled: true
   # 總是需要驗證碼
   always: false
-  # 驗證類型 ["image", "turnstile", "recaptcha", "hcaptcha", "geetest"]
+  # 驗證類型 ["image", "turnstile", "recaptcha", "hcaptcha", "geetest", "capjs"]
   captcha_type: image
   # 激活驗證碼所需操作次數
   action_limit: 3
@@ -176,6 +184,11 @@ captcha:
   geetest:
     captcha_id: ""
     captcha_key: ""
+  # Cap (https://capjs.js.org/)
+  capjs:
+    key_id: ""
+    secret_key: ""
+    api_endpoint: ""
 
 # IP 屬地
 ip_region:
@@ -236,11 +249,18 @@ email:
     access_key_id: ""
     access_key_secret: ""
     account_name: noreply@example.com
+    region: cn-hangzhou
+  # 郵件發送佇列
+  queue:
+    # 佇列緩衝區大小
+    buffer_size: 0
 
 # 多元推送
 admin_notify:
   # 通知模板 (填入文件路徑使用自定義模板)
   notify_tpl: default
+  # 通知標題
+  notify_subject: "{{site_name}} - 新評論"
   # 待審評論仍然發送通知 (當評論被攔截時仍然發送通知)
   notify_pending: false
   # 嘈雜模式
@@ -324,6 +344,12 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # 自建 Gitea
+  gitea_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   # Google
   google:
     enabled: false

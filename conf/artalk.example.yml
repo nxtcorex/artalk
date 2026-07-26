@@ -31,6 +31,8 @@ login_timeout: 259200
 db:
   # Database type ["sqlite", "mysql", "pgsql", "mssql"]
   type: sqlite
+  # Database DSN (highest priority, overrides the split database parameters below)
+  dsn: ""
   # Database file (only for SQLite)
   file: ./data/artalk.db
   # Table prefix (e.g. "atk_")
@@ -52,6 +54,12 @@ db:
   ssl: false
   # Prepared Statement
   prepare_stmt: true
+  # Server CA certificate path
+  server_ca_path: ""
+  # Client certificate path
+  client_cert_path: ""
+  # Client key path
+  client_key_path: ""
 
 # Web server
 http:
@@ -180,6 +188,16 @@ captcha:
     key_id: ""
     secret_key: ""
     api_endpoint: ""
+
+# IP region
+ip_region:
+  # Enable IP region display
+  enabled: false
+  # Database file path (.xdb format)
+  db_path: ./data/ip2region.xdb
+  # Display precision ["province", "city", "country"]
+  precision: province
+
 # Upload
 img_upload:
   # Enable image upload
@@ -229,11 +247,18 @@ email:
     access_key_id: ""
     access_key_secret: ""
     account_name: noreply@example.com
+    region: cn-hangzhou
+  # Email queue
+  queue:
+    # Queue buffer size
+    buffer_size: 0
 
 # Multi-Push
 admin_notify:
   # Notification template (set to file path to use custom template)
   notify_tpl: default
+  # Notification subject
+  notify_subject: "{{site_name}} - New comment"
   # Pending comment still send notification (notifications are still sent when comments are intercepted)
   notify_pending: false
   # Noise mode
@@ -320,6 +345,12 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # Self-hosted Gitea
+  gitea_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   # Google
   google:
     enabled: false

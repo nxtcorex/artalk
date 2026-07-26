@@ -74,7 +74,7 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_APP_KEY** | `""` | 加密密钥 | app_key (加密密钥) |
 | **ATK_DEBUG** | `false` | 调试模式 | debug (调试模式) |
 | **ATK_HOST** | `"0.0.0.0"` | 服务器地址 | host (服务器地址) |
-| **ATK_LOCALE** | `"zh-CN"` | 语言 (可选：`["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru"]`) | locale (语言) |
+| **ATK_LOCALE** | `"zh-CN"` | 语言 (可选：`["en", "zh-CN", "zh-TW", "ja", "fr", "ko", "ru", "tr"]`) | locale (语言) |
 | **ATK_LOGIN_TIMEOUT** | `259200` | 登录有效时长 (单位：秒) | login_timeout (登录有效时长) |
 | **ATK_PORT** | `23366` | 服务器端口 | port (服务器端口) |
 | **ATK_SITE_DEFAULT** | `"默认站点"` | 默认站点名 | site_default (默认站点名) |
@@ -104,6 +104,7 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_ADMIN_NOTIFY_LINE_RECEIVERS** | `[USER_ID_1 GROUP_ID_1]` | Receivers | admin_notify.line.receivers (多元推送 > LINE > Receivers) |
 | **ATK_ADMIN_NOTIFY_NOISE_MODE** | `false` | 嘈杂模式 | admin_notify.noise_mode (多元推送 > 嘈杂模式) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_PENDING** | `false` | 待审评论仍然发送通知 (当评论被拦截时仍然发送通知) | admin_notify.notify_pending (多元推送 > 待审评论仍然发送通知) |
+| **ATK_ADMIN_NOTIFY_NOTIFY_SUBJECT** | `"{{site_name}} - 新评论"` | 通知标题 | admin_notify.notify_subject (多元推送 > 通知标题) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_TPL** | `"default"` | 通知模版 (填入文件路径使用自定义模板) | admin_notify.notify_tpl (多元推送 > 通知模版) |
 | **ATK_ADMIN_NOTIFY_SLACK_ENABLED** | `false` | 启用 | admin_notify.slack.enabled (多元推送 > Slack > Enabled) |
 | **ATK_ADMIN_NOTIFY_SLACK_OAUTH_TOKEN** | `""` | OauthToken | admin_notify.slack.oauth_token (多元推送 > Slack > OauthToken) |
@@ -141,6 +142,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GITEA_CLIENT_ID** | `""` | ClientId | auth.gitea.client_id (社交登录 > Gitea > ClientId) |
 | **ATK_AUTH_GITEA_CLIENT_SECRET** | `""` | ClientSecret | auth.gitea.client_secret (社交登录 > Gitea > ClientSecret) |
 | **ATK_AUTH_GITEA_ENABLED** | `false` | 启用 | auth.gitea.enabled (社交登录 > Gitea > Enabled) |
+| **ATK_AUTH_GITEA_SELF_CLIENT_ID** | `""` | ClientId | auth.gitea_self.client_id (社交登录 > 自建 Gitea > ClientId) |
+| **ATK_AUTH_GITEA_SELF_CLIENT_SECRET** | `""` | ClientSecret | auth.gitea_self.client_secret (社交登录 > 自建 Gitea > ClientSecret) |
+| **ATK_AUTH_GITEA_SELF_ENABLED** | `false` | 启用 | auth.gitea_self.enabled (社交登录 > 自建 Gitea > Enabled) |
+| **ATK_AUTH_GITEA_SELF_SITE_URL** | `""` | SiteUrl | auth.gitea_self.site_url (社交登录 > 自建 Gitea > SiteUrl) |
 | **ATK_AUTH_GITHUB_CLIENT_ID** | `""` | ClientId | auth.github.client_id (社交登录 > GitHub > ClientId) |
 | **ATK_AUTH_GITHUB_CLIENT_SECRET** | `""` | ClientSecret | auth.github.client_secret (社交登录 > GitHub > ClientSecret) |
 | **ATK_AUTH_GITHUB_ENABLED** | `false` | 启用 | auth.github.enabled (社交登录 > GitHub > Enabled) |
@@ -222,12 +227,16 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | 环境变量 | 默认值 | 描述 | 路径 |
 | --- | --- | --- | --- |
 | **ATK_DB_CHARSET** | `"utf8mb4"` | 编码格式 | db.charset (数据库 > 编码格式) |
+| **ATK_DB_CLIENT_CERT_PATH** | `""` | 客户端证书路径 | db.client_cert_path (数据库 > 客户端证书路径) |
+| **ATK_DB_CLIENT_KEY_PATH** | `""` | 客户端密钥路径 | db.client_key_path (数据库 > 客户端密钥路径) |
+| **ATK_DB_DSN** | `""` | 数据库 DSN (优先级最高，填写后会优先于下方拆分参数) | db.dsn (数据库 > 数据库 DSN) |
 | **ATK_DB_FILE** | `"./data/artalk.db"` | 数据库文件 (仅 SQLite 数据库需填写) | db.file (数据库 > 数据库文件) |
 | **ATK_DB_HOST** | `"localhost"` | 数据库地址 | db.host (数据库 > 数据库地址) |
 | **ATK_DB_NAME** | `"artalk"` | 数据库名称 | db.name (数据库 > 数据库名称) |
 | **ATK_DB_PASSWORD** | `""` | 数据库密码 | db.password (数据库 > 数据库密码) |
 | **ATK_DB_PORT** | `3306` | 数据库端口 | db.port (数据库 > 数据库端口) |
 | **ATK_DB_PREPARE_STMT** | `true` | 预编译语句 | db.prepare_stmt (数据库 > 预编译语句) |
+| **ATK_DB_SERVER_CA_PATH** | `""` | 服务端 CA 证书路径 | db.server_ca_path (数据库 > 服务端 CA 证书路径) |
 | **ATK_DB_SSL** | `false` | 启用 SSL | db.ssl (数据库 > 启用 SSL) |
 | **ATK_DB_TABLE_PREFIX** | `""` | 表前缀 (例如："atk_") | db.table_prefix (数据库 > 表前缀) |
 | **ATK_DB_TYPE** | `"sqlite"` | 数据库类型 (可选：`["sqlite", "mysql", "pgsql", "mssql"]`) | db.type (数据库 > 数据库类型) |
@@ -241,9 +250,11 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_EMAIL_ALI_DM_ACCESS_KEY_ID** | `""` | AccessKeyId | email.ali_dm.access_key_id (邮件通知 > 阿里云邮件推送 > AccessKeyId) |
 | **ATK_EMAIL_ALI_DM_ACCESS_KEY_SECRET** | `""` | AccessKeySecret | email.ali_dm.access_key_secret (邮件通知 > 阿里云邮件推送 > AccessKeySecret) |
 | **ATK_EMAIL_ALI_DM_ACCOUNT_NAME** | `"noreply@example.com"` | AccountName | email.ali_dm.account_name (邮件通知 > 阿里云邮件推送 > AccountName) |
+| **ATK_EMAIL_ALI_DM_REGION** | `"cn-hangzhou"` | Region | email.ali_dm.region (邮件通知 > 阿里云邮件推送 > Region) |
 | **ATK_EMAIL_ENABLED** | `false` | 启用邮件通知 | email.enabled (邮件通知 > 启用邮件通知) |
 | **ATK_EMAIL_MAIL_SUBJECT** | `"[{{site_name}}] 您收到了来自 @{{reply_nick}} 的回复"` | 邮件标题 | email.mail_subject (邮件通知 > 邮件标题) |
 | **ATK_EMAIL_MAIL_TPL** | `"default"` | 邮件模板文件 (填入文件路径使用自定义模板) | email.mail_tpl (邮件通知 > 邮件模板文件) |
+| **ATK_EMAIL_QUEUE_BUFFER_SIZE** | `0` | 队列缓冲区大小 | email.queue.buffer_size (邮件通知 > 邮件发送队列 > 队列缓冲区大小) |
 | **ATK_EMAIL_SEND_ADDR** | `"noreply@example.com"` | 发信人地址 | email.send_addr (邮件通知 > 发信人地址) |
 | **ATK_EMAIL_SEND_NAME** | `"{{reply_nick}}"` | 发信人昵称 | email.send_name (邮件通知 > 发信人昵称) |
 | **ATK_EMAIL_SEND_TYPE** | `"smtp"` | 发送方式 (可选：`["smtp", "ali_dm", "sendmail"]`) | email.send_type (邮件通知 > 发送方式) |

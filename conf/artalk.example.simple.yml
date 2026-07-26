@@ -9,6 +9,7 @@ site_url: ""
 login_timeout: 259200
 db:
   type: sqlite
+  dsn: ""
   file: ./data/artalk.db
   table_prefix: ""
   name: artalk
@@ -19,6 +20,9 @@ db:
   charset: utf8mb4
   ssl: false
   prepare_stmt: true
+  server_ca_path: ""
+  client_cert_path: ""
+  client_key_path: ""
 http:
   body_limit: 100
   proxy_header: ""
@@ -84,6 +88,10 @@ captcha:
     key_id: ""
     secret_key: ""
     api_endpoint: ""
+ip_region:
+  enabled: false
+  db_path: ./data/ip2region.xdb
+  precision: province
 img_upload:
   enabled: true
   path: ./data/artalk-img/
@@ -109,8 +117,12 @@ email:
     access_key_id: ""
     access_key_secret: ""
     account_name: noreply@example.com
+    region: cn-hangzhou
+  queue:
+    buffer_size: 0
 admin_notify:
   notify_tpl: default
+  notify_subject: "{{site_name}} - New comment"
   notify_pending: false
   noise_mode: false
   email:
@@ -168,6 +180,11 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  gitea_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   google:
     enabled: false
     client_id: ""

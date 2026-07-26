@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 
 const customValue = ref<string[]>([])
-const disabled = ref(false)
+const disabled = computed(() => settings.get().getEnvRefByPath(props.node.path) !== null)
 
 onMounted(() => {
   sync()
@@ -14,8 +14,9 @@ onMounted(() => {
 
 function sync() {
   const value = settings.get().getCustom(props.node.path)
-  disabled.value = !!settings.get().getEnvByPath(props.node.path)
-  if (
+  if (Array.isArray(value)) {
+    customValue.value = value.map((item) => String(item))
+  } else if (
     value &&
     typeof value === 'object' &&
     'toJSON' in value &&
