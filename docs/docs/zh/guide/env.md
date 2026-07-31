@@ -129,6 +129,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_AUTH0_DOMAIN** | `""` | Domain | auth.auth0.domain (社交登录 > Auth0 > Domain) |
 | **ATK_AUTH_AUTH0_ENABLED** | `false` | 启用 | auth.auth0.enabled (社交登录 > Auth0 > Enabled) |
 | **ATK_AUTH_CALLBACK** | `"http://localhost:23366/api/v2/auth/{provider}/callback"` | 回调地址 (https://example.com/api/v2/auth/{provider}/callback) | auth.callback (社交登录 > 回调地址) |
+| **ATK_AUTH_DINGTALK_CLIENT_ID** | `""` | ClientId | auth.dingtalk.client_id (社交登录 > 钉钉 > ClientId) |
+| **ATK_AUTH_DINGTALK_CLIENT_SECRET** | `""` | ClientSecret | auth.dingtalk.client_secret (社交登录 > 钉钉 > ClientSecret) |
+| **ATK_AUTH_DINGTALK_CORP_ID** | `""` | 企业 ID (https://open.dingtalk.com/document/development/obtain-enterprise-corpid) | auth.dingtalk.corp_id (社交登录 > 钉钉 > 企业 ID) |
+| **ATK_AUTH_DINGTALK_ENABLED** | `false` | 启用 | auth.dingtalk.enabled (社交登录 > 钉钉 > Enabled) |
 | **ATK_AUTH_DISCORD_CLIENT_ID** | `""` | ClientId | auth.discord.client_id (社交登录 > Discord > ClientId) |
 | **ATK_AUTH_DISCORD_CLIENT_SECRET** | `""` | ClientSecret | auth.discord.client_secret (社交登录 > Discord > ClientSecret) |
 | **ATK_AUTH_DISCORD_ENABLED** | `false` | 启用 | auth.discord.enabled (社交登录 > Discord > Enabled) |
@@ -145,7 +149,7 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GITEA_SELF_CLIENT_ID** | `""` | ClientId | auth.gitea_self.client_id (社交登录 > 自建 Gitea > ClientId) |
 | **ATK_AUTH_GITEA_SELF_CLIENT_SECRET** | `""` | ClientSecret | auth.gitea_self.client_secret (社交登录 > 自建 Gitea > ClientSecret) |
 | **ATK_AUTH_GITEA_SELF_ENABLED** | `false` | 启用 | auth.gitea_self.enabled (社交登录 > 自建 Gitea > Enabled) |
-| **ATK_AUTH_GITEA_SELF_SITE_URL** | `""` | SiteUrl | auth.gitea_self.site_url (社交登录 > 自建 Gitea > SiteUrl) |
+| **ATK_AUTH_GITEA_SELF_SITE_URL** | `""` | Gitea 站点地址 (支持 Gitea 和 Forgejo) | auth.gitea_self.site_url (社交登录 > 自建 Gitea > Gitea 站点地址) |
 | **ATK_AUTH_GITHUB_CLIENT_ID** | `""` | ClientId | auth.github.client_id (社交登录 > GitHub > ClientId) |
 | **ATK_AUTH_GITHUB_CLIENT_SECRET** | `""` | ClientSecret | auth.github.client_secret (社交登录 > GitHub > ClientSecret) |
 | **ATK_AUTH_GITHUB_ENABLED** | `false` | 启用 | auth.github.enabled (社交登录 > GitHub > Enabled) |
@@ -155,6 +159,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GOOGLE_CLIENT_ID** | `""` | ClientId | auth.google.client_id (社交登录 > Google > ClientId) |
 | **ATK_AUTH_GOOGLE_CLIENT_SECRET** | `""` | ClientSecret | auth.google.client_secret (社交登录 > Google > ClientSecret) |
 | **ATK_AUTH_GOOGLE_ENABLED** | `false` | 启用 | auth.google.enabled (社交登录 > Google > Enabled) |
+| **ATK_AUTH_LARK_BASE_URL** | `"https://open.feishu.cn"` | API Base URL (可选：`["https://open.feishu.cn", "https://open.larksuite.com"]`) | auth.lark.base_url (社交登录 > 飞书 > API Base URL) |
+| **ATK_AUTH_LARK_CLIENT_ID** | `""` | ClientId | auth.lark.client_id (社交登录 > 飞书 > ClientId) |
+| **ATK_AUTH_LARK_CLIENT_SECRET** | `""` | ClientSecret | auth.lark.client_secret (社交登录 > 飞书 > ClientSecret) |
+| **ATK_AUTH_LARK_ENABLED** | `false` | 启用 | auth.lark.enabled (社交登录 > 飞书 > Enabled) |
 | **ATK_AUTH_LINE_CLIENT_ID** | `""` | ClientId | auth.line.client_id (社交登录 > Line > ClientId) |
 | **ATK_AUTH_LINE_CLIENT_SECRET** | `""` | ClientSecret | auth.line.client_secret (社交登录 > Line > ClientSecret) |
 | **ATK_AUTH_LINE_ENABLED** | `false` | 启用 | auth.line.enabled (社交登录 > Line > Enabled) |
@@ -164,6 +172,12 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_MICROSOFT_CLIENT_ID** | `""` | ClientId | auth.microsoft.client_id (社交登录 > Microsoft > ClientId) |
 | **ATK_AUTH_MICROSOFT_CLIENT_SECRET** | `""` | ClientSecret | auth.microsoft.client_secret (社交登录 > Microsoft > ClientSecret) |
 | **ATK_AUTH_MICROSOFT_ENABLED** | `false` | 启用 | auth.microsoft.enabled (社交登录 > Microsoft > Enabled) |
+| **ATK_AUTH_OIDC_CLIENT_ID** | `""` | 客户端 ID | auth.oidc.client_id (社交登录 > 通用 OIDC > 客户端 ID) |
+| **ATK_AUTH_OIDC_CLIENT_SECRET** | `""` | 客户端密钥 | auth.oidc.client_secret (社交登录 > 通用 OIDC > 客户端密钥) |
+| **ATK_AUTH_OIDC_ENABLED** | `false` | 启用 | auth.oidc.enabled (社交登录 > 通用 OIDC > Enabled) |
+| **ATK_AUTH_OIDC_ISSUER_URL** | `"https://accounts.example.com/.well-known/openid-configuration"` | OIDC 发现服务地址 (如 "https://accounts.example.com/.well-known/openid-configuration") | auth.oidc.issuer_url (社交登录 > 通用 OIDC > OIDC 发现服务地址) |
+| **ATK_AUTH_OIDC_NAME** | `""` | 显示名称 | auth.oidc.name (社交登录 > 通用 OIDC > 显示名称) |
+| **ATK_AUTH_OIDC_SCOPES** | `"openid,profile,email"` | 作用域 (openid,profile,email) | auth.oidc.scopes (社交登录 > 通用 OIDC > 作用域) |
 | **ATK_AUTH_PATREON_CLIENT_ID** | `""` | ClientId | auth.patreon.client_id (社交登录 > Patreon > ClientId) |
 | **ATK_AUTH_PATREON_CLIENT_SECRET** | `""` | ClientSecret | auth.patreon.client_secret (社交登录 > Patreon > ClientSecret) |
 | **ATK_AUTH_PATREON_ENABLED** | `false` | 启用 | auth.patreon.enabled (社交登录 > Patreon > Enabled) |

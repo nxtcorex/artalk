@@ -128,6 +128,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_AUTH0_DOMAIN** | `""` | Domain | auth.auth0.domain (Social Login > Auth0 > Domain) |
 | **ATK_AUTH_AUTH0_ENABLED** | `false` | 启用 | auth.auth0.enabled (Social Login > Auth0 > Enabled) |
 | **ATK_AUTH_CALLBACK** | `"http://localhost:23366/api/v2/auth/{provider}/callback"` | Callback URL (https://example.com/api/v2/auth/{provider}/callback) | auth.callback (Social Login > Callback URL) |
+| **ATK_AUTH_DINGTALK_CLIENT_ID** | `""` | ClientId | auth.dingtalk.client_id (Social Login > DingTalk > ClientId) |
+| **ATK_AUTH_DINGTALK_CLIENT_SECRET** | `""` | ClientSecret | auth.dingtalk.client_secret (Social Login > DingTalk > ClientSecret) |
+| **ATK_AUTH_DINGTALK_CORP_ID** | `""` | Corp ID (https://open.dingtalk.com/document/development/obtain-enterprise-corpid) | auth.dingtalk.corp_id (Social Login > DingTalk > Corp ID) |
+| **ATK_AUTH_DINGTALK_ENABLED** | `false` | 启用 | auth.dingtalk.enabled (Social Login > DingTalk > Enabled) |
 | **ATK_AUTH_DISCORD_CLIENT_ID** | `""` | ClientId | auth.discord.client_id (Social Login > Discord > ClientId) |
 | **ATK_AUTH_DISCORD_CLIENT_SECRET** | `""` | ClientSecret | auth.discord.client_secret (Social Login > Discord > ClientSecret) |
 | **ATK_AUTH_DISCORD_ENABLED** | `false` | 启用 | auth.discord.enabled (Social Login > Discord > Enabled) |
@@ -154,6 +158,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GOOGLE_CLIENT_ID** | `""` | ClientId | auth.google.client_id (Social Login > Google > ClientId) |
 | **ATK_AUTH_GOOGLE_CLIENT_SECRET** | `""` | ClientSecret | auth.google.client_secret (Social Login > Google > ClientSecret) |
 | **ATK_AUTH_GOOGLE_ENABLED** | `false` | 启用 | auth.google.enabled (Social Login > Google > Enabled) |
+| **ATK_AUTH_LARK_BASE_URL** | `"https://open.feishu.cn"` | API Base URL (可选：`["https://open.feishu.cn", "https://open.larksuite.com"]`) | auth.lark.base_url (Social Login > Feishu / Lark > API Base URL) |
+| **ATK_AUTH_LARK_CLIENT_ID** | `""` | ClientId | auth.lark.client_id (Social Login > Feishu / Lark > ClientId) |
+| **ATK_AUTH_LARK_CLIENT_SECRET** | `""` | ClientSecret | auth.lark.client_secret (Social Login > Feishu / Lark > ClientSecret) |
+| **ATK_AUTH_LARK_ENABLED** | `false` | 启用 | auth.lark.enabled (Social Login > Feishu / Lark > Enabled) |
 | **ATK_AUTH_LINE_CLIENT_ID** | `""` | ClientId | auth.line.client_id (Social Login > Line > ClientId) |
 | **ATK_AUTH_LINE_CLIENT_SECRET** | `""` | ClientSecret | auth.line.client_secret (Social Login > Line > ClientSecret) |
 | **ATK_AUTH_LINE_ENABLED** | `false` | 启用 | auth.line.enabled (Social Login > Line > Enabled) |
@@ -163,6 +171,12 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_MICROSOFT_CLIENT_ID** | `""` | ClientId | auth.microsoft.client_id (Social Login > Microsoft > ClientId) |
 | **ATK_AUTH_MICROSOFT_CLIENT_SECRET** | `""` | ClientSecret | auth.microsoft.client_secret (Social Login > Microsoft > ClientSecret) |
 | **ATK_AUTH_MICROSOFT_ENABLED** | `false` | 启用 | auth.microsoft.enabled (Social Login > Microsoft > Enabled) |
+| **ATK_AUTH_OIDC_CLIENT_ID** | `""` | Client ID | auth.oidc.client_id (Social Login > Generic OIDC > Client ID) |
+| **ATK_AUTH_OIDC_CLIENT_SECRET** | `""` | Client Secret | auth.oidc.client_secret (Social Login > Generic OIDC > Client Secret) |
+| **ATK_AUTH_OIDC_ENABLED** | `false` | 启用 | auth.oidc.enabled (Social Login > Generic OIDC > Enabled) |
+| **ATK_AUTH_OIDC_ISSUER_URL** | `""` | OIDC Discovery URL (eg. "https://accounts.example.com/.well-known/openid-configuration") | auth.oidc.issuer_url (Social Login > Generic OIDC > OIDC Discovery URL) |
+| **ATK_AUTH_OIDC_NAME** | `""` | Display name | auth.oidc.name (Social Login > Generic OIDC > Display name) |
+| **ATK_AUTH_OIDC_SCOPES** | `""` | Scopes (openid,profile,email) | auth.oidc.scopes (Social Login > Generic OIDC > Scopes) |
 | **ATK_AUTH_PATREON_CLIENT_ID** | `""` | ClientId | auth.patreon.client_id (Social Login > Patreon > ClientId) |
 | **ATK_AUTH_PATREON_CLIENT_SECRET** | `""` | ClientSecret | auth.patreon.client_secret (Social Login > Patreon > ClientSecret) |
 | **ATK_AUTH_PATREON_ENABLED** | `false` | 启用 | auth.patreon.enabled (Social Login > Patreon > Enabled) |

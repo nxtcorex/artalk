@@ -426,23 +426,27 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+    # Corp ID (https://open.dingtalk.com/document/development/obtain-enterprise-corpid)
     corp_id: ""
-  # Lark / Feishu
+  # Feishu / Lark
   lark:
     enabled: false
     client_id: ""
     client_secret: ""
     # API Base URL ["https://open.feishu.cn", "https://open.larksuite.com"]
-    base_url: ""
+    base_url: https://open.feishu.cn
   # Generic OIDC
   oidc:
     enabled: false
+    # Client ID
     client_id: ""
+    # Client Secret
     client_secret: ""
-    # OIDC Discovery URL
+    # OIDC Discovery URL (eg. "https://accounts.example.com/.well-known/openid-configuration")
     issuer_url: ""
+    # Display name
     name: ""
-    # Scopes
+    # Scopes (openid,profile,email)
     scopes: ""
 
   # SSO (Exchange external OIDC access tokens for Artalk login sessions, verified via the IdP's /userinfo endpoint)

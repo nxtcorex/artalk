@@ -348,6 +348,7 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+    # Gitea 站点地址 (支持 Gitea 和 Forgejo)
     site_url: ""
   # Google
   google:
@@ -413,6 +414,7 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # Auth0
   auth0:
     enabled: false
     client_id: ""
@@ -423,25 +425,28 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
-    # 企业 ID
+    # 企业 ID (https://open.dingtalk.com/document/development/obtain-enterprise-corpid)
     corp_id: ""
-  # Lark / 飞书
+  # 飞书
   lark:
     enabled: false
     client_id: ""
     client_secret: ""
-    # API 基础 URL ["https://open.feishu.cn", "https://open.larksuite.com"]
-    base_url: "https://open.feishu.cn"
+    # API Base URL ["https://open.feishu.cn", "https://open.larksuite.com"]
+    # -- 默认值为 "https://open.feishu.cn"，即国内站 --
+    base_url: https://open.feishu.cn
   # 通用 OIDC
   oidc:
     enabled: false
+    # 客户端 ID
     client_id: ""
+    # 客户端密钥
     client_secret: ""
-    # OIDC Discovery URL
+    # OIDC 发现服务地址 (如 "https://accounts.example.com/.well-known/openid-configuration")
     issuer_url: "https://accounts.example.com/.well-known/openid-configuration"
-    # 前端显示名称
-    name: "OIDC"
-    # Scopes
+    # 显示名称
+    name: ""
+    # 作用域 (openid,profile,email)
     scopes: "openid,profile,email"
 
   # SSO (用外部 OIDC 身份提供商的访问令牌换取 Artalk 登录会话，通过调用 IdP 的 /userinfo 端点校验)
