@@ -340,6 +340,13 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # Kendi barındırılan GitLab
+  gitlab_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # GitLab site URL'si
+    site_url: ""
   # Gitea
   gitea:
     enabled: false

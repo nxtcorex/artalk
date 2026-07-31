@@ -9,6 +9,7 @@ describe('sensitive config paths', () => {
     'moderator.aliyun.access_key_secret',
     'moderator.tencent.secret_key',
     'auth.gitea_self.client_secret',
+    'auth.gitlab_self.client_secret',
   ])('marks %s as sensitive', (path) => {
     expect(isSensitiveConfigPath(path)).toBe(true)
   })

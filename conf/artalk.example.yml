@@ -340,6 +340,13 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # Self-hosted GitLab
+  gitlab_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # GitLab site URL
+    site_url: ""
   # Gitea
   gitea:
     enabled: false

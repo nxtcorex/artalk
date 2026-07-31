@@ -21,6 +21,7 @@ export const SensitiveConfigPaths = [
   'auth.gitea_self.client_secret',
   'auth.github.client_secret',
   'auth.gitlab.client_secret',
+  'auth.gitlab_self.client_secret',
   'auth.google.client_secret',
   'auth.line.client_secret',
   'auth.mastodon.client_secret',

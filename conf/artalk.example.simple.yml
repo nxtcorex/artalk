@@ -176,6 +176,11 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  gitlab_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    site_url: ""
   gitea:
     enabled: false
     client_id: ""

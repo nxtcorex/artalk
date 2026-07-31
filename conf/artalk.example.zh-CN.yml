@@ -338,6 +338,13 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
+  # 自建 GitLab
+  gitlab_self:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # GitLab 站点地址
+    site_url: ""
   # Gitea
   gitea:
     enabled: false

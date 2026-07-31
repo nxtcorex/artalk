@@ -52,6 +52,16 @@ func GetProviders(conf *config.Config) []goth.Provider {
 		providers = append(providers, gitlab.New(gitlabConf.ClientID, gitlabConf.ClientSecret, callbackURL("gitlab"),
 			"read_user", "email"))
 	}
+	// self-hosted @see https://docs.gitlab.com/ee/integration/oauth_provider.html
+	if gitlabSelfConf := conf.Auth.GitlabSelf; gitlabSelfConf.Enabled {
+		if baseURL, ok := normalizeSelfHostedProviderURL("gitlab_self", gitlabSelfConf.FullUrl); ok {
+			provider := gitlab.NewCustomisedURL(gitlabSelfConf.ClientID, gitlabSelfConf.ClientSecret, callbackURL("gitlab_self"),
+				baseURL+"/oauth/authorize", baseURL+"/oauth/token", baseURL+"/api/v4/user",
+				"read_user", "email")
+			provider.SetName("gitlab_self")
+			providers = append(providers, provider)
+		}
+	}
 	// @see https://docs.gitea.io/en-us/oauth2-provider/
 	if giteaConf := conf.Auth.Gitea; giteaConf.Enabled {
 		providers = append(providers, gitea.New(giteaConf.ClientID, giteaConf.ClientSecret, callbackURL("gitea"),
@@ -157,4 +167,28 @@ func GetProviders(conf *config.Config) []goth.Provider {
 	}
 
 	return providers
+}
+
+func normalizeSelfHostedProviderURL(providerName, siteURL string) (string, bool) {
+	siteURL = strings.TrimSpace(siteURL)
+	if siteURL == "" {
+		log.Error("[SocialLogin] Missing site_url for provider: ", providerName)
+		return "", false
+	}
+
+	u, err := url.Parse(siteURL)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		log.Error("[SocialLogin] Invalid site_url for provider: ", providerName)
+		return "", false
+	}
+	if u.Scheme != "http" && u.Scheme != "https" {
+		log.Error("[SocialLogin] Invalid site_url scheme for provider: ", providerName)
+		return "", false
+	}
+
+	u.Path = strings.TrimRight(u.Path, "/")
+	u.RawQuery = ""
+	u.Fragment = ""
+
+	return strings.TrimRight(u.String(), "/"), true
 }

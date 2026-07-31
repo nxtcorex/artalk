@@ -35,6 +35,9 @@ func GetProviderInfo(conf *config.Config, providers []goth.Provider) []AuthProvi
 		if title == "Microsoftonline" {
 			title = "Microsoft"
 		}
+		if name == "gitlab_self" {
+			title = "Self-hosted GitLab"
+		}
 		info = append(info, AuthProviderInfo{
 			Name:  name,
 			Label: title,
