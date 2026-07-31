@@ -26,7 +26,7 @@ require (
 	github.com/jeremywohl/flatten v1.0.1
 	github.com/knadh/koanf v1.5.0
 	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20260709160242-cd40e3a1d532
-	github.com/markbates/goth v1.82.0
+	github.com/markbates/goth v1.82.1-0.20260211050629-9c7a2826a6e2
 	github.com/mattn/go-colorable v0.1.15
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/nikoksr/notify v1.5.0

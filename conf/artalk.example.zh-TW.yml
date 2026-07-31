@@ -420,6 +420,32 @@ auth:
     client_id: ""
     client_secret: ""
     domain: ""
+  # DingTalk (釘釘)
+  dingtalk:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # 可選：企業 CorpId，限制僅該企業成員可登入
+    corp_id: ""
+  # Lark / Feishu (飛書)
+  lark:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # API 基礎 URL ["https://open.feishu.cn", "https://open.larksuite.com"]
+    base_url: "https://open.feishu.cn"
+  # 通用 OIDC
+  oidc:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # OIDC Discovery URL
+    issuer_url: "https://accounts.example.com/.well-known/openid-configuration"
+    # 前端顯示名稱
+    name: "OIDC"
+    # Scopes
+    scopes: "openid,profile,email"
+
   # SSO (用外部 OIDC 身分提供商的存取權杖換取 Artalk 登入工作階段，透過呼叫 IdP 的 /userinfo 端點驗證)
   # -- 當嵌入頁面已執行 OIDC 且希望 Artalk 沿用該登入狀態、不顯示自身彈窗登入介面時使用。 --
   sso:

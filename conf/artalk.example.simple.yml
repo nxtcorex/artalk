@@ -241,6 +241,23 @@ auth:
     client_id: ""
     client_secret: ""
     domain: ""
+  dingtalk:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    corp_id: ""
+  lark:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    base_url: ""
+  oidc:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    issuer_url: ""
+    name: ""
+    scopes: ""
   sso:
     enabled: false
     issuer: ""

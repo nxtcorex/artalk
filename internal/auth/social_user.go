@@ -23,6 +23,12 @@ func GetSocialUser(u goth.User) SocialUser {
 	}
 
 	// Email patch
+	if u.Provider == "dingtalk" {
+		// @see https://open.dingtalk.com/document/orgapp/dingtalk-retrieve-user-information
+		if u.Email == "" {
+			u.Email = u.UserID + "@dingtalk.com"
+		}
+	}
 	if u.Provider == "steam" {
 		// @see https://stackoverflow.com/questions/31571267/steam-get-users-email-address
 		u.Email = u.UserID + "@steam.com"

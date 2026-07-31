@@ -421,6 +421,30 @@ auth:
     client_id: ""
     client_secret: ""
     domain: ""
+  # DingTalk
+  dingtalk:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    corp_id: ""
+  # Lark / Feishu
+  lark:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # API Base URL ["https://open.feishu.cn", "https://open.larksuite.com"]
+    base_url: ""
+  # Generic OIDC
+  oidc:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # OIDC Discovery URL
+    issuer_url: ""
+    name: ""
+    # Scopes
+    scopes: ""
+
   # SSO (Exchange external OIDC access tokens for Artalk login sessions, verified via the IdP's /userinfo endpoint)
   # -- Use this when the embedding app already runs OIDC and you want Artalk to inherit that session without its own popup login UI. --
   sso:

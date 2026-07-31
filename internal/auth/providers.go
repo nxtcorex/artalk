@@ -5,11 +5,13 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/artalkjs/artalk/v2/internal/auth/lark"
 	"github.com/artalkjs/artalk/v2/internal/config"
 	"github.com/artalkjs/artalk/v2/internal/log"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/apple"
 	"github.com/markbates/goth/providers/auth0"
+	"github.com/markbates/goth/providers/dingtalk"
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/facebook"
 	"github.com/markbates/goth/providers/gitea"
@@ -19,6 +21,7 @@ import (
 	"github.com/markbates/goth/providers/line"
 	"github.com/markbates/goth/providers/mastodon"
 	"github.com/markbates/goth/providers/microsoftonline"
+	"github.com/markbates/goth/providers/openidConnect"
 	"github.com/markbates/goth/providers/patreon"
 	"github.com/markbates/goth/providers/slack"
 	"github.com/markbates/goth/providers/steam"
@@ -124,6 +127,33 @@ func GetProviders(conf *config.Config) []goth.Provider {
 	if auth0Conf := conf.Auth.Auth0; auth0Conf.Enabled {
 		providers = append(providers, auth0.New(auth0Conf.ClientID, auth0Conf.ClientSecret, callbackURL("auth0"),
 			auth0Conf.Domain, "openid", "profile", "email"))
+	}
+
+	// @see https://open.dingtalk.com/document/orgapp/tutorial-obtaining-user-personal-information
+	if dingtalkConf := conf.Auth.DingTalk; dingtalkConf.Enabled {
+		providers = append(providers, dingtalk.New(dingtalkConf.ClientID, dingtalkConf.ClientSecret, callbackURL("dingtalk"), dingtalkConf.CorpID, "openid", "corpid"))
+	}
+
+	// @see https://open.feishu.cn/home (Feishu / Lark CN) or https://open.larksuite.com/home (Lark International)
+	if larkConf := conf.Auth.Lark; larkConf.Enabled {
+		providers = append(providers, lark.New(larkConf.ClientID, larkConf.ClientSecret, callbackURL("lark"), larkConf.BaseURL))
+	}
+
+	// Generic OIDC // discover endpoints from the issuer.well-known/openid-configuration
+	if oidcConf := conf.Auth.OIDC; oidcConf.Enabled {
+		var oidcScopes []string
+		if oidcConf.Scopes != "" {
+			oidcScopes = strings.Split(oidcConf.Scopes, ",")
+		} else {
+			oidcScopes = []string{"openid", "profile", "email"}
+		}
+		provider, err := openidConnect.New(oidcConf.ClientID, oidcConf.ClientSecret, callbackURL("oidc"), oidcConf.IssuerURL, oidcScopes...)
+		if err != nil {
+			log.Error("[SocialLogin] Failed to create OIDC provider: ", err)
+		} else {
+			provider.SetName("oidc")
+			providers = append(providers, provider)
+		}
 	}
 
 	return providers

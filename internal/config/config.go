@@ -470,6 +470,31 @@ type AuthConf struct {
 		ClientSecret string `koanf:"client_secret" json:"client_secret"`
 		Domain       string `koanf:"domain" json:"domain"`
 	} `koanf:"auth0" json:"auth0"`
+	// DingTalk (钉钉)
+	DingTalk struct {
+		Enabled      bool   `koanf:"enabled" json:"enabled"`
+		ClientID     string `koanf:"client_id" json:"client_id"`
+		ClientSecret string `koanf:"client_secret" json:"client_secret"`
+		CorpID       string `koanf:"corp_id" json:"corp_id"`
+	} `koanf:"dingtalk" json:"dingtalk"`
+
+	// Lark / Feishu (飞书)
+	Lark struct {
+		Enabled      bool   `koanf:"enabled" json:"enabled"`
+		ClientID     string `koanf:"client_id" json:"client_id"`
+		ClientSecret string `koanf:"client_secret" json:"client_secret"`
+		BaseURL      string `koanf:"base_url" json:"base_url"`
+	} `koanf:"lark" json:"lark"`
+
+	// Generic OIDC
+	OIDC struct {
+		Enabled      bool   `koanf:"enabled" json:"enabled"`
+		ClientID     string `koanf:"client_id" json:"client_id"`
+		ClientSecret string `koanf:"client_secret" json:"client_secret"`
+		IssuerURL    string `koanf:"issuer_url" json:"issuer_url"`
+		Name         string `koanf:"name" json:"name"`
+		Scopes       string `koanf:"scopes" json:"scopes"`
+	} `koanf:"oidc" json:"oidc"`
 
 	// Token exchange — accept an access token from an external OIDC IdP
 	// (verified via that IdP's /userinfo) and issue an Artalk JWT for the

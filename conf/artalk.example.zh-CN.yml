@@ -413,12 +413,37 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
-  # Auth0
   auth0:
     enabled: false
     client_id: ""
     client_secret: ""
     domain: ""
+  # 钉钉
+  dingtalk:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # 企业 ID
+    corp_id: ""
+  # Lark / 飞书
+  lark:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # API 基础 URL ["https://open.feishu.cn", "https://open.larksuite.com"]
+    base_url: "https://open.feishu.cn"
+  # 通用 OIDC
+  oidc:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # OIDC Discovery URL
+    issuer_url: "https://accounts.example.com/.well-known/openid-configuration"
+    # 前端显示名称
+    name: "OIDC"
+    # Scopes
+    scopes: "openid,profile,email"
+
   # SSO (用外部 OIDC 身份提供商的访问令牌换取 Artalk 登录会话，通过调用 IdP 的 /userinfo 端点校验)
   # -- 当嵌入页面已运行 OIDC 且希望 Artalk 复用该登录态、不显示自身弹窗登录界面时使用。 --
   sso:
