@@ -2066,7 +2066,7 @@ export class Api<
   };
   sso = {
     /**
- * @description Validates a third-party OIDC access token (currently Auth0)
+ * @description Validates a third-party OIDC access token by calling the issuer's /userinfo endpoint, requires a verified email claim, then mints an Artalk session JWT. Use when the surrounding application already runs OIDC and you want Artalk comments to inherit that session without showing Artalk's own login UI.
  *
  * @tags Auth
  * @name AuthSsoExchange
