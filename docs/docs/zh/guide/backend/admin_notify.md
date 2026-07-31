@@ -2,7 +2,7 @@
 
 Artalk 支持通过多元推送功能以多种方式发送管理员通知。
 
-支持 **Telegram**、**飞书**、**钉钉**、**Bark**、**Slack**、**LINE**，并且多种方式可以同时启用。
+支持 **Telegram**、**飞书**、**钉钉**、**Bark**、**Slack**、**LINE**、**Shoutrrr**，并且多种方式可以同时启用。
 
 你可以在 [控制中心](../frontend/sidebar.md#设置) 的设置界面修改此配置，也可以通过 [配置文件](./config.md#多元推送-admin-notify) 或 [环境变量](../env.md#多元推送) 进行配置。
 
@@ -56,6 +56,11 @@ admin_notify:
     receivers:
       - USER_ID_1
       - GROUP_ID_1
+  # Shoutrrr
+  shoutrrr:
+    enabled: false
+    urls:
+      - ''
   # WebHook
   webhook:
     enabled: false
@@ -207,6 +212,20 @@ admin_notify:
       - USER_ID_1
       - GROUP_ID_1
 ```
+
+## Shoutrrr
+
+```yaml
+admin_notify:
+  # Shoutrrr
+  shoutrrr:
+    enabled: true
+    urls:
+      - ''
+      - ''
+```
+
+- `urls`：Shoutrrr 服务 URL 列表，可添加多个。服务类型和 URL 格式请参考 [Shoutrrr Services](https://shoutrrr.nickfedor.com/v0.16.3/services/overview/)。
 
 ## 通知模版
 

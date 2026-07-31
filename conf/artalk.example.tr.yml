@@ -290,6 +290,12 @@ admin_notify:
     webhook_url: ""
     # Mesaj türü ["text", "card"]
     msg_type: "text"
+  # Shoutrrr
+  shoutrrr:
+    enabled: false
+    # Service URLs (multiple allowed)
+    urls:
+      - ""
   # WebHook
   webhook:
     enabled: false
@@ -439,7 +445,8 @@ auth:
     enabled: false
     client_id: ""
     client_secret: ""
-    base_url: ""
+    # API Base URL ["https://open.feishu.cn", "https://open.larksuite.com"]
+    base_url: https://open.feishu.cn
   # Genel OIDC
   oidc:
     enabled: false

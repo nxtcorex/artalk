@@ -49,6 +49,7 @@ export const FuncsFeature: React.FC = () => {
         'WebHook',
         'Slack',
         'LINE',
+        'Shoutrrr',
       ],
       link: 'https://artalk.js.org/guide/backend/admin_notify.html',
     },

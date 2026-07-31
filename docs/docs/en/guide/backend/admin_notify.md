@@ -2,7 +2,7 @@
 
 Artalk supports sending administrator notifications through its multi-channel notification feature in various ways.
 
-Supported platforms include **Telegram**, **Feishu**, **DingTalk**, **Bark**, **Slack**, and **LINE**, with the ability to enable multiple methods simultaneously.
+Supported platforms include **Telegram**, **Feishu**, **DingTalk**, **Bark**, **Slack**, **LINE**, and **Shoutrrr**, with the ability to enable multiple methods simultaneously.
 
 You can modify these configurations in the settings interface of the [Dashboard](../frontend/sidebar.md#Settings) or via the [configuration file](../backend/config.md#multi-channel-notifications-admin-notify) or [environment variables](../env.md#multi-channel-notifications).
 
@@ -56,6 +56,11 @@ admin_notify:
     receivers:
       - USER_ID_1
       - GROUP_ID_1
+  # Shoutrrr
+  shoutrrr:
+    enabled: false
+    urls:
+      - ''
   # WebHook
   webhook:
     enabled: false
@@ -207,6 +212,20 @@ admin_notify:
       - USER_ID_1
       - GROUP_ID_1
 ```
+
+## Shoutrrr
+
+```yaml
+admin_notify:
+  # Shoutrrr
+  shoutrrr:
+    enabled: true
+    urls:
+      - ''
+      - ''
+```
+
+- `urls`: Shoutrrr service URL list. Multiple URLs can be configured. See [Shoutrrr Services](https://shoutrrr.nickfedor.com/v0.16.3/services/overview/) for service types and URL formats.
 
 ## Notification Template
 

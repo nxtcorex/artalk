@@ -141,6 +141,10 @@ admin_notify:
     enabled: false
     webhook_url: ""
     msg_type: "text"
+  shoutrrr:
+    enabled: false
+    urls:
+      - ""
   webhook:
     enabled: false
     url: ""

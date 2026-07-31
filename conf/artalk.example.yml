@@ -290,6 +290,12 @@ admin_notify:
     webhook_url: ""
     # Message type ["text", "card"]
     msg_type: "text"
+  # Shoutrrr
+  shoutrrr:
+    enabled: false
+    # Service URLs (multiple allowed)
+    urls:
+      - ""
   # WebHook
   webhook:
     enabled: false

@@ -106,6 +106,8 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_ADMIN_NOTIFY_NOTIFY_PENDING** | `false` | 待审评论仍然发送通知 (当评论被拦截时仍然发送通知) | admin_notify.notify_pending (多元推送 > 待审评论仍然发送通知) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_SUBJECT** | `"{{site_name}} - 新评论"` | 通知标题 | admin_notify.notify_subject (多元推送 > 通知标题) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_TPL** | `"default"` | 通知模版 (填入文件路径使用自定义模板) | admin_notify.notify_tpl (多元推送 > 通知模版) |
+| **ATK_ADMIN_NOTIFY_SHOUTRRR_ENABLED** | `false` | 启用 | admin_notify.shoutrrr.enabled (多元推送 > Shoutrrr > Enabled) |
+| **ATK_ADMIN_NOTIFY_SHOUTRRR_URLS** | `[]` | 服务 URL（允许配置多个） | admin_notify.shoutrrr.urls (多元推送 > Shoutrrr > 服务 URL（允许配置多个）) |
 | **ATK_ADMIN_NOTIFY_SLACK_ENABLED** | `false` | 启用 | admin_notify.slack.enabled (多元推送 > Slack > Enabled) |
 | **ATK_ADMIN_NOTIFY_SLACK_OAUTH_TOKEN** | `""` | OauthToken | admin_notify.slack.oauth_token (多元推送 > Slack > OauthToken) |
 | **ATK_ADMIN_NOTIFY_SLACK_RECEIVERS** | `[CHANNEL_ID]` | Receivers | admin_notify.slack.receivers (多元推送 > Slack > Receivers) |
@@ -156,6 +158,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GITLAB_CLIENT_ID** | `""` | ClientId | auth.gitlab.client_id (社交登录 > GitLab > ClientId) |
 | **ATK_AUTH_GITLAB_CLIENT_SECRET** | `""` | ClientSecret | auth.gitlab.client_secret (社交登录 > GitLab > ClientSecret) |
 | **ATK_AUTH_GITLAB_ENABLED** | `false` | 启用 | auth.gitlab.enabled (社交登录 > GitLab > Enabled) |
+| **ATK_AUTH_GITLAB_SELF_CLIENT_ID** | `""` | ClientId | auth.gitlab_self.client_id (社交登录 > 自建 GitLab > ClientId) |
+| **ATK_AUTH_GITLAB_SELF_CLIENT_SECRET** | `""` | ClientSecret | auth.gitlab_self.client_secret (社交登录 > 自建 GitLab > ClientSecret) |
+| **ATK_AUTH_GITLAB_SELF_ENABLED** | `false` | 启用 | auth.gitlab_self.enabled (社交登录 > 自建 GitLab > Enabled) |
+| **ATK_AUTH_GITLAB_SELF_SITE_URL** | `""` | GitLab 站点地址 | auth.gitlab_self.site_url (社交登录 > 自建 GitLab > GitLab 站点地址) |
 | **ATK_AUTH_GOOGLE_CLIENT_ID** | `""` | ClientId | auth.google.client_id (社交登录 > Google > ClientId) |
 | **ATK_AUTH_GOOGLE_CLIENT_SECRET** | `""` | ClientSecret | auth.google.client_secret (社交登录 > Google > ClientSecret) |
 | **ATK_AUTH_GOOGLE_ENABLED** | `false` | 启用 | auth.google.enabled (社交登录 > Google > Enabled) |

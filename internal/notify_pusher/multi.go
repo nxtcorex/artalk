@@ -9,6 +9,7 @@ import (
 	"github.com/artalkjs/artalk/v2/internal/log"
 	"github.com/artalkjs/artalk/v2/internal/notify_pusher/sender"
 	"github.com/artalkjs/artalk/v2/internal/template"
+	"github.com/nicholas-fedor/shoutrrr/pkg/types"
 )
 
 func (pusher *NotifyPusher) multiPush(comment *entity.Comment, pComment *entity.Comment) {
@@ -41,6 +42,11 @@ func (pusher *NotifyPusher) multiPush(comment *entity.Comment, pComment *entity.
 	// Bark
 	if pusher.conf.Bark.Enabled {
 		sender.SendBark(pusher.conf.Bark.Server, subject, body)
+	}
+
+	// Shoutrrr
+	if pusher.shoutrrr != nil {
+		pusher.sendShoutrrr(subject, body)
 	}
 
 	// WebHook
@@ -84,4 +90,15 @@ func (pusher *NotifyPusher) sendWebhook(subject string, body string, comment *en
 		Comment:       pusher.dao.CookComment(comment),
 		ParentComment: pCommentCooked,
 	})
+}
+
+func (pusher *NotifyPusher) sendShoutrrr(subject string, body string) {
+	params := types.Params{}
+	if subject != "" {
+		params["title"] = subject
+	}
+
+	for _, err := range pusher.shoutrrr.Send(body, &params) {
+		log.Error("[Shoutrrr Push] ", err)
+	}
 }

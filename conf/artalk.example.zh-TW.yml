@@ -289,6 +289,12 @@ admin_notify:
     webhook_url: ""
     # 消息類型 ["text", "card"]
     msg_type: "text"
+  # Shoutrrr
+  shoutrrr:
+    enabled: false
+    # 服務 URL（允許配置多個）
+    urls:
+      - ""
   # WebHook
   webhook:
     enabled: false

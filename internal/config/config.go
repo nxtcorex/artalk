@@ -316,6 +316,7 @@ type AdminNotifyConf struct {
 	Bark          NotifyBarkConf     `koanf:"bark" json:"bark"`                     // bark
 	Slack         NotifySlackConf    `koanf:"slack" json:"slack"`                   // slack
 	LINE          NotifyLINEConf     `koanf:"line" json:"line"`                     // LINE
+	Shoutrrr      NotifyShoutrrrConf `koanf:"shoutrrr" json:"shoutrrr"`             // Shoutrrr
 	WebHook       NotifyWebHookConf  `koanf:"webhook" json:"webhook"`               // WebHook
 	NotifyPending bool               `koanf:"notify_pending" json:"notify_pending"` // 待审核评论通知
 	NoiseMode     bool               `koanf:"noise_mode" json:"noise_mode"`         // 嘈杂模式 (非回复管理员的评论也发送通知)
@@ -361,6 +362,11 @@ type NotifyLINEConf struct {
 	ChannelSecret      string   `koanf:"channel_secret" json:"channel_secret"`
 	ChannelAccessToken string   `koanf:"channel_access_token" json:"channel_access_token"`
 	Receivers          []string `koanf:"receivers" json:"receivers"`
+}
+
+type NotifyShoutrrrConf struct {
+	Enabled bool     `koanf:"enabled" json:"enabled"`
+	URLs    []string `koanf:"urls" json:"urls"`
 }
 
 type NotifyWebHookConf struct {
@@ -511,7 +517,7 @@ type AuthConf struct {
 }
 
 type AuthSSOConf struct {
-	Enabled bool   `koanf:"enabled" json:"enabled"`
+	Enabled bool `koanf:"enabled" json:"enabled"`
 	// Issuer is the OIDC issuer URL — e.g. "tenant.auth0.com" or
 	// "https://tenant.auth0.com". /userinfo is called against this host.
 	Issuer string `koanf:"issuer" json:"issuer"`

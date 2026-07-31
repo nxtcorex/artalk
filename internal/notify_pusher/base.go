@@ -2,11 +2,14 @@ package notify_pusher
 
 import (
 	"context"
+	"strings"
 
 	"github.com/artalkjs/artalk/v2/internal/config"
 	"github.com/artalkjs/artalk/v2/internal/dao"
 	"github.com/artalkjs/artalk/v2/internal/entity"
 	"github.com/artalkjs/artalk/v2/internal/log"
+	"github.com/nicholas-fedor/shoutrrr"
+	"github.com/nicholas-fedor/shoutrrr/pkg/router"
 	"github.com/nikoksr/notify"
 	"github.com/nikoksr/notify/service/dingding"
 	"github.com/nikoksr/notify/service/line"
@@ -23,10 +26,11 @@ type NotifyPusherConf struct {
 }
 
 type NotifyPusher struct {
-	conf   *NotifyPusherConf
-	dao    *dao.Dao
-	ctx    context.Context
-	helper *notify.Notify
+	conf     *NotifyPusherConf
+	dao      *dao.Dao
+	ctx      context.Context
+	helper   *notify.Notify
+	shoutrrr *router.ServiceRouter
 }
 
 func NewNotifyPusher(conf *NotifyPusherConf) *NotifyPusher {
@@ -84,4 +88,28 @@ func (pusher *NotifyPusher) loadHelper() {
 			log.Error("[Notify] LINE service init error: ", err)
 		}
 	}
+
+	// Shoutrrr
+	shoutrrrConf := conf.Shoutrrr
+	if shoutrrrConf.Enabled {
+		urls := normalizeShoutrrrURLs(shoutrrrConf.URLs)
+		if len(urls) == 0 {
+			log.Warn("[Notify] Shoutrrr service init skipped: no URLs configured")
+		} else if shoutrrrSender, err := shoutrrr.CreateSender(urls...); err == nil {
+			pusher.shoutrrr = shoutrrrSender
+		} else {
+			log.Error("[Notify] Shoutrrr service init error: ", err)
+		}
+	}
+}
+
+func normalizeShoutrrrURLs(rawURLs []string) []string {
+	urls := make([]string, 0, len(rawURLs))
+	for _, rawURL := range rawURLs {
+		if url := strings.TrimSpace(rawURL); url != "" {
+			urls = append(urls, url)
+		}
+	}
+
+	return urls
 }

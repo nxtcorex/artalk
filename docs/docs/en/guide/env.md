@@ -105,6 +105,8 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_ADMIN_NOTIFY_NOTIFY_PENDING** | `false` | Pending comment still send notification (notifications are still sent when comments are intercepted) | admin_notify.notify_pending (Multi-Push > Pending comment still send notification) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_SUBJECT** | `"{{site_name}} - New comment"` | Notification subject | admin_notify.notify_subject (Multi-Push > Notification subject) |
 | **ATK_ADMIN_NOTIFY_NOTIFY_TPL** | `"default"` | Notification template (set to file path to use custom template) | admin_notify.notify_tpl (Multi-Push > Notification template) |
+| **ATK_ADMIN_NOTIFY_SHOUTRRR_ENABLED** | `false` | 启用 | admin_notify.shoutrrr.enabled (Multi-Push > Shoutrrr > Enabled) |
+| **ATK_ADMIN_NOTIFY_SHOUTRRR_URLS** | `[]` | Service URLs (multiple allowed) | admin_notify.shoutrrr.urls (Multi-Push > Shoutrrr > Service URLs) |
 | **ATK_ADMIN_NOTIFY_SLACK_ENABLED** | `false` | 启用 | admin_notify.slack.enabled (Multi-Push > Slack > Enabled) |
 | **ATK_ADMIN_NOTIFY_SLACK_OAUTH_TOKEN** | `""` | OauthToken | admin_notify.slack.oauth_token (Multi-Push > Slack > OauthToken) |
 | **ATK_ADMIN_NOTIFY_SLACK_RECEIVERS** | `[CHANNEL_ID]` | Receivers | admin_notify.slack.receivers (Multi-Push > Slack > Receivers) |
@@ -155,6 +157,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_AUTH_GITLAB_CLIENT_ID** | `""` | ClientId | auth.gitlab.client_id (Social Login > GitLab > ClientId) |
 | **ATK_AUTH_GITLAB_CLIENT_SECRET** | `""` | ClientSecret | auth.gitlab.client_secret (Social Login > GitLab > ClientSecret) |
 | **ATK_AUTH_GITLAB_ENABLED** | `false` | 启用 | auth.gitlab.enabled (Social Login > GitLab > Enabled) |
+| **ATK_AUTH_GITLAB_SELF_CLIENT_ID** | `""` | ClientId | auth.gitlab_self.client_id (Social Login > Self-hosted GitLab > ClientId) |
+| **ATK_AUTH_GITLAB_SELF_CLIENT_SECRET** | `""` | ClientSecret | auth.gitlab_self.client_secret (Social Login > Self-hosted GitLab > ClientSecret) |
+| **ATK_AUTH_GITLAB_SELF_ENABLED** | `false` | 启用 | auth.gitlab_self.enabled (Social Login > Self-hosted GitLab > Enabled) |
+| **ATK_AUTH_GITLAB_SELF_SITE_URL** | `""` | GitLab site URL | auth.gitlab_self.site_url (Social Login > Self-hosted GitLab > GitLab site URL) |
 | **ATK_AUTH_GOOGLE_CLIENT_ID** | `""` | ClientId | auth.google.client_id (Social Login > Google > ClientId) |
 | **ATK_AUTH_GOOGLE_CLIENT_SECRET** | `""` | ClientSecret | auth.google.client_secret (Social Login > Google > ClientSecret) |
 | **ATK_AUTH_GOOGLE_ENABLED** | `false` | 启用 | auth.google.enabled (Social Login > Google > Enabled) |
