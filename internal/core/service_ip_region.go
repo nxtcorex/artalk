@@ -17,13 +17,14 @@ func (s *IPRegionService) Init() error {
 }
 
 func (s *IPRegionService) Dispose() error {
-	return nil
+	return ip_region.CloseMaxMindReaders()
 }
 
 func (s *IPRegionService) Query(ip string) string {
 	client := ip_region.NewIPRegion(ip_region.IPRegionConf{
 		IPRegionConf: s.app.Conf().IPRegion,
 		CacheEnabled: s.app.Conf().Cache.Enabled,
+		Locale:       s.app.Conf().Locale,
 	})
 
 	return client.IP2Region(ip)

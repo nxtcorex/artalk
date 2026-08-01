@@ -193,7 +193,9 @@ captcha:
 ip_region:
   # IP bölgesi görüntülemeyi etkinleştir
   enabled: false
-  # Veritabanı dosya yolu (.xdb biçimi)
+  # IP bölgesi sağlayıcısı ["ip2region", "maxmind"]
+  provider: ip2region
+  # Veritabanı dosya yolu (.xdb veya .mmdb biçimi)
   db_path: ./data/ip2region.xdb
   # Görüntüleme hassasiyeti ["province", "city", "country"]
   precision: province

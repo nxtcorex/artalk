@@ -14,6 +14,7 @@ type IPRegion struct {
 type IPRegionConf struct {
 	config.IPRegionConf
 	CacheEnabled bool
+	Locale       string
 }
 
 func NewIPRegion(conf IPRegionConf) *IPRegion {
@@ -28,13 +29,23 @@ func (ipRegion *IPRegion) IP2Region(ip string) string {
 	}
 
 	ip = ipScraper(ip)
-	region, err := search(ip, ipRegion.conf.DBPath, ipRegion.conf.CacheEnabled)
+	provider, err := newProvider(ipRegion.conf)
+	if err != nil {
+		log.Warn("[IPRegion] ", err)
+		return ""
+	}
+
+	region, err := provider.Search(ip)
 	if err != nil {
 		if !strings.HasPrefix(err.Error(), "invalid ip address") {
-			log.Warn("[IP2Region] ", err)
+			log.Warn("[IPRegion] ", err)
 		}
 		return ""
 	}
 
-	return regionScraper(region, config.IPRegionPrecision(ipRegion.conf.Precision))
+	precision := config.IPRegionPrecision(ipRegion.conf.Precision)
+	if config.IPRegionProvider(ipRegion.conf.Provider) == config.IPRegionProviderMaxMind {
+		return maxmindRegionScraper(region, precision)
+	}
+	return regionScraper(region, precision)
 }

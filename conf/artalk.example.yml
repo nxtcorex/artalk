@@ -193,7 +193,9 @@ captcha:
 ip_region:
   # Enable IP region display
   enabled: false
-  # Database file path (.xdb format)
+  # IP region provider ["ip2region", "maxmind"]
+  provider: ip2region
+  # Database file path (.xdb or .mmdb format)
   db_path: ./data/ip2region.xdb
   # Display precision ["province", "city", "country"]
   precision: province

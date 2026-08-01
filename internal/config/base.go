@@ -191,13 +191,32 @@ func (conf *Config) i18nPatch() {
 
 // IP属地功能配置修补
 func (conf *Config) ipRegionPatch() {
+	conf.IPRegion.Provider = strings.TrimSpace(conf.IPRegion.Provider)
+	if conf.IPRegion.Provider == "" {
+		conf.IPRegion.Provider = string(IPRegionProviderIP2Region)
+	}
+
 	if !conf.IPRegion.Enabled {
+		return
+	}
+
+	switch IPRegionProvider(conf.IPRegion.Provider) {
+	case IPRegionProviderIP2Region, IPRegionProviderMaxMind:
+		// supported provider
+	default:
+		log.Warn("未知的 IP 属地数据库提供方：" + strconv.Quote(conf.IPRegion.Provider) + "，IP 属地功能已禁用")
+		conf.IPRegion.Enabled = false
 		return
 	}
 
 	// IP 属地默认数据文件
 	if conf.IPRegion.DBPath == "" {
-		conf.IPRegion.DBPath = "./data/ip2region.xdb"
+		switch IPRegionProvider(conf.IPRegion.Provider) {
+		case IPRegionProviderMaxMind:
+			conf.IPRegion.DBPath = "./data/GeoLite2-City.mmdb"
+		default:
+			conf.IPRegion.DBPath = "./data/ip2region.xdb"
+		}
 	}
 
 	// 检测配置文件是否存在

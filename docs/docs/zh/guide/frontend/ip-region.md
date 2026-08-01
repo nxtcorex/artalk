@@ -6,11 +6,17 @@ Artalk 内置用户 IP 属地展示功能，并且你可以设置显示的精度
 
 ## IP 属地数据库
 
-在开启 IP 属地展示功能之前，你需要下载一个数据库文件：
+Artalk 默认使用 `ip2region` 作为 IP 属地数据库 provider。
+
+使用默认的 `ip2region` provider 开启 IP 属地展示功能之前，你需要下载一个数据库文件：
 
 - [GitHub 下载](https://github.com/lionsoul2014/ip2region/raw/master/data/ip2region.xdb) / [镜像站下载](https://gh-proxy.com/?q=https%3A%2F%2Fgithub.com%2Flionsoul2014%2Fip2region%2Fblob%2Fmaster%2Fdata%2Fip2region.xdb) (境内推荐)
 
 下载后请手动放置到 `./data/` 目录下，文件命名为：`ip2region.xdb`
+
+你也可以使用 `maxmind` provider 接入 MaxMind GeoLite2 数据库。Artalk 支持 `GeoLite2-City.mmdb` 和 `GeoLite2-Country.mmdb`。数据库文件需要用户自行下载和维护；Artalk 不会自动下载，也不会随发布包分发。
+
+使用 `GeoLite2-Country.mmdb` 时，由于 Country 数据库不包含省份和城市数据，`province` / `city` 精度会回退到国家、地区。
 
 ## 精度设置
 
@@ -29,10 +35,22 @@ Artalk 内置用户 IP 属地展示功能，并且你可以设置显示的精度
 ip_region:
   # 启用 IP 属地展示
   enabled: false
+  # 数据库提供方 ["ip2region", "maxmind"]
+  provider: ip2region
   # 数据文件路径 (.xdb 格式)
   db_path: ./data/ip2region.xdb
   # 显示精度 ["province", "city", "country"]
   precision: province
+```
+
+MaxMind 示例：
+
+```yaml
+ip_region:
+  enabled: true
+  provider: maxmind
+  db_path: ./data/GeoLite2-City.mmdb
+  precision: city
 ```
 
 ## 获取准确的 IP 地址

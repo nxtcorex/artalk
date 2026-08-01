@@ -90,6 +90,7 @@ captcha:
     api_endpoint: ""
 ip_region:
   enabled: false
+  provider: ip2region
   db_path: ./data/ip2region.xdb
   precision: province
 img_upload:

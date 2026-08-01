@@ -34,6 +34,71 @@ func TestI18nPatch(t *testing.T) {
 	})
 }
 
+func TestIPRegionPatch(t *testing.T) {
+	orgCheckFileExist := utils.CheckFileExist
+	defer func() {
+		utils.CheckFileExist = orgCheckFileExist
+	}()
+
+	t.Run("disabled still sets default provider", func(t *testing.T) {
+		conf := &Config{}
+		conf.ipRegionPatch()
+		assert.Equal(t, string(IPRegionProviderIP2Region), conf.IPRegion.Provider)
+		assert.False(t, conf.IPRegion.Enabled)
+		assert.Empty(t, conf.IPRegion.DBPath)
+	})
+
+	t.Run("ip2region defaults", func(t *testing.T) {
+		utils.CheckFileExist = mockCheckFileExist(map[string]bool{
+			"./data/ip2region.xdb": true,
+		})
+
+		conf := &Config{IPRegion: IPRegionConf{Enabled: true}}
+		conf.ipRegionPatch()
+		assert.True(t, conf.IPRegion.Enabled)
+		assert.Equal(t, string(IPRegionProviderIP2Region), conf.IPRegion.Provider)
+		assert.Equal(t, "./data/ip2region.xdb", conf.IPRegion.DBPath)
+		assert.Equal(t, string(IPRegionProvince), conf.IPRegion.Precision)
+	})
+
+	t.Run("maxmind defaults", func(t *testing.T) {
+		utils.CheckFileExist = mockCheckFileExist(map[string]bool{
+			"./data/GeoLite2-City.mmdb": true,
+		})
+
+		conf := &Config{IPRegion: IPRegionConf{
+			Enabled:  true,
+			Provider: string(IPRegionProviderMaxMind),
+		}}
+		conf.ipRegionPatch()
+		assert.True(t, conf.IPRegion.Enabled)
+		assert.Equal(t, string(IPRegionProviderMaxMind), conf.IPRegion.Provider)
+		assert.Equal(t, "./data/GeoLite2-City.mmdb", conf.IPRegion.DBPath)
+	})
+
+	t.Run("unknown provider disables ip region", func(t *testing.T) {
+		utils.CheckFileExist = mockCheckFileExist(map[string]bool{})
+
+		conf := &Config{IPRegion: IPRegionConf{
+			Enabled:  true,
+			Provider: "unknown",
+		}}
+		conf.ipRegionPatch()
+		assert.False(t, conf.IPRegion.Enabled)
+		assert.Equal(t, "unknown", conf.IPRegion.Provider)
+	})
+
+	t.Run("missing database disables ip region", func(t *testing.T) {
+		utils.CheckFileExist = mockCheckFileExist(map[string]bool{
+			"./data/ip2region.xdb": false,
+		})
+
+		conf := &Config{IPRegion: IPRegionConf{Enabled: true}}
+		conf.ipRegionPatch()
+		assert.False(t, conf.IPRegion.Enabled)
+	})
+}
+
 func mockCheckFileExist(mockFiles map[string]bool) func(string) bool {
 	return func(filename string) bool {
 		return mockFiles[filename]

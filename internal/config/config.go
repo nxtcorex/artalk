@@ -279,9 +279,17 @@ type RedisConf struct {
 
 type IPRegionConf struct {
 	Enabled   bool   `koanf:"enabled" json:"enabled"`     // 启用 IP 属地展示
+	Provider  string `koanf:"provider" json:"provider"`   // 数据库提供方
 	DBPath    string `koanf:"db_path" json:"db_path"`     // 数据文件路径
 	Precision string `koanf:"precision" json:"precision"` // 显示精度
 }
+
+type IPRegionProvider string
+
+const (
+	IPRegionProviderIP2Region IPRegionProvider = "ip2region"
+	IPRegionProviderMaxMind   IPRegionProvider = "maxmind"
+)
 
 type IPRegionPrecision string
 

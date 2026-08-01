@@ -340,9 +340,10 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 
 | Env | Default | Desc | Path |
 | --- | --- | --- | --- |
-| **ATK_IP_REGION_DB_PATH** | `"./data/ip2region.xdb"` | Database file path (.xdb format) | ip_region.db_path (IP region > Database file path) |
+| **ATK_IP_REGION_DB_PATH** | `"./data/ip2region.xdb"` | Database file path (.xdb or .mmdb format) | ip_region.db_path (IP region > Database file path) |
 | **ATK_IP_REGION_ENABLED** | `false` | Enable IP region display | ip_region.enabled (IP region > Enable IP region display) |
 | **ATK_IP_REGION_PRECISION** | `"province"` | Display precision (可选：`["province", "city", "country"]`) | ip_region.precision (IP region > Display precision) |
+| **ATK_IP_REGION_PROVIDER** | `"ip2region"` | IP region provider (可选：`["ip2region", "maxmind"]`) | ip_region.provider (IP region > IP region provider) |
 
 
 ## Logging

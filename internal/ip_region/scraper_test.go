@@ -1,9 +1,12 @@
 package ip_region
 
 import (
+	"os"
 	"testing"
 
 	"github.com/artalkjs/artalk/v2/internal/config"
+	geoip2 "github.com/oschwald/geoip2-golang/v2"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIpScraper(t *testing.T) {
@@ -53,4 +56,66 @@ func TestRegionScraper(t *testing.T) {
 			t.Errorf("For input '%s' and precision '%s', expected '%s' but got '%s'", test.raw, test.precision, test.expected, result)
 		}
 	}
+}
+
+func TestMaxMindRegionScraper(t *testing.T) {
+	tests := []struct {
+		raw       string
+		precision config.IPRegionPrecision
+		expected  string
+	}{
+		{"United States|California|Mountain View", config.IPRegionCountry, "United States"},
+		{"United States|California|Mountain View", config.IPRegionProvince, "California"},
+		{"United States|California|Mountain View", config.IPRegionCity, "California Mountain View"},
+		{"United States||", config.IPRegionCity, "United States"},
+		{"United States|California|", config.IPRegionCity, "California"},
+		{"中国|浙江省|杭州市", config.IPRegionProvince, "浙江"},
+		{"中国|浙江省|杭州市", config.IPRegionCity, "浙江杭州"},
+		{"", config.IPRegionCountry, ""},
+		{"United States|California|Mountain View", "unknown", ""},
+	}
+
+	for _, test := range tests {
+		result := maxmindRegionScraper(test.raw, test.precision)
+		if result != test.expected {
+			t.Errorf("For input '%s' and precision '%s', expected '%s' but got '%s'", test.raw, test.precision, test.expected, result)
+		}
+	}
+}
+
+func TestNameByLocale(t *testing.T) {
+	names := geoip2.Names{
+		English:           "China",
+		SimplifiedChinese: "中国",
+	}
+
+	require.Equal(t, "中国", nameByLocale(names, "zh-CN"))
+	require.Equal(t, "China", nameByLocale(names, "en"))
+	require.Equal(t, "China", nameByLocale(names, "fr"))
+	require.Equal(t, "China", nameByLocale(geoip2.Names{English: "China"}, "zh-CN"))
+}
+
+func TestMaxMindProviderInvalidIP(t *testing.T) {
+	provider := &maxMindProvider{dbPath: "not-opened.mmdb"}
+	_, err := provider.Search("invalid")
+	require.ErrorContains(t, err, "invalid ip address")
+}
+
+func TestMaxMindProviderWithCityDatabase(t *testing.T) {
+	dbPath := os.Getenv("ARTALK_TEST_MAXMIND_CITY_DB")
+	if dbPath == "" {
+		t.Skip("set ARTALK_TEST_MAXMIND_CITY_DB to run MaxMind integration test")
+	}
+	defer func() {
+		require.NoError(t, CloseMaxMindReaders())
+	}()
+
+	provider := &maxMindProvider{
+		dbPath: dbPath,
+		locale: "en",
+	}
+	raw, err := provider.Search("8.8.8.8")
+	require.NoError(t, err)
+	require.NotEmpty(t, raw)
+	require.NotEmpty(t, maxmindRegionScraper(raw, config.IPRegionCountry))
 }
