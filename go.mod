@@ -31,6 +31,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/nicholas-fedor/shoutrrr v0.16.3
 	github.com/nikoksr/notify v1.5.0
+	github.com/oschwald/geoip2-golang/v2 v2.2.0
 	github.com/qwqcode/go-aliyun-email v0.0.0-20180120030821-cb6e7b1382bf
 	github.com/redis/go-redis/v9 v9.21.0
 	github.com/rhysd/go-github-selfupdate v1.2.3
@@ -121,7 +122,6 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/oschwald/geoip2-golang/v2 v2.2.0 // indirect
 	github.com/oschwald/maxminddb-golang/v2 v2.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
