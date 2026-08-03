@@ -7,7 +7,7 @@ import * as Ui from '@/lib/ui'
 export function imgBody(checker: CheckerCtx) {
   // 图片验证方式
   const elem = Utils.createElement(
-    `<span><img class="atk-captcha-img" src="${checker.get('img_data') || ''}">${$t('captchaCheck')}</span>`,
+    `<span><img alt="Captcha" class="atk-captcha-img" src="${checker.get('img_data') || ''}">${$t('captchaCheck')}</span>`,
   )
 
   // 刷新验证码
@@ -30,7 +30,7 @@ export function imgBody(checker: CheckerCtx) {
 export function iframeBody(checker: CheckerCtx) {
   const $iframeWrap = Utils.createElement(`<div class="atk-checker-iframe-wrap"></div>`)
   const $iframe = Utils.createElement<HTMLIFrameElement>(
-    `<iframe class="atk-fade-in" referrerpolicy="strict-origin-when-cross-origin"></iframe>`,
+    `<iframe class="atk-fade-in" referrerpolicy="strict-origin-when-cross-origin" title="Captcha"></iframe>`,
   )
   $iframe.style.display = 'none'
   Ui.showLoading($iframeWrap, { transparentBg: true })
@@ -42,7 +42,7 @@ export function iframeBody(checker: CheckerCtx) {
   $iframeWrap.append($iframe)
 
   const $closeBtn = Utils.createElement(
-    `<div class="atk-close-btn"><i class="atk-icon atk-icon-close"></i></div>`,
+    `<div class="atk-close-btn" aria-label="Close"><i class="atk-icon atk-icon-close" aria-hidden="true"></i></div>`,
   )
   $iframeWrap.append($closeBtn)
 

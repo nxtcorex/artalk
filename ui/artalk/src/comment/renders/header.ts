@@ -44,7 +44,7 @@ function renderVerifyBadge(ctx: Render) {
     ctx.$headerBadgeWrap.append($badge)
   } else if (ctx.data.is_verified) {
     const $verifiedBadge = Utils.createElement(
-      `<span class="atk-icon-verified" title="${$t('emailVerified')}"></span>`,
+      `<span class="atk-icon-verified" role="img" aria-label="${$t('emailVerified')}" title="${$t('emailVerified')}"></span>`,
     ) // 邮箱验证徽章
     ctx.$headerBadgeWrap.append($verifiedBadge)
   }

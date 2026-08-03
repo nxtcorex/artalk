@@ -29,3 +29,7 @@ $:
           script: |
             eval "$(/root/.local/bin/mise activate bash)"
             pnpm install --frozen-lockfile
+        - name: prepare
+          script: |
+            eval "$(/root/.local/bin/mise activate bash)"
+            make build-frontend

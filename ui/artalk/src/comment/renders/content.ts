@@ -18,7 +18,7 @@ export default function renderContent(r: Render) {
   const collapsedInfoEl = Utils.createElement(`
     <div class="atk-collapsed">
       <span class="atk-text">${$t('collapsedMsg')}</span>
-      <span class="atk-show-btn">${$t('expand')}</span>
+      <span class="atk-show-btn" role="button">${$t('expand')}</span>
     </div>`)
   r.$body.insertAdjacentElement('beforeend', collapsedInfoEl)
 

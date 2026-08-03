@@ -56,7 +56,7 @@ export default class StateEdit extends EditorPlugin {
           `<span class="atk-text-wrap">` +
           `${$t('editCancel')}` +
           `</span>` +
-          `<span class="atk-cancel atk-icon-close atk-icon"></span>` +
+          `<span class="atk-cancel atk-icon-close atk-icon" aria-hidden="true"></span>` +
           `</span>`,
       )
       $btn.onclick = () => {

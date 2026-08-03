@@ -10,12 +10,14 @@ export default function renderAvatar(r: Render) {
 
   const avatarURLBuilder = r.opts.avatarURLBuilder
   $avatarImg.src = avatarURLBuilder ? avatarURLBuilder(r.data) : r.comment.getGravatarURL()
+  $avatarImg.alt = r.data.nick || 'Avatar'
 
   if (r.data.link) {
     const $avatarA = Utils.createElement<HTMLLinkElement>(
       '<a target="_blank" rel="noreferrer noopener nofollow ugc"></a>',
     )
     $avatarA.href = Utils.isValidURL(r.data.link) ? r.data.link : `https://${r.data.link}`
+    $avatarA.setAttribute('aria-label', r.data.nick || 'User link')
     $avatarA.append($avatarImg)
     $avatar.append($avatarA)
   } else {

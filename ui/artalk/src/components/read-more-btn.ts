@@ -32,7 +32,7 @@ export default class ReadMoreBtn {
 
     this.$el = Utils.createElement(
       `<div class="atk-list-read-more" style="display: none;">
-      <div class="atk-list-read-more-inner">
+      <div class="atk-list-read-more-inner" role="button">
         <div class="atk-loading-icon" style="display: none;"></div>
         <span class="atk-text">${this.origText}</span>
       </div>
