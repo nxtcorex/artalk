@@ -107,7 +107,10 @@ function filterAttributes(root: HTMLTemplateElement): void {
         continue
       }
 
-      if (urlAttributes.has(attribute.name) && !hasAllowedUrl(tag, attribute.name, attribute.value)) {
+      if (
+        urlAttributes.has(attribute.name) &&
+        !hasAllowedUrl(tag, attribute.name, attribute.value)
+      ) {
         element.removeAttribute(attribute.name)
       }
     }
