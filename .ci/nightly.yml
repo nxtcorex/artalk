@@ -1,7 +1,7 @@
 .ci-nightly: &ci-nightly
   name: Build nightly
   runner:
-    cpus: 16
+    cpus: 8
   docker:
     image: cnbcool/default-build-env:latest
     volumes:
@@ -12,7 +12,7 @@
   env:
     ARTALK_NIGHTLY_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
-    PNPM_VERSION: 11.13.1
+    PNPM_VERSION: 11.22.0
     TZ: Asia/Shanghai
   lock:
     key: nightly
@@ -54,14 +54,3 @@
 $:
   web_trigger_nightly:
     nightly: *ci-nightly
-
-master:
-  "crontab: 0 18 * * *":
-    nightly:
-      <<: *ci-nightly
-      env:
-        ARTALK_NIGHTLY_WRITES: "true"
-        ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
-        PNPM_VERSION: 11.13.1
-        TZ: Asia/Shanghai
-        DRY_RUN: "false"

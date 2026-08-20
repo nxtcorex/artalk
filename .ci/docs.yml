@@ -13,7 +13,7 @@
     - name: Build site
       script: |
         set -eu
-        npm install -g pnpm@11.13.1
+        npm install -g pnpm@11.22.0
         pnpm install --frozen-lockfile
         pnpm build:docs
         tar -czf "docs-site-$CNB_COMMIT_SHORT.tar.gz" \

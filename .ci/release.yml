@@ -41,7 +41,7 @@
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
     GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.13.1
+    PNPM_VERSION: 11.22.0
   stages:
     - name: Inspect merged PR
       script: .ci/scripts/tag-merged-release.sh
@@ -62,7 +62,7 @@
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
     GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.13.1
+    PNPM_VERSION: 11.22.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
@@ -113,7 +113,7 @@
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
     GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.13.1
+    PNPM_VERSION: 11.22.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
@@ -142,7 +142,7 @@
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
     GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.13.1
+    PNPM_VERSION: 11.22.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
