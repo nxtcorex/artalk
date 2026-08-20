@@ -7,7 +7,7 @@ ARGS        ?= server
 
 export CGO_ENABLED := 1
 
-all: install build
+all: install build-frontend build
 
 install:
 	go mod tidy

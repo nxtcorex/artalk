@@ -9,15 +9,38 @@ describe('HTML sanitizer', () => {
       <code class="hljs language-ts">code</code>
       <span class="hljs-keyword" style="color: #abc;">keyword</span>
       <img src="data:image/png;base64,AA==" class="lazyload" loading="lazy" alt="image">
+      <img data-src="https://example.com/lazy.webp" alt="lazy image">
     `)
 
     expect(html).toContain('<a href="mailto:test@example.com" target="_blank">mail</a>')
-    expect(html).toContain('<a href="data:text/plain,hello">data</a>')
+    expect(html).toContain('<a>data</a>')
     expect(html).toContain('<code class="hljs language-ts">code</code>')
     expect(html).toContain('<span class="hljs-keyword" style="color: #abc;">keyword</span>')
     expect(html).toContain(
       '<img src="data:image/png;base64,AA==" class="lazyload" loading="lazy" alt="image">',
     )
+    expect(html).toContain('<img data-src="https://example.com/lazy.webp" alt="lazy image">')
+  })
+
+  it('rejects data URI links and executable data URI image types', () => {
+    const html = sanitize(`
+      <a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">html</a>
+      <a href="data:text/javascript,alert(1)">js</a>
+      <img src="data:application/javascript,alert(1)" alt="js">
+      <img src="data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+" alt="svg">
+      <img src="data:image/jpeg;base64,AA==" alt="jpeg">
+    `)
+
+    expect(html).toContain('<a>html</a>')
+    expect(html).toContain('<a>js</a>')
+    expect(html).toContain('<img alt="js">')
+    expect(html).toContain('<img alt="svg">')
+    expect(html).toContain('<img src="data:image/jpeg;base64,AA==" alt="jpeg">')
+    expect(html).not.toContain('href="data:')
+    expect(html).not.toContain('data:text/html')
+    expect(html).not.toContain('data:text/javascript')
+    expect(html).not.toContain('data:application/javascript')
+    expect(html).not.toContain('data:image/svg+xml')
   })
 
   it('removes executable markup and attributes outside the per-tag allowlist', () => {

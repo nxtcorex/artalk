@@ -67,19 +67,33 @@ const allowedAttributes = [
   ...new Set([...globalAttributes, ...Object.values(tagAttributes).flatMap((v) => [...v])]),
 ]
 const urlAttributes = new Set(['href', 'src', 'data-src'])
-const allowedSchemes = new Set(['http', 'https', 'mailto', 'data'])
+const allowedSchemes = new Set(['http', 'https', 'mailto'])
+const allowedDataImageMimeTypes = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp'])
 
-function hasAllowedScheme(value: string): boolean {
+function normalizeUrlValue(value: string): string {
   // Browsers ignore ASCII control characters inside a URL scheme. Remove them
   // before checking so values such as "java\nscript:" cannot bypass the filter.
-  const normalized = [...value]
+  return [...value]
     .filter((character) => {
       const codePoint = character.codePointAt(0) || 0
       return codePoint > 0x20 && (codePoint < 0x7f || codePoint > 0x9f)
     })
     .join('')
+}
+
+function isAllowedDataImage(value: string): boolean {
+  const match = /^data:([^;,]+);base64,/i.exec(value)
+  return !!match && allowedDataImageMimeTypes.has(match[1].toLowerCase())
+}
+
+function hasAllowedUrl(tag: string, attribute: string, value: string): boolean {
+  const normalized = normalizeUrlValue(value)
   const scheme = /^([a-z][a-z\d+.-]*):/i.exec(normalized)?.[1].toLowerCase()
-  return !scheme || allowedSchemes.has(scheme)
+
+  if (!scheme) return true
+  if (scheme !== 'data') return allowedSchemes.has(scheme)
+
+  return tag === 'img' && attribute === 'src' && isAllowedDataImage(normalized)
 }
 
 function filterAttributes(root: HTMLTemplateElement): void {
@@ -93,7 +107,7 @@ function filterAttributes(root: HTMLTemplateElement): void {
         continue
       }
 
-      if (urlAttributes.has(attribute.name) && !hasAllowedScheme(attribute.value)) {
+      if (urlAttributes.has(attribute.name) && !hasAllowedUrl(tag, attribute.name, attribute.value)) {
         element.removeAttribute(attribute.name)
       }
     }
@@ -121,7 +135,6 @@ export function sanitize(content: string): string {
     ALLOW_ARIA_ATTR: false,
     ALLOW_DATA_ATTR: false,
     ALLOW_UNKNOWN_PROTOCOLS: true,
-    ADD_DATA_URI_TAGS: ['a'],
   })
   const template = document.createElement('template')
   template.innerHTML = sanitized
