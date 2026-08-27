@@ -49,6 +49,15 @@ moderator:
   pending_default: false
   api_fail_block: false
   akismet_key: ""
+  llm:
+    enabled: false
+    endpoint: ""
+    api_key: ""
+    headers: {}
+    model: ""
+    timeout: 10
+    max_input_chars: 8000
+    policy: Set spam, abuse, hate, sexual, illegal, or clearly off-topic content to review.
   tencent:
     enabled: false
     secret_id: ""

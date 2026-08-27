@@ -15,6 +15,9 @@ func TestAntiSpam(t *testing.T) {
 		antiSpam := NewAntiSpam(&AntiSpamConf{
 			ModeratorConf: config.ModeratorConf{
 				AkismetKey: "test",
+				LLM: config.LLMAntispamConf{
+					Enabled: true,
+				},
 				Tencent: config.TencentAntispamConf{
 					Enabled: true,
 				},
@@ -32,7 +35,7 @@ func TestAntiSpam(t *testing.T) {
 		checkerNames := lo.Map[Checker, string](checkers, func(item Checker, index int) string {
 			return item.Name()
 		})
-		expectedCheckers := []string{"akismet", "tencent", "aliyun", "keywords"}
+		expectedCheckers := []string{"akismet", "tencent", "aliyun", "keywords", "llm"}
 
 		for _, expect := range expectedCheckers {
 			assert.Contains(t, checkerNames, expect, "expected %s in %v", expect, checkerNames)

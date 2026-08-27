@@ -370,6 +370,14 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_MODERATOR_KEYWORDS_FILES** | `[./data/词库_1.txt]` | 词库文件 (支持多个词库文件) | moderator.keywords.files (评论审核 > 关键词过滤 > 词库文件) |
 | **ATK_MODERATOR_KEYWORDS_PENDING** | `false` | 匹配成功设为待审状态 | moderator.keywords.pending (评论审核 > 关键词过滤 > 匹配成功设为待审状态) |
 | **ATK_MODERATOR_KEYWORDS_REPLACE_TO** | `"x"` | 替换字符 | moderator.keywords.replace_to (评论审核 > 关键词过滤 > 替换字符) |
+| **ATK_MODERATOR_LLM_API_KEY** | `""` | ApiKey | moderator.llm.api_key (评论审核 > LLM 评论审核 > ApiKey) |
+| **ATK_MODERATOR_LLM_ENABLED** | `false` | 启用 | moderator.llm.enabled (评论审核 > LLM 评论审核 > Enabled) |
+| **ATK_MODERATOR_LLM_ENDPOINT** | `""` | 完整的 Chat Completions 接口地址 | moderator.llm.endpoint (评论审核 > LLM 评论审核 > 完整的 Chat Completions 接口地址) |
+| **ATK_MODERATOR_LLM_HEADERS** | `map[]` | 附加请求 Header (值可能包含敏感信息) | moderator.llm.headers (评论审核 > LLM 评论审核 > 附加请求 Header) |
+| **ATK_MODERATOR_LLM_MAX_INPUT_CHARS** | `8000` | 发送给模型的评论最大字符数 | moderator.llm.max_input_chars (评论审核 > LLM 评论审核 > 发送给模型的评论最大字符数) |
+| **ATK_MODERATOR_LLM_MODEL** | `""` | Model | moderator.llm.model (评论审核 > LLM 评论审核 > Model) |
+| **ATK_MODERATOR_LLM_POLICY** | `"将垃圾广告、辱骂、仇恨、色情、违法或明显与页面无关的内容设为 review。"` | 站点审核规则 | moderator.llm.policy (评论审核 > LLM 评论审核 > 站点审核规则) |
+| **ATK_MODERATOR_LLM_TIMEOUT** | `10` | 请求超时 (单位：秒) | moderator.llm.timeout (评论审核 > LLM 评论审核 > 请求超时) |
 | **ATK_MODERATOR_PENDING_DEFAULT** | `false` | 默认待审 (发表新评论需要后台人工审核后才能显示) | moderator.pending_default (评论审核 > 默认待审) |
 | **ATK_MODERATOR_TENCENT_ENABLED** | `false` | 启用 | moderator.tencent.enabled (评论审核 > 腾讯云文本内容安全 > Enabled) |
 | **ATK_MODERATOR_TENCENT_REGION** | `"ap-guangzhou"` | Region | moderator.tencent.region (评论审核 > 腾讯云文本内容安全 > Region) |

@@ -369,6 +369,14 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_MODERATOR_KEYWORDS_FILES** | `[./data/keywords_1.txt]` | Dictionary file (support multiple dictionary files) | moderator.keywords.files (Moderator > Keyword filter > Dictionary file) |
 | **ATK_MODERATOR_KEYWORDS_PENDING** | `false` | Set to pending when match | moderator.keywords.pending (Moderator > Keyword filter > Set to pending when match) |
 | **ATK_MODERATOR_KEYWORDS_REPLACE_TO** | `"x"` | ReplaceTo | moderator.keywords.replace_to (Moderator > Keyword filter > ReplaceTo) |
+| **ATK_MODERATOR_LLM_API_KEY** | `""` | ApiKey | moderator.llm.api_key (Moderator > LLM comment moderation > ApiKey) |
+| **ATK_MODERATOR_LLM_ENABLED** | `false` | 启用 | moderator.llm.enabled (Moderator > LLM comment moderation > Enabled) |
+| **ATK_MODERATOR_LLM_ENDPOINT** | `""` | Full Chat Completions endpoint URL | moderator.llm.endpoint (Moderator > LLM comment moderation > Full Chat Completions endpoint URL) |
+| **ATK_MODERATOR_LLM_HEADERS** | `map[]` | Extra request headers (values may contain secrets) | moderator.llm.headers (Moderator > LLM comment moderation > Extra request headers) |
+| **ATK_MODERATOR_LLM_MAX_INPUT_CHARS** | `8000` | Maximum number of comment characters sent to the model | moderator.llm.max_input_chars (Moderator > LLM comment moderation > Maximum number of comment characters sent to the model) |
+| **ATK_MODERATOR_LLM_MODEL** | `""` | Model | moderator.llm.model (Moderator > LLM comment moderation > Model) |
+| **ATK_MODERATOR_LLM_POLICY** | `"Set spam, abuse, hate, sexual, illegal, or clearly off-topic content to review."` | Site-specific moderation policy | moderator.llm.policy (Moderator > LLM comment moderation > Site-specific moderation policy) |
+| **ATK_MODERATOR_LLM_TIMEOUT** | `10` | Request timeout (unit: s) | moderator.llm.timeout (Moderator > LLM comment moderation > Request timeout) |
 | **ATK_MODERATOR_PENDING_DEFAULT** | `false` | Default pending (new comments need to be approved by admin) | moderator.pending_default (Moderator > Default pending) |
 | **ATK_MODERATOR_TENCENT_ENABLED** | `false` | 启用 | moderator.tencent.enabled (Moderator > Tencent Cloud Content Security > Enabled) |
 | **ATK_MODERATOR_TENCENT_REGION** | `"ap-guangzhou"` | Region | moderator.tencent.region (Moderator > Tencent Cloud Content Security > Region) |

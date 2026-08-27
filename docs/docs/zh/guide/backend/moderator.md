@@ -15,6 +15,16 @@ moderator:
   api_fail_block: false # 垃圾检测 API 请求错误仍然拦截
   # akismet.com 反垃圾
   akismet_key: ''
+  # OpenAI-compatible LLM 审核
+  llm:
+    enabled: false
+    endpoint: '' # 完整的 Chat Completions 接口地址
+    api_key: ''
+    headers: {} # 附加请求 Header
+    model: ''
+    timeout: 10 # 秒
+    max_input_chars: 8000
+    policy: 将垃圾广告、辱骂、仇恨、色情、违法或明显与页面无关的内容设为 review。
   # 腾讯云文本内容安全 (tms)
   tencent: # https://cloud.tencent.com/document/product/1124/64508
     enabled: false
@@ -60,6 +70,41 @@ moderator:
 moderator:
   akismet_key: your_key
 ```
+
+## LLM 评论审核
+
+Artalk 可以将评论正文发送到兼容 OpenAI Chat Completions 的接口。请求只包含评论正文和配置的审核规则，不包含邮箱、IP、User-Agent 或登录标识。
+
+配置完整的接口地址和服务商支持的模型：
+
+```yaml
+moderator:
+  # 建议开启：服务商出错时让评论进入待审。
+  api_fail_block: true
+  llm:
+    enabled: true
+    endpoint: https://api.example.com/v1/chat/completions
+    api_key: your_key
+    headers:
+      CF-Access-Client-Id: your_access_id
+      CF-Access-Client-Secret: your_access_secret
+    model: your_model
+    timeout: 10
+    max_input_chars: 8000
+    policy: 将垃圾广告、辱骂、仇恨、色情、违法或明显与页面无关的内容设为 review。
+```
+
+模型必须返回 JSON 对象，`decision` 只能是 `allow` 或 `review`。`review` 会把评论放入现有待审队列，LLM 不会直接删除评论。评论超过 `max_input_chars`、请求超时、响应无效或服务商报错时，由 `api_fail_block` 决定放行还是转待审。
+
+`headers` 可用于 Cloudflare Access 等网关。Artalk 始终发送 `Content-Type: application/json`；如果配置了 `api_key`，Bearer 认证会覆盖自定义的 `Authorization`。Header 值可能包含凭证，请勿将填写后的值提交到公开配置文件。
+
+也可以通过环境变量传入 JSON 对象：
+
+```bash
+ATK_MODERATOR_LLM_HEADERS='{"CF-Access-Client-Id":"your_access_id","CF-Access-Client-Secret":"your_access_secret"}'
+```
+
+LLM 审核使用 Artalk 的异步审核管线。如果没有开启 `pending_default`，评论可能在 LLM 返回并将其转为待审前短暂可见。开启 `pending_default` 后，`allow` 结果仍会保持待审状态，需要管理员手动通过。
 
 ## 腾讯云文本内容安全
 

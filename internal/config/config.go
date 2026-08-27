@@ -125,9 +125,22 @@ type ModeratorConf struct {
 	PendingDefault bool                 `koanf:"pending_default" json:"pending_default"`
 	ApiFailBlock   bool                 `koanf:"api_fail_block" json:"api_fail_block"` // API 请求错误仍然拦截
 	AkismetKey     string               `koanf:"akismet_key" json:"akismet_key"`
+	LLM            LLMAntispamConf      `koanf:"llm" json:"llm"`
 	Tencent        TencentAntispamConf  `koanf:"tencent" json:"tencent"`
 	Aliyun         AliyunAntispamConf   `koanf:"aliyun" json:"aliyun"`
 	Keywords       KeyWordsAntispamConf `koanf:"keywords" json:"keywords"`
+}
+
+// OpenAI-compatible LLM comment moderation
+type LLMAntispamConf struct {
+	Enabled       bool        `koanf:"enabled" json:"enabled"`
+	Endpoint      string      `koanf:"endpoint" json:"endpoint"`
+	APIKey        string      `koanf:"api_key" json:"api_key"`
+	Headers       HTTPHeaders `koanf:"headers" json:"headers"`
+	Model         string      `koanf:"model" json:"model"`
+	Timeout       int         `koanf:"timeout" json:"timeout"`
+	MaxInputChars int         `koanf:"max_input_chars" json:"max_input_chars"`
+	Policy        string      `koanf:"policy" json:"policy"`
 }
 
 // 腾讯云反垃圾

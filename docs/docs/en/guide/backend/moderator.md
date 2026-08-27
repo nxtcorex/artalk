@@ -15,6 +15,16 @@ moderator:
   api_fail_block: false # Intercept comments even if the spam detection API request fails
   # akismet.com anti-spam
   akismet_key: ''
+  # OpenAI-compatible LLM moderation
+  llm:
+    enabled: false
+    endpoint: '' # Full Chat Completions endpoint URL
+    api_key: ''
+    headers: {} # Extra request headers
+    model: ''
+    timeout: 10 # Seconds
+    max_input_chars: 8000
+    policy: Set spam, abuse, hate, sexual, illegal, or clearly off-topic content to review.
   # Tencent Cloud Text Content Safety (tms)
   tencent: # https://cloud.tencent.com/document/product/1124/64508
     enabled: false
@@ -60,6 +70,41 @@ You can easily apply for an `akismet_key` on the [Akismet official website](http
 moderator:
   akismet_key: your_key
 ```
+
+## LLM Comment Moderation
+
+Artalk can send comment text to an OpenAI-compatible Chat Completions endpoint. Only the comment body and your configured policy are sent; email addresses, IP addresses, user agents, and login identifiers are not included.
+
+Configure the full endpoint URL and a model supported by your provider:
+
+```yaml
+moderator:
+  # Set this to true if provider errors should leave comments pending.
+  api_fail_block: true
+  llm:
+    enabled: true
+    endpoint: https://api.example.com/v1/chat/completions
+    api_key: your_key
+    headers:
+      CF-Access-Client-Id: your_access_id
+      CF-Access-Client-Secret: your_access_secret
+    model: your_model
+    timeout: 10
+    max_input_chars: 8000
+    policy: Set spam, abuse, hate, sexual, illegal, or clearly off-topic content to review.
+```
+
+The model must return a JSON object whose `decision` is `allow` or `review`. A `review` decision moves the comment to the existing pending queue; the LLM never deletes comments. Comments longer than `max_input_chars`, timeouts, invalid responses, and provider errors follow `api_fail_block`.
+
+Use `headers` for gateways such as Cloudflare Access. Artalk always sends `Content-Type: application/json`; when `api_key` is set, it overrides any custom `Authorization` value with Bearer authentication. Header values may contain credentials, so do not commit populated values to a public configuration file.
+
+Headers can also be supplied as a JSON object through the environment:
+
+```bash
+ATK_MODERATOR_LLM_HEADERS='{"CF-Access-Client-Id":"your_access_id","CF-Access-Client-Secret":"your_access_secret"}'
+```
+
+LLM moderation uses Artalk's asynchronous moderation pipeline. Unless `pending_default` is enabled, a comment can be visible briefly before the LLM finishes and changes it to pending. When `pending_default` is enabled, comments remain pending after an `allow` decision and must be approved by an administrator.
 
 ## Tencent Cloud Text Content Safety
 

@@ -127,6 +127,22 @@ moderator:
   # Akismet Key
   # (Akismet 反垃圾服务，https://akismet.com)
   akismet_key: ""
+  # LLM 评论审核 (兼容 OpenAI Chat Completions)
+  llm:
+    enabled: false
+    # 完整的 Chat Completions 接口地址
+    endpoint: ""
+    api_key: ""
+    # 附加请求 Header (值可能包含敏感信息)
+    headers: {}
+    model: ""
+    # 请求超时 (单位：秒)
+    timeout: 10
+    # 发送给模型的评论最大字符数
+    max_input_chars: 8000
+    # 站点审核规则
+    policy: >-
+      将垃圾广告、辱骂、仇恨、色情、违法或明显与页面无关的内容设为 review。
   # 腾讯云文本内容安全
   # (https://cloud.tencent.com/document/product/1124/64508)
   tencent:

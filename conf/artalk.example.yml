@@ -124,6 +124,22 @@ moderator:
   # Akismet Key
   # (Akismet anti-spam service, https://akismet.com)
   akismet_key: ""
+  # LLM comment moderation (OpenAI-compatible Chat Completions)
+  llm:
+    enabled: false
+    # Full Chat Completions endpoint URL
+    endpoint: ""
+    api_key: ""
+    # Extra request headers (values may contain secrets)
+    headers: {}
+    model: ""
+    # Request timeout (unit: s)
+    timeout: 10
+    # Maximum number of comment characters sent to the model
+    max_input_chars: 8000
+    # Site-specific moderation policy
+    policy: >-
+      Set spam, abuse, hate, sexual, illegal, or clearly off-topic content to review.
   # Tencent Cloud Content Security
   # (Auto review comments with Tencent Cloud Content Security)
   # -- see https://cloud.tencent.com/document/product/1124/64508 --

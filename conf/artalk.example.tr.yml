@@ -124,6 +124,22 @@ moderator:
   # Akismet Anahtarı
   # (Akismet spam önleme servisi, https://akismet.com)
   akismet_key: ""
+  # LLM yorum denetimi (OpenAI Chat Completions uyumlu)
+  llm:
+    enabled: false
+    # Tam Chat Completions uç nokta adresi
+    endpoint: ""
+    api_key: ""
+    # Ek istek başlıkları (değerler gizli bilgiler içerebilir)
+    headers: {}
+    model: ""
+    # İstek zaman aşımı (birim: saniye)
+    timeout: 10
+    # Modele gönderilen en fazla yorum karakteri
+    max_input_chars: 8000
+    # Siteye özel denetim politikası
+    policy: >-
+      Spam, taciz, nefret, cinsel, yasa dışı veya açıkça konu dışı içeriği review olarak işaretle.
   # Tencent Bulut İçerik Güvenliği
   # (Tencent Bulut İçerik Güvenliği ile yorumları otomatik inceleyin)
   # -- bkz. https://cloud.tencent.com/document/product/1124/64508 --

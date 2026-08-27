@@ -2,7 +2,6 @@ package anti_spam
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/artalkjs/artalk/v2/internal/config"
@@ -67,8 +66,8 @@ func (as AntiSpam) checkerTrigger(checker Checker, params *CheckerParams) bool {
 			as.conf.OnBlockComment(params.CommentID)
 		}
 
-		log.Debug(LOG_TAG, fmt.Sprintf("[%s] Successful blocking of comments ID=%d CONT=%s",
-			checker.Name(), params.CommentID, strconv.Quote(params.Content)))
+		log.Debug(LOG_TAG, fmt.Sprintf("[%s] Successful blocking of comment ID=%d",
+			checker.Name(), params.CommentID))
 	}
 
 	return pass
@@ -121,6 +120,13 @@ func (as AntiSpam) getEnabledCheckers() []Checker {
 			},
 		}))
 
+	}
+
+	// OpenAI-compatible LLM runs last to avoid remote model calls when a
+	// cheaper checker has already rejected the comment.
+	llmConf := as.conf.LLM
+	if llmConf.Enabled {
+		checkers = append(checkers, NewLLMChecker(llmConf))
 	}
 
 	return checkers

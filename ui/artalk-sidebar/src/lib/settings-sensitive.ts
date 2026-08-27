@@ -42,9 +42,11 @@ export const SensitiveConfigPaths = [
   'email.ali_dm.access_key_secret',
   'email.smtp.password',
   'moderator.aliyun.access_key_secret',
+  'moderator.llm.api_key',
+  'moderator.llm.headers',
   'moderator.tencent.secret_key',
 ]
 
 export function isSensitiveConfigPath(path: string) {
-  return SensitiveConfigPaths.includes(path)
+  return SensitiveConfigPaths.includes(path) || path.startsWith('moderator.llm.headers.')
 }
