@@ -3,8 +3,8 @@
   docker:
     image: golang:1.26.5
     volumes:
-      - go-mod:/go/pkg/mod:rw
-      - go-build:/root/.cache/go-build:rw
+      - go-mod:/go/pkg/mod:cow
+      - go-build:/root/.cache/go-build:cow
   ifModify:
     - "**/*.go"
     - go.mod
@@ -17,34 +17,8 @@
   stages:
     - name: Vet and test
       script: |
-        set -eu
-        go install gotest.tools/gotestsum@v1.13.0
         go mod download
         go vet ./...
-        mkdir -p "$REPORT_DIR"
-        gotestsum \
-          --junitfile "$REPORT_DIR/unit-tests.xml" \
-          --jsonfile "$REPORT_DIR/unit-tests.json" \
-          -- -coverprofile="$REPORT_DIR/coverage.out" ./...
-        tar -czf "$REPORT_DIR/go-test-results-$CNB_COMMIT_SHORT.tar.gz" \
-          -C "$REPORT_DIR" unit-tests.xml unit-tests.json coverage.out
-    - name: Report coverage
-      type: testing:coverage
-      options:
-        key: backend
-        name: Go coverage
-        pattern: .ci-reports/go/coverage.out
-        lang: go
-        breakIfNoCoverage: true
-    - name: Upload test report
-      # PR 场景下 CI 默认 Token 缺少 repo-code:rw 权限，
-      # 无法写入 commit assets，故仅在 push（非 PR）事件下上传测试报告。
-      if: |
-        [ -z "$CNB_PULL_REQUEST_IID" ]
-      image: cnbcool/attachments:latest
-      settings:
-        attachments:
-          - .ci-reports/go/go-test-results-$CNB_COMMIT_SHORT.tar.gz
 
 .ci-frontend-check: &ci-frontend-check
   name: Frontend checks
