@@ -9,7 +9,7 @@ import (
 // The version of Artalk
 //
 // Which is automatically set by the CI release workflow
-const Version = "v2.10.2"
+const Version = "v2.10.3"
 
 // The commit hash from which the binary was built (optional)
 //

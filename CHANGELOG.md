@@ -1,3 +1,49 @@
+## v2.10.3 (2026-08-30)
+
+### Features
+
+* **anti-spam:** support AI/LLM spam detection
+* **ip-region:** add MaxMind GeoLite2 provider support
+* **notify:** add Shoutrrr admin push support
+* **auth:** add self-hosted Gitlab
+* **auth:** add dingtalk, feishu and custom oidc support
+
+### Bug Fixes
+
+* **security:** restrict data URI sanitization
+* **a11y:** 修复 Pagespeed 无障碍检测问题
+* **deps:** upgrade brace-expansion to 5.0.6 to resolve CVE-2026-45149
+* **deps:** upgrade fast-uri to 3.1.1 to resolve CVE-2026-6321
+* sync sidebar settings with backend config
+* **auth:** require verified email for SSO exchange
+* **api/vote:** return not found for deleted targets
+* **ui:** replace vulnerable HTML sanitizer
+* **api:** validate vote status targets
+* **ui/types:** preserve atomic config values
+* **scripts:** import Buffer explicitly
+* **api:** make vote updates transactional
+* **cmd:** preserve config lookup before data chdir
+* **db:** enforce Cloud SQL TLS verification
+* **ui/editor:** restore deprecated aliases
+* **ui:** reject direct context replacement
+* **ui:** restore deprecated context services
+* **ui:** align plugin lifecycle with final config
+* **ui/sidebar:** handle null array preferences
+* **docs:** support React 19 useRef types
+* **api/stats:** exclude pending comments
+* **email:** add Message-ID header
+* **cache:** return database results on store failure
+* **config:** preserve keyword file separators
+
+### Testing
+
+* **ui:** cover sanitizer attribute allowlist
+* **ui:** isolate browser storage from Node
+* **ui:** cover Marked 18 integration
+* **server:** verify plugin URL trust filtering
+* **ui:** update comment e2e flow
+* **ui:** isolate Playwright end-to-end specs
+
 ## v2.10.2 (2026-07-22)
 
 ### Bug Fixes
