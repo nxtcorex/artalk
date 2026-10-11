@@ -68,32 +68,27 @@ const allowedAttributes = [
 ]
 const urlAttributes = new Set(['href', 'src', 'data-src'])
 const allowedSchemes = new Set(['http', 'https', 'mailto'])
-const allowedDataImageMimeTypes = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp'])
 
-function normalizeUrlValue(value: string): string {
+function hasAllowedURL(value: string, tag: string, attribute: string): boolean {
   // Browsers ignore ASCII control characters inside a URL scheme. Remove them
   // before checking so values such as "java\nscript:" cannot bypass the filter.
-  return [...value]
+  const normalized = [...value]
     .filter((character) => {
       const codePoint = character.codePointAt(0) || 0
       return codePoint > 0x20 && (codePoint < 0x7f || codePoint > 0x9f)
     })
     .join('')
-}
-
-function isAllowedDataImage(value: string): boolean {
-  const match = /^data:([^;,]+);base64,/i.exec(value)
-  return !!match && allowedDataImageMimeTypes.has(match[1].toLowerCase())
-}
-
-function hasAllowedUrl(tag: string, attribute: string, value: string): boolean {
-  const normalized = normalizeUrlValue(value)
   const scheme = /^([a-z][a-z\d+.-]*):/i.exec(normalized)?.[1].toLowerCase()
-
-  if (!scheme) return true
-  if (scheme !== 'data') return allowedSchemes.has(scheme)
-
-  return tag === 'img' && attribute === 'src' && isAllowedDataImage(normalized)
+  if (scheme === 'data') {
+    // Inline data is only for raster images, including lazy-loaded images.
+    // Never allow navigable data documents or SVG/HTML payloads.
+    return (
+      tag === 'img' &&
+      (attribute === 'src' || attribute === 'data-src') &&
+      /^data:image\/(?:png|jpeg|gif|webp|avif|bmp)(?:;base64)?,/i.test(normalized)
+    )
+  }
+  return !scheme || allowedSchemes.has(scheme)
 }
 
 function filterAttributes(root: HTMLTemplateElement): void {
@@ -109,7 +104,7 @@ function filterAttributes(root: HTMLTemplateElement): void {
 
       if (
         urlAttributes.has(attribute.name) &&
-        !hasAllowedUrl(tag, attribute.name, attribute.value)
+        !hasAllowedURL(attribute.value, tag, attribute.name)
       ) {
         element.removeAttribute(attribute.name)
       }
@@ -131,13 +126,15 @@ function filterAttributes(root: HTMLTemplateElement): void {
 
 export function sanitize(content: string): string {
   // Keep Artalk's existing HTML allowlist while using a maintained, non-regex
-  // parser. The second pass enforces the original per-tag attribute rules.
+  // parser. The second pass enforces per-tag attributes and URL restrictions.
   const sanitized = DOMPurify.sanitize(content, {
     ALLOWED_TAGS: allowedTags,
     ALLOWED_ATTR: allowedAttributes,
     ALLOW_ARIA_ATTR: false,
     ALLOW_DATA_ATTR: false,
     ALLOW_UNKNOWN_PROTOCOLS: true,
+    // Validate lazy image URLs in the same second pass as img[src].
+    ADD_URI_SAFE_ATTR: ['data-src'],
   })
   const template = document.createElement('template')
   template.innerHTML = sanitized
