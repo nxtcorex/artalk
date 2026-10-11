@@ -135,13 +135,13 @@ export function versionCompare(a: string, b: string) {
 /** 获取修正后的 UserAgent */
 export async function getCorrectUserAgent() {
   const uaRaw = navigator.userAgent
-  if (!(navigator as any).userAgentData || !(navigator as any).userAgentData.getHighEntropyValues) {
+  const uaData = (navigator as any).userAgentData
+  if (typeof uaData?.getHighEntropyValues !== 'function') {
     return uaRaw
   }
 
   // @link https://web.dev/migrate-to-ua-ch/
   // @link https://web.dev/user-agent-client-hints/
-  const uaData = (navigator as any).userAgentData
   let uaGot: any
   try {
     uaGot = await uaData.getHighEntropyValues(['platformVersion'])
@@ -149,8 +149,10 @@ export async function getCorrectUserAgent() {
     console.error(err)
     return uaRaw
   }
+  // Privacy extensions may omit or redact high-entropy hints. UA correction is
+  // optional and must not prevent a comment from being submitted.
   const platformVersion = uaGot?.platformVersion
-  if (typeof platformVersion !== 'string') {
+  if (typeof platformVersion !== 'string' || !/^\d+(\.\d+)*$/.test(platformVersion)) {
     return uaRaw
   }
   const majorPlatformVersion = Number(platformVersion.split('.')[0])
