@@ -1616,6 +1616,8 @@ export class Api<
  */
     getPages: (
       query?: {
+        /** Only include pages with comments (including pending comments) */
+        has_comments?: boolean
         /** The limit for pagination */
         limit?: number;
         /** The offset for pagination */
