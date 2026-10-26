@@ -5,9 +5,17 @@ import (
 
 	"github.com/artalkjs/artalk/v2/internal/entity"
 	"github.com/artalkjs/artalk/v2/internal/log"
+	"gorm.io/gorm"
 )
 
 func (dao *Dao) MigrateModels() {
+	// SQLite prepared statements retain column metadata across schema changes.
+	// Refresh it before inspecting the schema and after installing new columns.
+	if stmts, ok := dao.DB().ConnPool.(*gorm.PreparedStmtDB); ok && dao.DB().Dialector.Name() == "sqlite" {
+		stmts.Close()
+		defer stmts.Close()
+	}
+
 	// Upgrade the database
 	if dao.DB().Migrator().HasTable(&entity.Comment{}) &&
 		(!dao.DB().Migrator().HasColumn(&entity.Comment{}, "root_id") ||
