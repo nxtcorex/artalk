@@ -7,7 +7,9 @@
 </route>
 
 <script setup lang="ts">
-import { bootParams } from '../global'
+import { bootParams, isOpenFromSidebar } from '../global'
+import { useUserStore } from '../stores/user'
+import { initialPage } from '../lib/overview-navigation'
 
 const router = useRouter()
 
@@ -18,13 +20,7 @@ onMounted(() => {
     if (splitted[1]) bootParams.viewParams = JSON.parse(splitted[1])
   }
 
-  const LinkMap: { [key: string]: string } = {
-    comments: '/comments',
-    pages: '/pages',
-    sites: '/sites',
-    settings: '/settings',
-  }
-  router.replace(LinkMap[bootParams.view] || '/comments')
+  router.replace(initialPage(useUserStore().is_admin, isOpenFromSidebar(), bootParams.view))
 })
 </script>
 

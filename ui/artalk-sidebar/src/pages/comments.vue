@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { artalk } from '../global'
 import { useNavStore } from '../stores/nav'
 import { useUserStore } from '../stores/user'
+import { commentsTab } from '../lib/overview-navigation'
 
 const wrapEl = ref<HTMLElement>()
 const listEl = ref<HTMLElement>()
@@ -12,6 +13,7 @@ const { curtTab } = storeToRefs(nav)
 const { site: curtSite } = storeToRefs(user)
 
 const search = ref('')
+const route = useRoute()
 
 onMounted(() => {
   // 初始化导航条
@@ -22,7 +24,7 @@ onMounted(() => {
         pending: 'pending',
         personal_all: 'personal',
       },
-      'all',
+      commentsTab(route.query.tab, true),
     )
   } else {
     nav.updateTabs(
@@ -32,7 +34,7 @@ onMounted(() => {
         mine: 'mine',
         pending: 'pending',
       },
-      'all',
+      commentsTab(route.query.tab, false),
     )
   }
 
@@ -41,6 +43,13 @@ onMounted(() => {
       offset: 0,
     })
   })
+
+  watch(
+    () => route.query.tab,
+    (value) => {
+      nav.setTabActive(commentsTab(value, user.is_admin))
+    },
+  )
 
   watch(curtSite, (value) => {
     artalk!.ctx.reload()

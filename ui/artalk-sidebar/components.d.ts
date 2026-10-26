@@ -20,6 +20,7 @@ declare module 'vue' {
     ItemTextEditor: typeof import('./src/components/ItemTextEditor.vue')['default']
     LoadingLayer: typeof import('./src/components/LoadingLayer.vue')['default']
     LogTerminal: typeof import('./src/components/LogTerminal.vue')['default']
+    OverviewActivity: typeof import('./src/components/OverviewActivity.vue')['default']
     PageEditor: typeof import('./src/components/PageEditor.vue')['default']
     Pagination: typeof import('./src/components/Pagination.vue')['default']
     PreferenceArr: typeof import('./src/components/PreferenceArr.vue')['default']

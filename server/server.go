@@ -128,6 +128,8 @@ func Serve(app *core.App) (*fiber.App, error) {
 }
 
 func admin(app *core.App, api fiber.Router) {
+	h.Overview(app, api)
+	h.CommentActivity(app, api)
 	h.CommentUpdate(app, api)
 	h.CommentDelete(app, api)
 	h.PageList(app, api)

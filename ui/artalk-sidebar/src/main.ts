@@ -9,6 +9,7 @@ import './style.scss'
 import App from './App.vue'
 import { setArtalk } from './global'
 import { setupArtalk, syncArtalkUser } from './artalk'
+import { useUserStore } from './stores/user'
 import './lib/promise-polyfill'
 
 // I18n
@@ -25,6 +26,10 @@ const router = createRouter({
 // Pinia
 // @see https://pinia.vuejs.org
 const pinia = createPinia()
+
+router.beforeEach((to) => {
+  if (to.meta.adminOnly && !useUserStore(pinia).is_admin) return '/comments'
+})
 
 // Artalk
 // @see https://artalk.js.org

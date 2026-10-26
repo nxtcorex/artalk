@@ -6,6 +6,7 @@ import UsersIcon from '@/assets/nav-icon-users.svg'
 import SitesIcon from '@/assets/nav-icon-sites.svg'
 import TransferIcon from '@/assets/nav-icon-transfer.svg'
 import SettingsIcon from '@/assets/nav-icon-settings.svg'
+import OverviewIcon from '@/assets/nav-icon-overview.svg'
 import { useUserStore } from '@/stores/user'
 import { useNavStore } from '@/stores/nav'
 
@@ -15,6 +16,11 @@ export type PageItem = { label: string; link: string; hideOnMobile?: boolean; ic
  * Pages for admin
  */
 export const AdminPages: Record<string, PageItem> = {
+  overview: {
+    label: 'overview',
+    link: '/overview',
+    icon: OverviewIcon,
+  },
   comments: {
     label: 'comment',
     link: '/comments',

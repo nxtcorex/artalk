@@ -37,6 +37,47 @@ export interface CommonJSONResult {
 
 export type CommonMap = Record<string, any>;
 
+export interface DaoCommentActivityDay {
+  count: number;
+  date: string;
+}
+
+export interface DaoOverviewComment {
+  created_at: string;
+  id: number;
+  is_pending: boolean;
+  nick: string;
+  page_key: string;
+  page_title: string;
+  page_url: string;
+  site_name: string;
+  summary: string;
+}
+
+export interface DaoOverviewDay {
+  date: string;
+  pending: number;
+  published: number;
+}
+
+export interface DaoOverviewMetrics {
+  commented_pages: number;
+  participants: number;
+  pending: number;
+  published: number;
+  pv: number;
+  today_comments: number;
+}
+
+export interface DaoOverviewPage {
+  comments: number;
+  id: number;
+  key: string;
+  site_name: string;
+  title: string;
+  url: string;
+}
+
 export interface EntityCookedComment {
   badge_color: string;
   badge_name: string;
@@ -367,6 +408,15 @@ export interface HandlerResponseCaptchaStatus {
   is_pass: boolean;
 }
 
+export interface HandlerResponseCommentActivity {
+  days: DaoCommentActivityDay[];
+  end_date: string;
+  generated_at: string;
+  start_date: string;
+  timezone: string;
+  years: number[];
+}
+
 export interface HandlerResponseCommentCreate {
   badge_color: string;
   badge_name: string;
@@ -451,6 +501,15 @@ export interface HandlerResponseConfDomain {
 export interface HandlerResponseNotifyList {
   count: number;
   notifies: EntityCookedNotify[];
+}
+
+export interface HandlerResponseOverview {
+  generated_at: string;
+  latest_comments: DaoOverviewComment[];
+  metrics: DaoOverviewMetrics;
+  popular_pages: DaoOverviewPage[];
+  timezone: string;
+  trend: DaoOverviewDay[];
 }
 
 export interface HandlerResponsePageFetch {
@@ -870,6 +929,108 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
+  admin = {
+    /**
+ * @description Comment activity in the configured timezone. Historical buckets use current moderation status. Participants are distinct existing users with published comments in the selected period.
+ *
+ * @tags Admin
+ * @name GetOverview
+ * @summary Admin overview
+ * @request GET:/admin/overview
+ * @secure
+ * @response `200` `HandlerResponseOverview` OK
+ * @response `400` `(HandlerMap & {
+    msg?: string,
+
+})` Bad Request
+ * @response `403` `(HandlerMap & {
+    msg?: string,
+
+})` Forbidden
+ * @response `404` `(HandlerMap & {
+    msg?: string,
+
+})` Not Found
+ * @response `500` `(HandlerMap & {
+    msg?: string,
+
+})` Internal Server Error
+ */
+    getOverview: (
+      query?: {
+        /**
+         * Calendar days including today
+         * @default 7
+         */
+        days?: 7 | 30;
+        /** Site name; empty includes all sites */
+        site_name?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        HandlerResponseOverview,
+        HandlerMap & {
+          msg?: string;
+        }
+      >({
+        path: `/admin/overview`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+ * @description Daily new comments, including published and pending comments, in the configured timezone. Omit year for the last 365 days. Available years follow the first non-deleted comment in the selected site scope.
+ *
+ * @tags Admin
+ * @name GetCommentActivity
+ * @summary Comment activity calendar
+ * @request GET:/admin/overview/activity
+ * @secure
+ * @response `200` `HandlerResponseCommentActivity` OK
+ * @response `400` `(HandlerMap & {
+    msg?: string,
+
+})` Bad Request
+ * @response `403` `(HandlerMap & {
+    msg?: string,
+
+})` Forbidden
+ * @response `404` `(HandlerMap & {
+    msg?: string,
+
+})` Not Found
+ * @response `500` `(HandlerMap & {
+    msg?: string,
+
+})` Internal Server Error
+ */
+    getCommentActivity: (
+      query?: {
+        /** Site name; empty includes all sites */
+        site_name?: string;
+        /** Calendar year, from 1970 through the current year */
+        year?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        HandlerResponseCommentActivity,
+        HandlerMap & {
+          msg?: string;
+        }
+      >({
+        path: `/admin/overview/activity`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
   auth = {
     /**
  * @description Login by email with verify code (Need send email verify code first) or password
@@ -1617,7 +1778,7 @@ export class Api<
     getPages: (
       query?: {
         /** Only include pages with comments (including pending comments) */
-        has_comments?: boolean
+        has_comments?: boolean;
         /** The limit for pagination */
         limit?: number;
         /** The offset for pagination */

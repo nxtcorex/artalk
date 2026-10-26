@@ -16,6 +16,235 @@
     },
     "basePath": "/api/v2",
     "paths": {
+        "/admin/overview": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Comment activity in the configured timezone. Historical buckets use current moderation status. Participants are distinct existing users with published comments in the selected period.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin overview",
+                "operationId": "GetOverview",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Site name; empty includes all sites",
+                        "name": "site_name",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            7,
+                            30
+                        ],
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Calendar days including today",
+                        "name": "days",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ResponseOverview"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/overview/activity": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Daily new comments, including published and pending comments, in the configured timezone. Omit year for the last 365 days. Available years follow the first non-deleted comment in the selected site scope.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Comment activity calendar",
+                "operationId": "GetCommentActivity",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Site name; empty includes all sites",
+                        "name": "site_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Calendar year, from 1970 through the current year",
+                        "name": "year",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ResponseCommentActivity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.Map"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/auth/email/login": {
             "post": {
                 "description": "Login by email with verify code (Need send email verify code first) or password",
@@ -4027,6 +4256,145 @@
             "type": "object",
             "additionalProperties": true
         },
+        "dao.CommentActivityDay": {
+            "type": "object",
+            "required": [
+                "count",
+                "date"
+            ],
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.OverviewComment": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "id",
+                "is_pending",
+                "nick",
+                "page_key",
+                "page_title",
+                "page_url",
+                "site_name",
+                "summary"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_pending": {
+                    "type": "boolean"
+                },
+                "nick": {
+                    "type": "string"
+                },
+                "page_key": {
+                    "type": "string"
+                },
+                "page_title": {
+                    "type": "string"
+                },
+                "page_url": {
+                    "type": "string"
+                },
+                "site_name": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.OverviewDay": {
+            "type": "object",
+            "required": [
+                "date",
+                "pending",
+                "published"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "pending": {
+                    "type": "integer"
+                },
+                "published": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dao.OverviewMetrics": {
+            "type": "object",
+            "required": [
+                "commented_pages",
+                "participants",
+                "pending",
+                "published",
+                "pv",
+                "today_comments"
+            ],
+            "properties": {
+                "commented_pages": {
+                    "type": "integer"
+                },
+                "participants": {
+                    "type": "integer"
+                },
+                "pending": {
+                    "type": "integer"
+                },
+                "published": {
+                    "type": "integer"
+                },
+                "pv": {
+                    "type": "integer"
+                },
+                "today_comments": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dao.OverviewPage": {
+            "type": "object",
+            "required": [
+                "comments",
+                "id",
+                "key",
+                "site_name",
+                "title",
+                "url"
+            ],
+            "properties": {
+                "comments": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "site_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.CookedComment": {
             "type": "object",
             "required": [
@@ -4940,6 +5308,43 @@
                 }
             }
         },
+        "handler.ResponseCommentActivity": {
+            "type": "object",
+            "required": [
+                "days",
+                "end_date",
+                "generated_at",
+                "start_date",
+                "timezone",
+                "years"
+            ],
+            "properties": {
+                "days": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.CommentActivityDay"
+                    }
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "generated_at": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "years": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "handler.ResponseCommentCreate": {
             "type": "object",
             "required": [
@@ -5246,6 +5651,46 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/entity.CookedNotify"
+                    }
+                }
+            }
+        },
+        "handler.ResponseOverview": {
+            "type": "object",
+            "required": [
+                "generated_at",
+                "latest_comments",
+                "metrics",
+                "popular_pages",
+                "timezone",
+                "trend"
+            ],
+            "properties": {
+                "generated_at": {
+                    "type": "string"
+                },
+                "latest_comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.OverviewComment"
+                    }
+                },
+                "metrics": {
+                    "$ref": "#/definitions/dao.OverviewMetrics"
+                },
+                "popular_pages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.OverviewPage"
+                    }
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "trend": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.OverviewDay"
                     }
                 }
             }

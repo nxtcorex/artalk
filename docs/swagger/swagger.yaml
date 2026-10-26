@@ -49,6 +49,104 @@ definitions:
   common.Map:
     additionalProperties: true
     type: object
+  dao.CommentActivityDay:
+    properties:
+      count:
+        type: integer
+      date:
+        type: string
+    required:
+    - count
+    - date
+    type: object
+  dao.OverviewComment:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_pending:
+        type: boolean
+      nick:
+        type: string
+      page_key:
+        type: string
+      page_title:
+        type: string
+      page_url:
+        type: string
+      site_name:
+        type: string
+      summary:
+        type: string
+    required:
+    - created_at
+    - id
+    - is_pending
+    - nick
+    - page_key
+    - page_title
+    - page_url
+    - site_name
+    - summary
+    type: object
+  dao.OverviewDay:
+    properties:
+      date:
+        type: string
+      pending:
+        type: integer
+      published:
+        type: integer
+    required:
+    - date
+    - pending
+    - published
+    type: object
+  dao.OverviewMetrics:
+    properties:
+      commented_pages:
+        type: integer
+      participants:
+        type: integer
+      pending:
+        type: integer
+      published:
+        type: integer
+      pv:
+        type: integer
+      today_comments:
+        type: integer
+    required:
+    - commented_pages
+    - participants
+    - pending
+    - published
+    - pv
+    - today_comments
+    type: object
+  dao.OverviewPage:
+    properties:
+      comments:
+        type: integer
+      id:
+        type: integer
+      key:
+        type: string
+      site_name:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    required:
+    - comments
+    - id
+    - key
+    - site_name
+    - title
+    - url
+    type: object
   entity.CookedComment:
     properties:
       badge_color:
@@ -701,6 +799,32 @@ definitions:
     required:
     - is_pass
     type: object
+  handler.ResponseCommentActivity:
+    properties:
+      days:
+        items:
+          $ref: '#/definitions/dao.CommentActivityDay'
+        type: array
+      end_date:
+        type: string
+      generated_at:
+        type: string
+      start_date:
+        type: string
+      timezone:
+        type: string
+      years:
+        items:
+          type: integer
+        type: array
+    required:
+    - days
+    - end_date
+    - generated_at
+    - start_date
+    - timezone
+    - years
+    type: object
   handler.ResponseCommentCreate:
     properties:
       badge_color:
@@ -919,6 +1043,34 @@ definitions:
     required:
     - count
     - notifies
+    type: object
+  handler.ResponseOverview:
+    properties:
+      generated_at:
+        type: string
+      latest_comments:
+        items:
+          $ref: '#/definitions/dao.OverviewComment'
+        type: array
+      metrics:
+        $ref: '#/definitions/dao.OverviewMetrics'
+      popular_pages:
+        items:
+          $ref: '#/definitions/dao.OverviewPage'
+        type: array
+      timezone:
+        type: string
+      trend:
+        items:
+          $ref: '#/definitions/dao.OverviewDay'
+        type: array
+    required:
+    - generated_at
+    - latest_comments
+    - metrics
+    - popular_pages
+    - timezone
+    - trend
     type: object
   handler.ResponsePageFetch:
     properties:
@@ -1282,6 +1434,136 @@ info:
   title: Artalk API
   version: "2.0"
 paths:
+  /admin/overview:
+    get:
+      description: Comment activity in the configured timezone. Historical buckets
+        use current moderation status. Participants are distinct existing users with
+        published comments in the selected period.
+      operationId: GetOverview
+      parameters:
+      - description: Site name; empty includes all sites
+        in: query
+        name: site_name
+        type: string
+      - default: 7
+        description: Calendar days including today
+        enum:
+        - 7
+        - 30
+        in: query
+        name: days
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseOverview'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "403":
+          description: Forbidden
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Admin overview
+      tags:
+      - Admin
+  /admin/overview/activity:
+    get:
+      description: Daily new comments, including published and pending comments, in
+        the configured timezone. Omit year for the last 365 days. Available years
+        follow the first non-deleted comment in the selected site scope.
+      operationId: GetCommentActivity
+      parameters:
+      - description: Site name; empty includes all sites
+        in: query
+        name: site_name
+        type: string
+      - description: Calendar year, from 1970 through the current year
+        in: query
+        name: year
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseCommentActivity'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "403":
+          description: Forbidden
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Map'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Comment activity calendar
+      tags:
+      - Admin
   /auth/email/login:
     post:
       consumes:

@@ -94,6 +94,8 @@ func TestDatabaseCompatibility(t *testing.T) {
 	handler.NotifyList(app, router)
 	handler.NotifyReadAll(app, router)
 	handler.PageList(app, router)
+	handler.Overview(app, router)
+	handler.CommentActivity(app, router)
 
 	t.Run("migration", func(t *testing.T) {
 		var comment entity.Comment
@@ -202,6 +204,34 @@ func TestDatabaseCompatibility(t *testing.T) {
 		require.Equal(t, 8, page.PV)
 		require.True(t, page.AdminOnly)
 		require.Equal(t, "Admin title", page.Title)
+	})
+
+	t.Run("overview aggregation", func(t *testing.T) {
+		for _, query := range []string{"?days=7", "?days=30&site_name=Compat"} {
+			resp := guestRequest(t, router, "GET", "/admin/overview"+query, "", adminToken, nil)
+			require.Equal(t, 200, resp.StatusCode)
+			var result dao.Overview
+			require.NoError(t, json.NewDecoder(resp.Body).Decode(&result))
+			require.EqualValues(t, 1, result.Metrics.Published)
+			require.EqualValues(t, 1, result.Metrics.Participants)
+			require.Len(t, result.PopularPages, 1)
+			require.EqualValues(t, 1, result.PopularPages[0].Comments)
+		}
+	})
+
+	t.Run("comment activity calendar", func(t *testing.T) {
+		for _, query := range []string{"", "?site_name=Compat", fmt.Sprintf("?year=%d", time.Now().Year())} {
+			resp := guestRequest(t, router, "GET", "/admin/overview/activity"+query, "", adminToken, nil)
+			require.Equal(t, 200, resp.StatusCode)
+			var result dao.CommentActivity
+			require.NoError(t, json.NewDecoder(resp.Body).Decode(&result))
+			require.GreaterOrEqual(t, len(result.Days), 365)
+			var total int64
+			for _, day := range result.Days {
+				total += day.Count
+			}
+			require.GreaterOrEqual(t, total, int64(3))
+		}
 	})
 
 	t.Run("email challenge attempts and single use", func(t *testing.T) {
