@@ -18,6 +18,8 @@
     "vitest.workspace.ts",
     ".ci/scripts/generate-changelog.mjs",
     ".ci/scripts/set-version.mjs",
+    ".ci/scripts/release-notes.mjs",
+    ".ci/tests/release.test.mjs",
     "scripts/check-npm-publish.mjs",
     "scripts/fetch-registry.mjs"
   ],

@@ -24,7 +24,7 @@ $:
             apt-get install libatomic1 make gcc -y || true
             eval "$(/root/.local/bin/mise activate bash)"
             mise install
-            npm install -g pnpm@11.22.0
+            npm install -g pnpm@12.15.0
         - name: pnpm install
           script: |
             eval "$(/root/.local/bin/mise activate bash)"

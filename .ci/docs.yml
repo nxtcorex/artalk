@@ -1,7 +1,7 @@
 .ci-docs-site: &ci-docs-site
   name: Build documentation site
   docker:
-    image: node:24
+    image: node:26.12.1
     volumes:
       - node_modules
       - pnpm-store:/root/.local/share/pnpm/store:rw
@@ -13,7 +13,7 @@
     - name: Build site
       script: |
         set -eu
-        npm install -g pnpm@11.22.0
+        npm install -g pnpm@12.15.0
         pnpm install --frozen-lockfile
         pnpm build:docs
         tar -czf "docs-site-$CNB_COMMIT_SHORT.tar.gz" \

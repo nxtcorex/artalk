@@ -1,11 +1,15 @@
 ### build Artalk
-FROM golang:1.26.5-alpine3.24 AS builder
+FROM node:26.12.1-alpine3.24 AS node
+
+FROM golang:1.27.3-alpine3.24 AS builder
 
 WORKDIR /source
 
 # install tools
 RUN set -ex \
-    && apk add --no-cache make git gcc musl-dev bash
+    && apk add --no-cache make git gcc musl-dev bash libstdc++ libatomic
+
+COPY --from=node /usr/local/ /usr/local/
 
 # download go deps
 # (cache by separating the downloading of deps)
@@ -21,8 +25,7 @@ ARG SKIP_UI_BUILD=false
 # install ui build toolchain
 RUN set -ex \
     && if [ "$SKIP_UI_BUILD" = "false" ]; then \
-        apk add --no-cache nodejs npm \
-        && npm install -g pnpm@11.22.0 \
+        npm install -g pnpm@12.15.0 \
     ;fi
 
 RUN set -ex \

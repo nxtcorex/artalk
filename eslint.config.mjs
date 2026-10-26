@@ -97,7 +97,7 @@ export default defineConfig(
 
   /* Node scripts */
   {
-    files: ['.ci/scripts/**/*.mjs'],
+    files: ['.ci/scripts/**/*.mjs', '.ci/tests/**/*.mjs'],
     languageOptions: {
       globals: globals.node,
     },

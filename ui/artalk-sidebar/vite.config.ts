@@ -11,6 +11,7 @@ import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: __dirname,
   base: './',
   build: {
     target: 'es2015',
@@ -18,7 +19,7 @@ export default defineConfig({
     minify: 'terser',
   },
   plugins: [
-    VueRouter({ importMode: 'sync' }),
+    VueRouter({ importMode: 'sync', dts: resolve(__dirname, 'typed-router.d.ts') }),
     vue(),
     Components({ resolvers: [HeadlessUiResolver()] }),
     AutoImport({

@@ -30,6 +30,31 @@ branch:
             options:
               - { name: Enabled, value: "true" }
               - { name: Disabled, value: "false" }
+      - name: Repair release
+        description: Ensure a release tag and Release without rebuilding packages or images
+        event: web_trigger_repair_release
+        groupName: Release
+        permissions:
+          roles: [owner, master]
+        inputs:
+          RELEASE_VERSION:
+            name: Release version
+            description: Existing or missing release tag to repair
+            type: input
+            required: true
+            placeholder: v2.10.3
+          RELEASE_COMMIT:
+            name: Release commit
+            description: Required if the tag is missing; existing tags must point to this commit
+            type: input
+            required: false
+          DRY_RUN:
+            name: Dry run
+            type: switch
+            default: "true"
+            options:
+              - { name: Enabled, value: "true" }
+              - { name: Disabled, value: "false" }
       - name: Build nightly
         description: Build nightly release artifacts
         event: web_trigger_nightly

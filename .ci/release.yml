@@ -8,16 +8,16 @@
     cancel-in-wait: true
   stages:
     - name: Resolve version
-      image: golang:1.26.5
+      image: golang:1.27.3
       script: .ci/scripts/resolve-version.sh
       exports:
         VERSION: VERSION
         PREV_VERSION: PREV_VERSION
     - name: Generate changelog
-      image: node:24
+      image: node:26.12.1
       script: node .ci/scripts/generate-changelog.mjs "$VERSION" "$PREV_VERSION" --prepend
     - name: Update version files
-      image: node:24
+      image: node:26.12.1
       script: node .ci/scripts/set-version.mjs "$VERSION"
     - name: Validate release changes
       script: |
@@ -26,7 +26,7 @@
         git diff -- CHANGELOG.md internal/config/version.go \
           ui/artalk/package.json docs/docs/code/ArtalkVersion.json
     - name: Push release branch and create PR
-      image: node:24
+      image: node:26.12.1
       if: '[ "${DRY_RUN:-true}" = "false" ]'
       script: |
         npm install -g @cnbcool/cnb-cli
@@ -35,48 +35,98 @@
 .ci-tag-release: &ci-tag-release
   name: Tag merged release PR
   docker:
-    image: cnbcool/default-build-env:latest
+    image: node:26.12.1
   env:
     ARTALK_RELEASE_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
-    GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.22.0
+    GO_VERSION: 1.27.3
+    PNPM_VERSION: 12.15.0
   stages:
     - name: Inspect merged PR
       script: .ci/scripts/tag-merged-release.sh
+      exports:
+        RELEASE_VERSION: RELEASE_VERSION
+        RELEASE_COMMIT: RELEASE_COMMIT
+    - name: Read release notes
+      script: node .ci/scripts/release-notes.mjs "$RELEASE_VERSION" "$RELEASE_COMMIT"
+    - name: Create or update CNB Release
+      if: '[ "${DRY_RUN:-false}" = "false" ] && [ "$ARTALK_RELEASE_WRITES" = "true" ]'
+      type: git:release
+      options:
+        tag: $RELEASE_VERSION
+        title: Artalk $RELEASE_VERSION
+        descriptionFromFile: local/release-notes.md
+        overlying: true
+        latest: true
+
+.ci-repair-release: &ci-repair-release
+  name: Repair release metadata
+  docker:
+    image: node:26.12.1
+  env:
+    ARTALK_RELEASE_WRITES: "true"
+  stages:
+    - name: Ensure release tag
+      script: DRY_RUN="${DRY_RUN:-true}" sh .ci/scripts/ensure-release-tag.sh
+      exports:
+        RELEASE_VERSION: RELEASE_VERSION
+        RELEASE_COMMIT: RELEASE_COMMIT
+    - name: Read release notes
+      script: node .ci/scripts/release-notes.mjs "$RELEASE_VERSION" "$RELEASE_COMMIT"
+    - name: Create or update CNB Release
+      if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_RELEASE_WRITES" = "true" ]'
+      type: git:release
+      options:
+        tag: $RELEASE_VERSION
+        title: Artalk $RELEASE_VERSION
+        descriptionFromFile: local/release-notes.md
+        overlying: true
+
+.ci-release-metadata: &ci-release-metadata
+  name: Publish release metadata
+  docker:
+    image: node:26.12.1
+  stages:
+    - name: Validate release tag
+      script: .ci/scripts/validate-release-tag.sh
+    - name: Read release notes
+      script: node .ci/scripts/release-notes.mjs "$CNB_BRANCH"
+    - name: Create or update CNB Release
+      type: git:release
+      options:
+        title: Artalk $CNB_BRANCH
+        descriptionFromFile: local/release-notes.md
+        overlying: true
+        latest: true
 
 .ci-release-artifacts: &ci-release-artifacts
   name: Build release artifacts
+  allowFailure: true
   runner:
     cpus: 16
   docker:
-    image: cnbcool/default-build-env:latest
+    image: ghcr.io/goreleaser/goreleaser-cross:v1.27.3
     volumes:
       - node_modules
       - pnpm-store:/root/.local/share/pnpm/store:rw
-  services:
-    - docker
   env:
     ARTALK_RELEASE_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
-    GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.22.0
+    GO_VERSION: 1.27.3
+    PNPM_VERSION: 12.15.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
-    - name: Generate release notes
-      image: node:24
+    - name: Read release notes
+      image: node:26.12.1
       script: |
         set -eu
-        git fetch --force --tags origin
-        mkdir -p local
-        node .ci/scripts/generate-changelog.mjs \
-          "$CNB_BRANCH" "" --output local/release-notes.md
+        node .ci/scripts/release-notes.mjs "$CNB_BRANCH"
         cp conf/artalk.example.yml artalk.yml
     - name: Build release UI
-      image: node:24
+      image: node:26.12.1
       script: |
         set -eu
         npm install -g "pnpm@$PNPM_VERSION" @cnbcool/cnb-cli
@@ -90,7 +140,7 @@
       options:
         title: Artalk $CNB_BRANCH
         descriptionFromFile: local/release-notes.md
-        latest: true
+        overlying: true
     - name: Upload release files
       if: '[ "$ARTALK_RELEASE_WRITES" = "true" ]'
       image: cnbcool/attachments:latest
@@ -104,7 +154,7 @@
 .ci-release-npm: &ci-release-npm
   name: Publish npm package
   docker:
-    image: node:24
+    image: node:26.12.1
     volumes:
       - node_modules
       - pnpm-store:/root/.local/share/pnpm/store:rw
@@ -112,8 +162,8 @@
     ARTALK_RELEASE_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
-    GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.22.0
+    GO_VERSION: 1.27.3
+    PNPM_VERSION: 12.15.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
@@ -141,13 +191,13 @@
     ARTALK_RELEASE_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
     ARTALK_NPM_REGISTRY: https://npm.cnb.cool/pw.sh.cn/artalkjs/-/packages/
-    GO_VERSION: 1.26.2
-    PNPM_VERSION: 11.22.0
+    GO_VERSION: 1.27.3
+    PNPM_VERSION: 12.15.0
   stages:
     - name: Validate release tag
       script: .ci/scripts/validate-release-tag.sh
     - name: Build UI
-      image: node:24
+      image: node:26.12.1
       script: |
         set -eu
         npm install -g "pnpm@$PNPM_VERSION"
@@ -158,7 +208,10 @@
 $:
   web_trigger_prepare_release:
     prepare-release: *ci-prepare-release
+  web_trigger_repair_release:
+    repair-release: *ci-repair-release
   tag_push:
+    release: *ci-release-metadata
     artifacts: *ci-release-artifacts
     npm: *ci-release-npm
     docker: *ci-release-docker

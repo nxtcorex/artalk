@@ -12,7 +12,7 @@
   env:
     ARTALK_NIGHTLY_WRITES: "true"
     ARTALK_IMAGE: docker.cnb.cool/pw.sh.cn/artalk
-    PNPM_VERSION: 11.22.0
+    PNPM_VERSION: 12.15.0
     TZ: Asia/Shanghai
   lock:
     key: nightly
@@ -22,7 +22,7 @@
     - name: Check for recent commits
       script: .ci/scripts/check-nightly.sh
     - name: Build UI
-      image: node:24
+      image: node:26.12.1
       script: |
         set -eu
         npm install -g "pnpm@$PNPM_VERSION"
@@ -40,6 +40,7 @@
         tag: nightly
         title: Artalk Nightly
         descriptionFromFile: nightly-dist/release-notes.md
+        overlying: true
         preRelease: true
         latest: false
     - name: Upload nightly files

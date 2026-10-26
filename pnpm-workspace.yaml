@@ -11,17 +11,10 @@ allowBuilds:
   protobufjs: true
   unrs-resolver: true
 
-minimumReleaseAgeExclude:
-  - "@rolldown/binding-darwin-x64@1.2.5"
-  - "@rolldown/binding-linux-arm64-gnu@1.2.5"
-
 overrides:
   eslint-plugin-import>eslint: "10"
   eslint-plugin-react>eslint: "10"
-  fast-uri: 3.1.1
-  brace-expansion@5: 5.0.6
-
-packageExtensions:
-  "@microsoft/api-extractor@7.58.12":
-    peerDependencies:
-      typescript: ">=4.5.0 || 6.0.3"
+  fast-uri@3: 3.1.9
+  brace-expansion@5: 5.0.12
+  # Newer Nolebase UI releases require VitePress 2, which is still in alpha.
+  "@nolebase/vitepress-plugin-git-changelog>@nolebase/ui": 2.18.2

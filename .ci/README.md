@@ -6,7 +6,7 @@ limits nested custom tags to 10 levels.
 
 - `checks.yml`: Go, frontend, and documentation checks for push and PR events.
 - `docs.yml`: builds the `master` documentation site as a commit attachment.
-- `release.yml`: prepares release PRs and builds tag release artifacts.
+- `release.yml`: prepares release PRs, ensures tags and Releases, and publishes packages and images.
 - `nightly.yml`: scheduled and manually triggered nightly builds.
 
 Registry writes are enabled directly in the release and nightly pipelines. A
@@ -14,6 +14,37 @@ Registry writes are enabled directly in the release and nightly pipelines. A
 amd64 image at `docker.cnb.cool/pw.sh.cn/artalk`. The scheduled nightly build
 also updates the private amd64 `nightly` image and CNB prerelease. Manual
 buttons default to dry-run.
+
+Stable Releases run independently of binary packaging. Both merged release
+PRs and `tag_push` create or update the Release with `overlying: true`, which
+preserves existing attachments on retries. Binary archives are optional;
+their failure does not block the Release or the Docker publishing pipeline.
+GoReleaser runs directly inside the pipeline's `goreleaser-cross` image, without
+nested privileged Docker containers (CNB runners reject their sysfs mounts).
+
+To recover a failed release, use **Repair release** on `master`. Enter the
+`RELEASE_VERSION` (for example `v2.10.3`). For an existing tag, its commit is
+resolved from the remote. For a missing tag, also enter `RELEASE_COMMIT`.
+The script checks all three version files and refuses to move an existing
+remote tag to a different commit. Start with dry-run, then disable it to
+create the tag and Release. This does not rebuild or republish npm or images.
+Release notes come from the original release commit's `CHANGELOG.md`, so
+repairing an older release does not include newer changes.
+
+Use `pnpm test:ci` to test tag creation, retries, version validation, dry-runs,
+and release notes against temporary local Git repositories.
+
+The toolchain is pinned in `mise.toml`, `package.json`, CI and Docker:
+Node 26.12.1, pnpm 12.15.0 and Go 1.27.3. TypeScript stays at 6.0.3 because
+the current ESLint, Vue and declaration tooling still requires its JavaScript
+Compiler API. Nolebase's changelog plugin and UI stay at 2.18.2 to support
+stable VitePress 1.6.4; newer versions require VitePress 2 alpha.
+
+CNB references: [Release task](https://docs.cnb.cool/zh/build/internal-steps/git/release.md),
+[events](https://docs.cnb.cool/zh/build/trigger-rule.md),
+[variables](https://docs.cnb.cool/zh/build/build-in-env.md),
+[web triggers](https://docs.cnb.cool/zh/build/web-trigger.md),
+[pipeline syntax](https://docs.cnb.cool/zh/build/grammar.md).
 
 The obsolete GitHub Actions, Dependabot configuration, funding metadata,
 comment action, and GitHub changelog template were removed. Release notes are

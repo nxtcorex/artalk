@@ -7,7 +7,7 @@ then
     curl https://mise.run | sh
     eval "$("${HOME}/.local/bin/mise" activate bash)"
     mise install
-    npm install -g pnpm@11.22.0
+    npm install -g pnpm@12.15.0
 fi
 
 # build

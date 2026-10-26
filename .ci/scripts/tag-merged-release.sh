@@ -20,12 +20,6 @@ if [ "$expected" != "$version" ]; then
   exit 1
 fi
 
-if [ "$ARTALK_RELEASE_WRITES" != "true" ]; then
-  echo "Release write gate is disabled; would create tag $version."
-  exit 0
-fi
-
-git config user.name "cnb-ci"
-git config user.email "cnb-ci@users.noreply.cnb.cool"
-git tag -a "$version" -m "Release $version"
-git push origin "refs/tags/$version"
+export RELEASE_VERSION="$version"
+export RELEASE_COMMIT="${CNB_PULL_REQUEST_MERGE_SHA:-${CNB_COMMIT:-HEAD}}"
+exec sh .ci/scripts/ensure-release-tag.sh
