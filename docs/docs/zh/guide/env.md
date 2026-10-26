@@ -366,6 +366,15 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_MODERATOR_ALIYUN_ENABLED** | `false` | 启用 | moderator.aliyun.enabled (评论审核 > 阿里云内容安全 > Enabled) |
 | **ATK_MODERATOR_ALIYUN_REGION** | `"cn-shanghai"` | Region | moderator.aliyun.region (评论审核 > 阿里云内容安全 > Region) |
 | **ATK_MODERATOR_API_FAIL_BLOCK** | `false` | API 请求错误时拦截 (关闭此项当请求错误时让评论放行) | moderator.api_fail_block (评论审核 > API 请求错误时拦截) |
+| **ATK_MODERATOR_JEV_API_KEY** | `""` | ApiKey | moderator.jev.api_key (评论审核 > Jev 垃圾评论检测 > ApiKey) |
+| **ATK_MODERATOR_JEV_ENABLED** | `false` | 启用 | moderator.jev.enabled (评论审核 > Jev 垃圾评论检测 > Enabled) |
+| **ATK_MODERATOR_JEV_ENDPOINT** | `"https://api.typesafe.ai/v1/systemone"` | 完整的 System One 接口地址 | moderator.jev.endpoint (评论审核 > Jev 垃圾评论检测 > 完整的 System One 接口地址) |
+| **ATK_MODERATOR_JEV_HEADERS** | `map[]` | 附加请求 Header (值可能包含敏感信息) | moderator.jev.headers (评论审核 > Jev 垃圾评论检测 > 附加请求 Header) |
+| **ATK_MODERATOR_JEV_MAX_INPUT_CHARS** | `8000` | 发送给模型的评论最大字符数 | moderator.jev.max_input_chars (评论审核 > Jev 垃圾评论检测 > 发送给模型的评论最大字符数) |
+| **ATK_MODERATOR_JEV_MODEL** | `"jev-latest"` | Model | moderator.jev.model (评论审核 > Jev 垃圾评论检测 > Model) |
+| **ATK_MODERATOR_JEV_POLICY** | `"将未经请求的广告、引流、诈骗、钓鱼和无意义的批量消息视为垃圾评论。正常讨论、批评、代码、引用和相关链接，不应仅因含有网址或敏感词而被判为垃圾评论。"` | 垃圾评论判定规则 | moderator.jev.policy (评论审核 > Jev 垃圾评论检测 > 垃圾评论判定规则) |
+| **ATK_MODERATOR_JEV_THRESHOLD** | `0.8` | 垃圾概率达到此值时转为待审 (范围 0 到 1) | moderator.jev.threshold (评论审核 > Jev 垃圾评论检测 > 垃圾概率达到此值时转为待审) |
+| **ATK_MODERATOR_JEV_TIMEOUT** | `10` | 请求超时 (单位：秒) | moderator.jev.timeout (评论审核 > Jev 垃圾评论检测 > 请求超时) |
 | **ATK_MODERATOR_KEYWORDS_ENABLED** | `false` | 启用 | moderator.keywords.enabled (评论审核 > 关键词过滤 > Enabled) |
 | **ATK_MODERATOR_KEYWORDS_FILE_SEP** | `"\n"` | 词库文件内容分割符 (例如填写 "\n" 文件中一行一个关键词) | moderator.keywords.file_sep (评论审核 > 关键词过滤 > 词库文件内容分割符) |
 | **ATK_MODERATOR_KEYWORDS_FILES** | `[./data/词库_1.txt]` | 词库文件 (支持多个词库文件) | moderator.keywords.files (评论审核 > 关键词过滤 > 词库文件) |

@@ -1,6 +1,6 @@
 # Comment Moderation
 
-Artalk supports multiple comment filtering methods to intercept spam comments. It offers integration with online APIs like Akismet, Tencent Cloud Content Safety, Alibaba Cloud Content Safety, and local offline keyword libraries. You can further enhance comment moderation by combining it with the [captcha](./captcha.md) feature, making it hard for spam comments to get through.
+Artalk supports multiple comment filtering methods to intercept spam comments. It offers integration with online APIs like Jev, Akismet, Tencent Cloud Content Safety, Alibaba Cloud Content Safety, and local offline keyword libraries. You can further enhance comment moderation by combining it with the [captcha](./captcha.md) feature, making it hard for spam comments to get through.
 
 You can modify this configuration in the settings interface of the [Dashboard](../frontend/sidebar.md#settings), or configure it through [configuration files](./config.md#comment-moderation-moderator) or [environment variables](../env.md#comment-moderation).
 
@@ -15,6 +15,17 @@ moderator:
   api_fail_block: false # Intercept comments even if the spam detection API request fails
   # akismet.com anti-spam
   akismet_key: ''
+  # TypeSafe Jev spam probability detection
+  jev:
+    enabled: false
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ''
+    headers: {}
+    model: jev-latest
+    timeout: 10
+    max_input_chars: 8000
+    threshold: 0.8
+    policy: Unsolicited advertising, link farming, scams, phishing, and meaningless bulk messages are spam.
   # OpenAI-compatible LLM moderation
   llm:
     enabled: false
@@ -70,6 +81,31 @@ You can easily apply for an `akismet_key` on the [Akismet official website](http
 moderator:
   akismet_key: your_key
 ```
+
+## Jev Spam Detection
+
+[Jev](https://typesafe.ai/) is TypeSafe's probability evaluation model. Following [sub2api's TypeSafe integration](https://github.com/Wei-Shaw/sub2api/blob/main/backend/internal/pkg/typesafe/client.go), Artalk sends a single `noul` spam question to `/v1/systemone` and reads a probability between 0 and 1 without generating a text completion.
+
+Obtain a TypeSafe API key and enable detection:
+
+```yaml
+moderator:
+  api_fail_block: true
+  jev:
+    enabled: true
+    api_key: your_typesafe_api_key
+    threshold: 0.8
+```
+
+The default endpoint is `https://api.typesafe.ai/v1/systemone`, and the default model is `jev-latest`. For a gateway, set `endpoint` to its full System One URL and use `headers` for additional authentication. A nonempty `api_key` overrides a custom `Authorization` header; the request always uses JSON.
+
+A spam probability **at or above** `threshold` moves the comment to the existing pending queue. Lower probabilities continue through the remaining checks. The threshold ranges from 0 to 1 and defaults to 0.8; lowering it catches more comments. The default policy targets unsolicited advertising, link farming, scams, phishing, and meaningless bulk messages. Ordinary discussion, criticism, code, quotations, and relevant links are not spam merely because they include URLs or sensitive words. Customize `policy` for your site.
+
+Only comment text and policy are sent. Email addresses, IP addresses, names, and other personal fields are excluded, and linked images are not downloaded or audited. Existing filters, including keywords, run before Jev. A blocked comment skips Jev; a Jev rejection also skips the generic LLM checker when both are enabled.
+
+Timeouts (10 seconds by default), comments exceeding `max_input_chars` (8000 by default), invalid probabilities, and provider errors follow `api_fail_block`. Paid requests are not retried automatically. Jev uses asynchronous moderation: comments may be briefly visible unless `pending_default` is enabled. With that setting enabled, passing Jev still requires manual approval.
+
+Environment variables include `ATK_MODERATOR_JEV_ENABLED=true`, `ATK_MODERATOR_JEV_API_KEY=...`, and `ATK_MODERATOR_JEV_THRESHOLD=0.8`. Set `ATK_MODERATOR_JEV_HEADERS` to a JSON object for additional headers.
 
 ## LLM Comment Moderation
 

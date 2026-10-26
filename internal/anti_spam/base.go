@@ -122,6 +122,12 @@ func (as AntiSpam) getEnabledCheckers() []Checker {
 
 	}
 
+	// Run Jev before generative LLM moderation to avoid the more expensive
+	// model call when its spam probability already meets the threshold.
+	if as.conf.Jev.Enabled {
+		checkers = append(checkers, NewJevChecker(as.conf.Jev))
+	}
+
 	// OpenAI-compatible LLM runs last to avoid remote model calls when a
 	// cheaper checker has already rejected the comment.
 	llmConf := as.conf.LLM

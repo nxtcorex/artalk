@@ -127,6 +127,24 @@ moderator:
   # Akismet Anahtarı
   # (Akismet spam önleme servisi, https://akismet.com)
   akismet_key: ""
+  # Jev spam tespiti (TypeSafe olasılık değerlendirmesi)
+  jev:
+    enabled: false
+    # Tam System One uç nokta adresi
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ""
+    # Ek istek başlıkları (değerler gizli bilgiler içerebilir)
+    headers: {}
+    model: jev-latest
+    # Saniye cinsinden istek zaman aşımı
+    timeout: 10
+    # Modele gönderilecek azami yorum karakter sayısı
+    max_input_chars: 8000
+    # Bu değere ulaşan spam olasılığı yorumu incelemeye alır (0 ile 1)
+    threshold: 0.8
+    # Spam tespit politikası
+    policy: >-
+      İstenmeyen reklam, bağlantı spamı, dolandırıcılık, kimlik avı ve anlamsız toplu mesajlar spamdır. Normal tartışma, eleştiri, kod, alıntılar ve ilgili bağlantılar yalnızca URL veya hassas sözcük içerdiği için spam sayılmaz.
   # LLM yorum denetimi (OpenAI Chat Completions uyumlu)
   llm:
     enabled: false

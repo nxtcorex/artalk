@@ -127,6 +127,24 @@ moderator:
   # Akismet Key
   # (Akismet anti-spam service, https://akismet.com)
   akismet_key: ""
+  # Jev spam detection (TypeSafe probability evaluation)
+  jev:
+    enabled: false
+    # Full System One endpoint URL
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ""
+    # Extra request headers (values may contain secrets)
+    headers: {}
+    model: jev-latest
+    # Request timeout in seconds
+    timeout: 10
+    # Maximum comment characters sent to the model
+    max_input_chars: 8000
+    # Spam probability at or above this value goes to pending review (0 to 1)
+    threshold: 0.8
+    # Spam detection policy
+    policy: >-
+      Unsolicited advertising, link farming, scams, phishing, and meaningless bulk messages are spam. Ordinary discussion, criticism, code, quotations, and relevant links are not spam merely because they contain URLs or sensitive words.
   # LLM comment moderation (OpenAI-compatible Chat Completions)
   llm:
     enabled: false

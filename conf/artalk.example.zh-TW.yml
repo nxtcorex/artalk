@@ -130,6 +130,24 @@ moderator:
   # Akismet Key
   # (Akismet 反垃圾服務，https://akismet.com)
   akismet_key: ""
+  # Jev 垃圾評論偵測 (TypeSafe 機率評估)
+  jev:
+    enabled: false
+    # 完整的 System One 介面位址
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ""
+    # 附加請求 Header (值可能包含敏感資訊)
+    headers: {}
+    model: jev-latest
+    # 請求逾時 (單位：秒)
+    timeout: 10
+    # 傳送給模型的評論最大字元數
+    max_input_chars: 8000
+    # 垃圾機率達到此值時轉為待審 (範圍 0 到 1)
+    threshold: 0.8
+    # 垃圾評論判定規則
+    policy: >-
+      將未經請求的廣告、引流、詐騙、釣魚和無意義的批次訊息視為垃圾評論。正常討論、批評、程式碼、引用和相關連結，不應僅因含有網址或敏感詞而被判為垃圾評論。
   # LLM 評論審核 (相容 OpenAI Chat Completions)
   llm:
     enabled: false

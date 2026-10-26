@@ -365,6 +365,15 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_MODERATOR_ALIYUN_ENABLED** | `false` | 启用 | moderator.aliyun.enabled (Moderator > Aliyun Content Security > Enabled) |
 | **ATK_MODERATOR_ALIYUN_REGION** | `"cn-shanghai"` | Region | moderator.aliyun.region (Moderator > Aliyun Content Security > Region) |
 | **ATK_MODERATOR_API_FAIL_BLOCK** | `false` | Block when API request fails (set to false to let comments pass when API request fails) | moderator.api_fail_block (Moderator > Block when API request fails) |
+| **ATK_MODERATOR_JEV_API_KEY** | `""` | ApiKey | moderator.jev.api_key (Moderator > Jev spam detection > ApiKey) |
+| **ATK_MODERATOR_JEV_ENABLED** | `false` | 启用 | moderator.jev.enabled (Moderator > Jev spam detection > Enabled) |
+| **ATK_MODERATOR_JEV_ENDPOINT** | `"https://api.typesafe.ai/v1/systemone"` | Full System One endpoint URL | moderator.jev.endpoint (Moderator > Jev spam detection > Full System One endpoint URL) |
+| **ATK_MODERATOR_JEV_HEADERS** | `map[]` | Extra request headers (values may contain secrets) | moderator.jev.headers (Moderator > Jev spam detection > Extra request headers) |
+| **ATK_MODERATOR_JEV_MAX_INPUT_CHARS** | `8000` | Maximum comment characters sent to the model | moderator.jev.max_input_chars (Moderator > Jev spam detection > Maximum comment characters sent to the model) |
+| **ATK_MODERATOR_JEV_MODEL** | `"jev-latest"` | Model | moderator.jev.model (Moderator > Jev spam detection > Model) |
+| **ATK_MODERATOR_JEV_POLICY** | `"Unsolicited advertising, link farming, scams, phishing, and meaningless bulk messages are spam. Ordinary discussion, criticism, code, quotations, and relevant links are not spam merely because they contain URLs or sensitive words."` | Spam detection policy | moderator.jev.policy (Moderator > Jev spam detection > Spam detection policy) |
+| **ATK_MODERATOR_JEV_THRESHOLD** | `0.8` | Spam probability at or above this value goes to pending review (0 to 1) | moderator.jev.threshold (Moderator > Jev spam detection > Spam probability at or above this value goes to pending review) |
+| **ATK_MODERATOR_JEV_TIMEOUT** | `10` | Request timeout in seconds | moderator.jev.timeout (Moderator > Jev spam detection > Request timeout in seconds) |
 | **ATK_MODERATOR_KEYWORDS_ENABLED** | `false` | Enable keyword filter | moderator.keywords.enabled (Moderator > Keyword filter > Enable keyword filter) |
 | **ATK_MODERATOR_KEYWORDS_FILE_SEP** | `"\n"` | FileSep | moderator.keywords.file_sep (Moderator > Keyword filter > FileSep) |
 | **ATK_MODERATOR_KEYWORDS_FILES** | `[./data/keywords_1.txt]` | Dictionary file (support multiple dictionary files) | moderator.keywords.files (Moderator > Keyword filter > Dictionary file) |

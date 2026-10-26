@@ -1,6 +1,6 @@
 # 评论审核
 
-Artalk 支持多种评论过滤方式以拦截垃圾评论，支持通过 Akismet、腾讯云内容安全、阿里云内容安全 等在线 API 实现垃圾评论识别和拦截，也可通过本地离线关键词词库过滤评论，结合[验证码](./captcha.md)功能进一步提高评论审核强度，让垃圾评论没有容身之地。
+Artalk 支持多种评论过滤方式以拦截垃圾评论，支持通过 Jev、Akismet、腾讯云内容安全、阿里云内容安全 等在线 API 实现垃圾评论识别和拦截，也可通过本地离线关键词词库过滤评论，结合[验证码](./captcha.md)功能进一步提高评论审核强度，让垃圾评论没有容身之地。
 
 你可以在 [控制中心](../frontend/sidebar.md#设置) 的设置界面修改此配置，也可以通过 [配置文件](./config.md#评论审核-moderator) 或 [环境变量](../env.md#评论审核) 进行配置。
 
@@ -15,6 +15,17 @@ moderator:
   api_fail_block: false # 垃圾检测 API 请求错误仍然拦截
   # akismet.com 反垃圾
   akismet_key: ''
+  # TypeSafe Jev 垃圾概率检测
+  jev:
+    enabled: false
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ''
+    headers: {}
+    model: jev-latest
+    timeout: 10
+    max_input_chars: 8000
+    threshold: 0.8
+    policy: 将未经请求的广告、引流、诈骗、钓鱼和无意义的批量消息视为垃圾评论。
   # OpenAI-compatible LLM 审核
   llm:
     enabled: false
@@ -70,6 +81,31 @@ moderator:
 moderator:
   akismet_key: your_key
 ```
+
+## Jev 垃圾评论检测
+
+[Jev](https://typesafe.ai/) 是 TypeSafe 的概率评估模型。Artalk 参考 [sub2api 的 TypeSafe 接入](https://github.com/Wei-Shaw/sub2api/blob/main/backend/internal/pkg/typesafe/client.go)，通过 `/v1/systemone` 发送一个 `noul` 类型的 spam 问题，直接取得 0 到 1 的垃圾概率，无需生成长文本或解析模型生成的 JSON。
+
+在 TypeSafe 获取 API Key 后，添加以下配置即可启用：
+
+```yaml
+moderator:
+  api_fail_block: true
+  jev:
+    enabled: true
+    api_key: your_typesafe_api_key
+    threshold: 0.8
+```
+
+默认接口为 `https://api.typesafe.ai/v1/systemone`，模型为 `jev-latest`。使用中转服务时，`endpoint` 应填写完整的 System One 接口地址，支持通过 `headers` 配置网关认证。`api_key` 非空时会覆盖自定义的 `Authorization`，请求始终使用 JSON。
+
+垃圾概率**大于或等于** `threshold` 时，评论进入现有待审队列；低于阈值则继续后续检查。阈值范围是 0 到 1，默认 0.8，调低会拦截更多评论。默认规则识别广告、引流、诈骗、钓鱼和无意义的批量消息，正常讨论、批评、代码、引用及相关链接不会仅因包含网址或敏感词就被视为垃圾。可通过 `policy` 自定义站点规则。
+
+Jev 只接收评论正文和审核规则，不发送邮箱、IP、昵称等信息，也不下载图片进行审核。关键词等已有检测在 Jev 前运行，命中拦截后不调用 Jev；同时启用通用 LLM 审核时，Jev 拦截后也会跳过该模型调用。
+
+请求超时（默认 10 秒）、正文超过 `max_input_chars`（默认 8000 字符）、无效概率或服务报错时，按 `api_fail_block` 决定放行或转待审。不会自动重试付费请求。Jev 沿用异步审核：未开启 `pending_default` 时，评论可能短暂可见；开启后，即使通过 Jev 仍需管理员手动批准。
+
+也可使用环境变量，例如 `ATK_MODERATOR_JEV_ENABLED=true`、`ATK_MODERATOR_JEV_API_KEY=...` 和 `ATK_MODERATOR_JEV_THRESHOLD=0.8`。附加 Header 可通过 `ATK_MODERATOR_JEV_HEADERS` 传入 JSON 对象。
 
 ## LLM 评论审核
 

@@ -127,10 +127,24 @@ type ModeratorConf struct {
 	PendingDefault bool                 `koanf:"pending_default" json:"pending_default"`
 	ApiFailBlock   bool                 `koanf:"api_fail_block" json:"api_fail_block"` // API 请求错误仍然拦截
 	AkismetKey     string               `koanf:"akismet_key" json:"akismet_key"`
+	Jev            JevAntispamConf      `koanf:"jev" json:"jev"`
 	LLM            LLMAntispamConf      `koanf:"llm" json:"llm"`
 	Tencent        TencentAntispamConf  `koanf:"tencent" json:"tencent"`
 	Aliyun         AliyunAntispamConf   `koanf:"aliyun" json:"aliyun"`
 	Keywords       KeyWordsAntispamConf `koanf:"keywords" json:"keywords"`
+}
+
+// TypeSafe Jev probability-based spam detection.
+type JevAntispamConf struct {
+	Enabled       bool        `koanf:"enabled" json:"enabled"`
+	Endpoint      string      `koanf:"endpoint" json:"endpoint"`
+	APIKey        string      `koanf:"api_key" json:"api_key"`
+	Headers       HTTPHeaders `koanf:"headers" json:"headers"`
+	Model         string      `koanf:"model" json:"model"`
+	Timeout       int         `koanf:"timeout" json:"timeout"`
+	MaxInputChars int         `koanf:"max_input_chars" json:"max_input_chars"`
+	Threshold     *float64    `koanf:"threshold" json:"threshold"`
+	Policy        string      `koanf:"policy" json:"policy"`
 }
 
 // OpenAI-compatible LLM comment moderation

@@ -52,6 +52,16 @@ moderator:
   pending_default: false
   api_fail_block: false
   akismet_key: ""
+  jev:
+    enabled: false
+    endpoint: https://api.typesafe.ai/v1/systemone
+    api_key: ""
+    headers: {}
+    model: jev-latest
+    timeout: 10
+    max_input_chars: 8000
+    threshold: 0.8
+    policy: Unsolicited advertising, link farming, scams, phishing, and meaningless bulk messages are spam. Ordinary discussion, criticism, code, quotations, and relevant links are not spam merely because they contain URLs or sensitive words.
   llm:
     enabled: false
     endpoint: ""
