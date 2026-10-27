@@ -10,6 +10,9 @@ docker build \
   --build-arg SKIP_UI_BUILD=true \
   -t "$image" .
 
+# Check the real entrypoint before publishing.
+docker run --rm "$image" --version
+
 if [ "${DRY_RUN:-true}" = "false" ] && \
    [ "$ARTALK_NIGHTLY_WRITES" = "true" ]; then
   printf '%s' "$CNB_TOKEN" | docker login "$CNB_DOCKER_REGISTRY" \

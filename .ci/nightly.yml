@@ -30,12 +30,13 @@
         make pack-frontend
     - name: Build nightly artifacts
       script: .ci/scripts/build-nightly.sh
-    # Keep `script` directly on the stage: a stage that only declares `jobs`
-    # never reported its sub-job failures, so a broken image build left the
-    # pipeline green until the release steps crashed on the missing output.
+    # Keep scripts directly on stages so build/smoke-test errors fail the stage.
+    # Retry transient package-index and registry failures with a bounded limit.
     - name: Build nightly-distroless image
+      retry: 2
       script: .ci/scripts/build-nightly-distroless.sh
     - name: Build nightly bundle image
+      retry: 2
       script: .ci/scripts/build-nightly-bundle.sh
     - name: Update nightly tag
       if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_NIGHTLY_WRITES" = "true" ]'

@@ -34,18 +34,6 @@ RUN CGO_ENABLED=1 go build \
 RUN mkdir -p /runtime/data /runtime/etc \
     && ln -s /data /runtime/etc/artalk
 
-# Point /artalk at the shell runner so the bundled PATH and config work the
-# same way as in the alpine image, where /usr/bin/artalk runs with -w /.
-RUN cp /out/artalk /out/artalk-go \
-    && cp scripts/docker-artalk-runner.sh /out/artalk \
-    && chmod +x /out/artalk /out/artalk-go
-
-# The runner script is a bash script, while distroless/static carries no shell
-# at all: ship the static bash build next to it as /bin/bash so the shebang
-# resolves inside the image.
-COPY --from=builder /bin/bash /bin/bash
-COPY --from=builder /bin/bash /usr/bin/bash
-
 ### build final image (includes CA certificates and timezone data)
 FROM gcr.io/distroless/static-debian13:latest
 
@@ -54,7 +42,6 @@ ENV TZ=${TZ} \
     XDG_CONFIG_HOME=/etc
 
 COPY --from=builder /out/artalk /artalk
-COPY --from=builder /out/artalk-go /artalk-go
 COPY --from=builder /runtime/ /
 
 WORKDIR /
@@ -62,10 +49,7 @@ VOLUME ["/data"]
 
 EXPOSE 23366
 
-# Distroless ships no shell: any RUN here would fail with
-# `exec: "/bin/sh": no such file or directory`. The executable bit comes from
-# the build context instead, so keep docker-entrypoint.sh at mode 755 on disk.
-COPY docker-entrypoint.sh /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+# Artalk discovers and generates its config natively; no shell runner is needed.
+# Keep relative database and upload paths under /data, as in the Alpine image.
+ENTRYPOINT ["/artalk", "--workdir", "/"]
 CMD ["server", "--host", "0.0.0.0", "--port", "23366"]
