@@ -1,0 +1,54 @@
+ARG ARTALK_BASE_IMAGE=artalk:local
+
+FROM alpine:3.24 AS upgit-builder
+
+RUN apk add --no-cache cargo rust build-base git ca-certificates binutils
+
+WORKDIR /source
+RUN git clone --depth 1 https://github.com/pluveto/upgit.git .
+
+RUN set -eux; \
+    rust_target="$(rustc -vV | sed -n 's/^host: //p')"; \
+    case "$rust_target" in \
+        *-linux-musl) ;; \
+        *) echo 'UpGit must be built with a native musl toolchain' >&2; exit 1 ;; \
+    esac; \
+    RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --locked -p upgit --target "$rust_target"; \
+    if readelf -l "target/$rust_target/release/upgit" | grep -q INTERP; then \
+        echo 'UpGit must be statically linked' >&2; exit 1; \
+    fi; \
+    mkdir -p /out/bin; \
+    cp "target/$rust_target/release/upgit" /out/bin/upgit; \
+    /out/bin/upgit --version
+
+FROM alpine:3.24 AS bundle-data
+
+RUN apk add --no-cache git ca-certificates
+COPY go.mod /source/go.mod
+
+RUN set -eux; \
+    ip2region_version="$(awk '$1 == "github.com/lionsoul2014/ip2region/binding/golang" { print $2 }' /source/go.mod)"; \
+    test -n "$ip2region_version"; \
+    ip2region_revision="${ip2region_version##*-}"; \
+    git clone --filter=blob:none --no-checkout https://github.com/lionsoul2014/ip2region.git /source/ip2region; \
+    git -C /source/ip2region checkout "$ip2region_revision" -- data/ip2region_v4.xdb; \
+    mkdir -p /out; \
+    cp /source/ip2region/data/ip2region_v4.xdb /out/ip2region.xdb
+
+FROM ${ARTALK_BASE_IMAGE}
+
+COPY --from=upgit-builder /out/bin/upgit /usr/local/bin/upgit
+COPY --from=bundle-data /out/ /usr/share/artalk/
+
+RUN set -eux; \
+    apk add --no-cache rclone msmtp ca-certificates; \
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail; \
+    upgit --version; \
+    rclone version; \
+    /usr/sbin/sendmail --version
+
+COPY docker-bundle-entrypoint.sh /bundle-entrypoint.sh
+RUN chmod +x /bundle-entrypoint.sh
+
+ENTRYPOINT ["/bundle-entrypoint.sh"]
+CMD ["server", "--host", "0.0.0.0", "--port", "23366"]
