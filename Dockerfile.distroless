@@ -1,0 +1,53 @@
+### build Artalk
+FROM node:26.12.1-alpine3.24 AS node
+
+FROM golang:1.27.3-alpine3.24 AS builder
+
+WORKDIR /source
+
+RUN apk add --no-cache make git gcc musl-dev bash libstdc++ libatomic
+
+COPY --from=node /usr/local/ /usr/local/
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+ARG SKIP_UI_BUILD=false
+
+RUN set -ex \
+    && if [ "$SKIP_UI_BUILD" = "false" ]; then \
+        npm install -g pnpm@12.15.0 \
+        && make build-frontend \
+    ;fi
+
+# SQLite requires CGO. Link musl statically so the runtime needs no C loader.
+# Disable VCS stamping because a worktree's .git file points outside the context.
+RUN CGO_ENABLED=1 go build \
+    -trimpath -v -buildvcs=false -tags netgo,osusergo \
+    -ldflags '-s -w -linkmode external -extldflags "-static"' \
+    -o /out/artalk .
+
+# Route the default XDG config location to the persistent data volume.
+# Artalk discovers existing /data configs and generates a new one on first boot.
+RUN mkdir -p /runtime/data /runtime/etc \
+    && ln -s /data /runtime/etc/artalk
+
+### build final image (includes CA certificates and timezone data)
+FROM gcr.io/distroless/static-debian13:latest
+
+ARG TZ="Asia/Shanghai"
+ENV TZ=${TZ} \
+    XDG_CONFIG_HOME=/etc
+
+COPY --from=builder /out/artalk /artalk
+COPY --from=builder /runtime/ /
+
+WORKDIR /
+VOLUME ["/data"]
+
+EXPOSE 23366
+
+ENTRYPOINT ["/artalk", "--workdir", "/"]
+CMD ["server", "--host", "0.0.0.0", "--port", "23366"]

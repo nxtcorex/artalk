@@ -30,6 +30,8 @@
         make pack-frontend
     - name: Build nightly artifacts
       script: .ci/scripts/build-nightly.sh
+    - name: Build nightly-distroless image
+      script: .ci/scripts/build-nightly-distroless.sh
     - name: Update nightly tag
       if: '[ "${DRY_RUN:-true}" = "false" ] && [ "$ARTALK_NIGHTLY_WRITES" = "true" ]'
       script: .ci/scripts/update-nightly-tag.sh
