@@ -14,6 +14,7 @@ import (
 	"github.com/artalkjs/artalk/v2/internal/config"
 	"github.com/artalkjs/artalk/v2/internal/core"
 	"github.com/artalkjs/artalk/v2/internal/i18n"
+	"github.com/artalkjs/artalk/v2/internal/imgupload"
 	"github.com/artalkjs/artalk/v2/internal/log"
 	"github.com/artalkjs/artalk/v2/internal/utils"
 	"github.com/artalkjs/artalk/v2/server/common"
@@ -128,6 +129,26 @@ func Upload(app *core.App, router fiber.Router) {
 
 		t := time.Now()
 		filename := t.Format("20060102-150405.000") + mineToExts[fileMine]
+
+		if app.Conf().ImgUpload.S3.Enabled {
+			if app.Conf().ImgUpload.Upgit.Enabled {
+				log.Error("[IMG_UPLOAD] S3 and Upgit cannot be enabled at the same time")
+				return common.RespError(c, 500, "Image upload configuration error")
+			}
+
+			// A random suffix prevents concurrent uploads from overwriting the same object.
+			filename = t.Format("20060102-150405.000") + "-" + utils.RandomString(16) + mineToExts[fileMine]
+			imgURL, err := imgupload.UploadS3(c.UserContext(), app.Conf().ImgUpload.S3, filename, fileMine, buf)
+			if err != nil {
+				log.Error("[IMG_UPLOAD] [S3] ", err)
+				return common.RespError(c, 500, i18n.T("Upload image via {{method}} failed", Map{"method": "S3"}))
+			}
+			return common.RespData(c, ResponseUpload{
+				FileType:  "image",
+				FileName:  filename,
+				PublicURL: imgURL,
+			})
+		}
 
 		// 创建图片目标文件
 		if err := utils.EnsureDir(app.Conf().ImgUpload.Path); err != nil {

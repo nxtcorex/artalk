@@ -1,6 +1,6 @@
 # Image Upload
 
-Artalk provides an image upload feature with options to limit image size, upload frequency, and more. You can also integrate with UpGit to upload images to image hosting services.
+Artalk provides an image upload feature with options to limit image size, upload frequency, and more. It supports native uploads to AWS S3 and S3-compatible object storage, as well as integration with UpGit for image hosting services.
 
 You can modify this configuration in the settings interface of the [Dashboard](../frontend/sidebar.md#settings), or configure it through [configuration files](./config.md#image-upload-img_upload) or [environment variables](../env.md#image-upload).
 
@@ -20,11 +20,79 @@ img_upload:
     enabled: false # Enable UpGit
     exec: upgit -c <upgit configuration file path> -t /artalk-img
     del_local: true # Delete local images after uploading
+  # Native S3 upload; choose either S3 or UpGit
+  s3:
+    enabled: false
+    endpoint: "" # AWS S3 uses its default endpoint; compatible services use a full HTTP(S) endpoint
+    region: us-east-1
+    bucket: ""
+    access_key_id: "" # Leave both keys empty to use the AWS default credential chain
+    secret_access_key: ""
+    session_token: "" # For temporary credentials
+    prefix: artalk-img # Object key prefix; may be empty
+    public_path: "" # Required public bucket root or CDN URL; prefix is appended automatically
+    path_style: false # Set to true for services such as MinIO
+    timeout: 30 # Upload timeout in seconds
 ```
+
+## Native S3 Uploads
+
+Enable `img_upload.s3.enabled` to upload images through the Artalk backend to object storage using the existing frontend upload API. Image format, size, captcha, and rate limits still apply. S3 mode saves images directly to object storage.
+
+### AWS S3 Configuration
+
+```yaml
+img_upload:
+  enabled: true
+  max_size: 5
+  upgit:
+    enabled: false
+  s3:
+    enabled: true
+    region: ap-southeast-1
+    bucket: my-images
+    prefix: artalk-img
+    public_path: https://my-images.s3.ap-southeast-1.amazonaws.com
+```
+
+### Authentication and Image URLs
+
+Configure authentication using `access_key_id`, `secret_access_key`, and an optional `session_token`. Leave both keys empty to use the AWS SDK default credential chain, including server-side `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` environment variables, shared credentials files, or IAM roles. Upload credentials need `s3:PutObject` permission for the target prefix.
+
+`public_path` must be a public HTTP(S) URL pointing to the bucket root, optionally through a CDN. Artalk appends `prefix` and a generated unique filename. For example, `public_path: https://img.example.com` and `prefix: artalk-img` return `https://img.example.com/artalk-img/filename.png`. `img_upload.s3.public_path` controls S3 image links, and `img_upload.public_path` controls local image links.
+
+### S3-Compatible Services
+
+For S3-compatible services such as MinIO and Cloudflare R2, also configure `endpoint`. For example, with MinIO:
+
+```yaml
+img_upload:
+  s3:
+    enabled: true
+    endpoint: https://minio.example.com
+    region: us-east-1
+    bucket: my-images
+    access_key_id: YOUR_ACCESS_KEY_ID
+    secret_access_key: YOUR_SECRET_ACCESS_KEY
+    prefix: artalk-img
+    public_path: https://minio.example.com/my-images
+    path_style: true
+    timeout: 30
+```
+
+### Addressing, Region, and Timeout
+
+`path_style: true` uses `endpoint/bucket/key` addressing; the default is virtual-hosted addressing. `region` defaults to `us-east-1`, and `timeout` defaults to 30 seconds and accepts a positive integer in seconds. Choose either S3 or UpGit as the upload method.
+
+### Environment Variables
+
+All fields support `ATK_IMG_UPLOAD_S3_*` environment variables, such as `ATK_IMG_UPLOAD_S3_ENABLED`, `ATK_IMG_UPLOAD_S3_SECRET_ACCESS_KEY`, and `ATK_IMG_UPLOAD_S3_PUBLIC_PATH`. See the [environment variable reference](../env.md#upload) for the complete list.
 
 ## Using UpGit to Upload to Image Hosting Services
 
 [UpGit](https://github.com/pluveto/upgit) supports uploading images to various image hosting services or code repositories such as GitHub, Gitee, Tencent Cloud COS, Qiniu Cloud, UpYun, SM.MS, and more.
+
+### Configuring UpGit
 
 First, download UpGit and complete the configuration for your target image hosting service according to the [README.md](https://github.com/pluveto/upgit).
 
@@ -45,8 +113,8 @@ upgit:
   del_local: true # Delete local images after uploading
 ```
 
-::: warning Update Notice
-Starting from version `v2.8.4`, to enhance security, Artalk no longer allows specifying the UpGit executable file path. Please add it to the system's environment variables. :)
+::: tip Configuration
+Starting from version `v2.8.4`, Artalk locates UpGit through the system `PATH`. Add the directory containing UpGit to `PATH`.
 :::
 
 ### Mounting UpGit with Docker

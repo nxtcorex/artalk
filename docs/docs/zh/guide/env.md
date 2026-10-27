@@ -333,6 +333,17 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_IMG_UPLOAD_MAX_SIZE** | `5` | 图片大小限制 (单位：MB) | img_upload.max_size (图片上传 > 图片大小限制) |
 | **ATK_IMG_UPLOAD_PATH** | `"./data/artalk-img/"` | 图片存放路径 | img_upload.path (图片上传 > 图片存放路径) |
 | **ATK_IMG_UPLOAD_PUBLIC_PATH** | `<nil>` | 图片链接基础路径 (默认为 "/static/images/") | img_upload.public_path (图片上传 > 图片链接基础路径) |
+| **ATK_IMG_UPLOAD_S3_ACCESS_KEY_ID** | `""` | 访问密钥 ID (两个密钥均留空时使用 AWS 凭据链) | img_upload.s3.access_key_id (图片上传 > 原生 S3 上传 > 访问密钥 ID) |
+| **ATK_IMG_UPLOAD_S3_BUCKET** | `""` | 存储桶名称 | img_upload.s3.bucket (图片上传 > 原生 S3 上传 > 存储桶名称) |
+| **ATK_IMG_UPLOAD_S3_ENABLED** | `false` | 启用 S3 上传 | img_upload.s3.enabled (图片上传 > 原生 S3 上传 > 启用 S3 上传) |
+| **ATK_IMG_UPLOAD_S3_ENDPOINT** | `""` | S3 兼容端点 (AWS S3 留空) | img_upload.s3.endpoint (图片上传 > 原生 S3 上传 > S3 兼容端点) |
+| **ATK_IMG_UPLOAD_S3_PATH_STYLE** | `false` | 使用路径风格寻址 (适用于 MinIO 等服务) | img_upload.s3.path_style (图片上传 > 原生 S3 上传 > 使用路径风格寻址) |
+| **ATK_IMG_UPLOAD_S3_PREFIX** | `"artalk-img"` | 对象键前缀 | img_upload.s3.prefix (图片上传 > 原生 S3 上传 > 对象键前缀) |
+| **ATK_IMG_UPLOAD_S3_PUBLIC_PATH** | `""` | 存储桶根目录或 CDN 的公开访问 URL (必填，自动追加对象键前缀) | img_upload.s3.public_path (图片上传 > 原生 S3 上传 > 存储桶根目录或 CDN 的公开访问 URL) |
+| **ATK_IMG_UPLOAD_S3_REGION** | `"us-east-1"` | S3 区域 | img_upload.s3.region (图片上传 > 原生 S3 上传 > S3 区域) |
+| **ATK_IMG_UPLOAD_S3_SECRET_ACCESS_KEY** | `""` | 访问密钥 | img_upload.s3.secret_access_key (图片上传 > 原生 S3 上传 > 访问密钥) |
+| **ATK_IMG_UPLOAD_S3_SESSION_TOKEN** | `""` | 会话令牌 (临时凭据可选) | img_upload.s3.session_token (图片上传 > 原生 S3 上传 > 会话令牌) |
+| **ATK_IMG_UPLOAD_S3_TIMEOUT** | `30` | 上传超时 (单位：秒) | img_upload.s3.timeout (图片上传 > 原生 S3 上传 > 上传超时) |
 | **ATK_IMG_UPLOAD_UPGIT_DEL_LOCAL** | `true` | 上传后删除本地的图片 | img_upload.upgit.del_local (图片上传 > Upgit 配置 > 上传后删除本地的图片) |
 | **ATK_IMG_UPLOAD_UPGIT_ENABLED** | `false` | 启用 Upgit | img_upload.upgit.enabled (图片上传 > Upgit 配置 > 启用 Upgit) |
 | **ATK_IMG_UPLOAD_UPGIT_EXEC** | `"upgit -c <upgit配置文件路径> -t /artalk-img"` | 命令行参数 | img_upload.upgit.exec (图片上传 > Upgit 配置 > 命令行参数) |

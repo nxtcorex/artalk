@@ -255,6 +255,30 @@ img_upload:
     exec: upgit -c UPGIT_CONF_FILE_PATH -t /artalk-img
     # Yükleme başarılı olduktan sonra yerel resmi sil
     del_local: true
+  # Yerel S3 yüklemesi (S3 veya Upgit seçin)
+  s3:
+    # S3 yüklemesini etkinleştir
+    enabled: false
+    # S3 uyumlu uç nokta (AWS S3 için boş bırakın)
+    endpoint: ""
+    # S3 bölgesi
+    region: us-east-1
+    # Kova adı
+    bucket: ""
+    # Erişim anahtarı kimliği (AWS kimlik bilgisi zinciri için iki anahtarı da boş bırakın)
+    access_key_id: ""
+    # Gizli erişim anahtarı
+    secret_access_key: ""
+    # Oturum belirteci (geçici kimlik bilgileri için isteğe bağlı)
+    session_token: ""
+    # Nesne anahtarı öneki
+    prefix: artalk-img
+    # Genel kova kökü veya CDN URL adresi (gerekli, nesne anahtarı öneki otomatik eklenir)
+    public_path: ""
+    # Yol stili adresleme kullan (MinIO gibi hizmetler için)
+    path_style: false
+    # Yükleme zaman aşımı (birim: sn)
+    timeout: 30
 
 # E-posta
 email:

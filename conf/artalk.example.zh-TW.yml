@@ -257,6 +257,30 @@ img_upload:
     exec: upgit -c <upgit配置文件路徑> -t /artalk-img
     # 上傳後刪除本地的圖片
     del_local: true
+  # 原生 S3 上傳 (S3 與 Upgit 擇一啟用)
+  s3:
+    # 啟用 S3 上傳
+    enabled: false
+    # S3 相容端點 (AWS S3 留空)
+    endpoint: ""
+    # S3 區域
+    region: us-east-1
+    # 儲存桶名稱
+    bucket: ""
+    # 存取金鑰 ID (兩個金鑰均留空時使用 AWS 憑證鏈)
+    access_key_id: ""
+    # 存取金鑰
+    secret_access_key: ""
+    # 工作階段權杖 (臨時憑證可選)
+    session_token: ""
+    # 物件鍵前綴
+    prefix: artalk-img
+    # 儲存桶根目錄或 CDN 的公開存取 URL (必填，自動附加物件鍵前綴)
+    public_path: ""
+    # 使用路徑風格定址 (適用於 MinIO 等服務)
+    path_style: false
+    # 上傳逾時 (單位：秒)
+    timeout: 30
 
 # 郵件通知
 email:

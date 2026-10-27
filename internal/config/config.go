@@ -334,6 +334,21 @@ type ImgUploadConf struct {
 	MaxSize    int64     `koanf:"max_size" json:"max_size"`       // 图片大小限制
 	PublicPath string    `koanf:"public_path" json:"public_path"` // 图片 URL 基础路径
 	Upgit      UpgitConf `koanf:"upgit" json:"upgit"`             // upgit
+	S3         S3Conf    `koanf:"s3" json:"s3"`                   // 原生 S3 上传
+}
+
+type S3Conf struct {
+	Enabled         bool   `koanf:"enabled" json:"enabled"`
+	Endpoint        string `koanf:"endpoint" json:"endpoint"`
+	Region          string `koanf:"region" json:"region"`
+	Bucket          string `koanf:"bucket" json:"bucket"`
+	AccessKeyID     string `koanf:"access_key_id" json:"access_key_id"`
+	SecretAccessKey string `koanf:"secret_access_key" json:"secret_access_key"`
+	SessionToken    string `koanf:"session_token" json:"session_token"`
+	Prefix          string `koanf:"prefix" json:"prefix"`
+	PublicPath      string `koanf:"public_path" json:"public_path"`
+	PathStyle       bool   `koanf:"path_style" json:"path_style"`
+	Timeout         int    `koanf:"timeout" json:"timeout"`
 }
 
 type UpgitConf struct {

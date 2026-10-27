@@ -255,6 +255,30 @@ img_upload:
     exec: upgit -c UPGIT_CONF_FILE_PATH -t /artalk-img
     # Delete local image after upload success
     del_local: true
+  # Native S3 upload (choose S3 or Upgit)
+  s3:
+    # Enable S3 upload
+    enabled: false
+    # S3-compatible endpoint (empty for AWS S3)
+    endpoint: ""
+    # S3 region
+    region: us-east-1
+    # Bucket name
+    bucket: ""
+    # Access key ID (leave both keys empty to use the AWS credential chain)
+    access_key_id: ""
+    # Secret access key
+    secret_access_key: ""
+    # Session token (optional, for temporary credentials)
+    session_token: ""
+    # Object key prefix
+    prefix: artalk-img
+    # Public bucket root or CDN URL (required, object key prefix appended automatically)
+    public_path: ""
+    # Use path-style addressing (for services such as MinIO)
+    path_style: false
+    # Upload timeout (unit: s)
+    timeout: 30
 
 # Email
 email:

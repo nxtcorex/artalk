@@ -332,6 +332,17 @@ ATK_TRUSTED_DOMAINS_0="https://a.com"
 | **ATK_IMG_UPLOAD_MAX_SIZE** | `5` | Image size limit (unit: MB) | img_upload.max_size (Upload > Image size limit) |
 | **ATK_IMG_UPLOAD_PATH** | `"./data/artalk-img/"` | Image storage | img_upload.path (Upload > Image storage) |
 | **ATK_IMG_UPLOAD_PUBLIC_PATH** | `<nil>` | Image link base path (default: "/static/images/") | img_upload.public_path (Upload > Image link base path) |
+| **ATK_IMG_UPLOAD_S3_ACCESS_KEY_ID** | `""` | Access key ID (leave both keys empty to use the AWS credential chain) | img_upload.s3.access_key_id (Upload > Native S3 upload > Access key ID) |
+| **ATK_IMG_UPLOAD_S3_BUCKET** | `""` | Bucket name | img_upload.s3.bucket (Upload > Native S3 upload > Bucket name) |
+| **ATK_IMG_UPLOAD_S3_ENABLED** | `false` | Enable S3 upload | img_upload.s3.enabled (Upload > Native S3 upload > Enable S3 upload) |
+| **ATK_IMG_UPLOAD_S3_ENDPOINT** | `""` | S3-compatible endpoint (empty for AWS S3) | img_upload.s3.endpoint (Upload > Native S3 upload > S3-compatible endpoint) |
+| **ATK_IMG_UPLOAD_S3_PATH_STYLE** | `false` | Use path-style addressing (for services such as MinIO) | img_upload.s3.path_style (Upload > Native S3 upload > Use path-style addressing) |
+| **ATK_IMG_UPLOAD_S3_PREFIX** | `"artalk-img"` | Object key prefix | img_upload.s3.prefix (Upload > Native S3 upload > Object key prefix) |
+| **ATK_IMG_UPLOAD_S3_PUBLIC_PATH** | `""` | Public bucket root or CDN URL (required, object key prefix appended automatically) | img_upload.s3.public_path (Upload > Native S3 upload > Public bucket root or CDN URL) |
+| **ATK_IMG_UPLOAD_S3_REGION** | `"us-east-1"` | S3 region | img_upload.s3.region (Upload > Native S3 upload > S3 region) |
+| **ATK_IMG_UPLOAD_S3_SECRET_ACCESS_KEY** | `""` | Secret access key | img_upload.s3.secret_access_key (Upload > Native S3 upload > Secret access key) |
+| **ATK_IMG_UPLOAD_S3_SESSION_TOKEN** | `""` | Session token (optional, for temporary credentials) | img_upload.s3.session_token (Upload > Native S3 upload > Session token) |
+| **ATK_IMG_UPLOAD_S3_TIMEOUT** | `30` | Upload timeout (unit: s) | img_upload.s3.timeout (Upload > Native S3 upload > Upload timeout) |
 | **ATK_IMG_UPLOAD_UPGIT_DEL_LOCAL** | `true` | Delete local image after upload success | img_upload.upgit.del_local (Upload > Upgit config > Delete local image after upload success) |
 | **ATK_IMG_UPLOAD_UPGIT_ENABLED** | `false` | Enable Upgit | img_upload.upgit.enabled (Upload > Upgit config > Enable Upgit) |
 | **ATK_IMG_UPLOAD_UPGIT_EXEC** | `"upgit -c UPGIT_CONF_FILE_PATH -t /artalk-img"` | Command line arguments | img_upload.upgit.exec (Upload > Upgit config > Command line arguments) |
