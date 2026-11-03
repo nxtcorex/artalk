@@ -135,9 +135,6 @@ export const zhCN: MessageSchema = {
   logout: '退出登录',
   logoutConfirm: '确定要退出登录吗？',
   loginSelectHint: '请选择您要登录的账户：',
-  captchaTitle: '人机验证',
-  captchaCheck: '请输入验证码继续',
-  captchaRefresh: '点击刷新验证码',
 }
 
 export default zhCN

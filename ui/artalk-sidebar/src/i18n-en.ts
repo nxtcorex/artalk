@@ -138,9 +138,6 @@ export const en = {
   logout: 'Logout',
   logoutConfirm: 'Are you sure you want to log out?',
   loginSelectHint: 'Please select the account you wish to log into:',
-  captchaTitle: 'CAPTCHA',
-  captchaCheck: 'Enter the CAPTCHA to continue',
-  captchaRefresh: 'Click to refresh the CAPTCHA',
 }
 
 export default en

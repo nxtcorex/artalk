@@ -283,10 +283,9 @@
   flex-direction: column;
   gap: 10px;
   margin: 8px 12px 0;
-  padding: 12px;
-  background: var(--atk-muted);
-  border: 1px solid var(--atk-border);
-  border-radius: var(--atk-radius);
+  padding: 0;
+  background: transparent;
+  border: 0;
 
   .atk-checker-body {
     display: flex;
@@ -367,15 +366,14 @@
 
   .atk-checker-iframe-wrap {
     position: relative;
-    min-height: 340px;
+    min-height: 70px;
     overflow: hidden;
-    background: var(--atk-background);
-    border-radius: var(--atk-radius-sm);
 
     iframe {
       display: block;
       width: 100%;
-      height: 340px;
+      height: 70px;
+      background: transparent;
       border: 0;
     }
   }

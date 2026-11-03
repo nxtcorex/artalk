@@ -11,7 +11,7 @@ export function setupArtalk() {
   document.body.append(artalkEl)
 
   // Init Artalk
-  const instance = Artalk.init({
+  return Artalk.init({
     el: artalkEl,
     server: '../',
     pageKey: bootParams.pageKey,
@@ -28,12 +28,6 @@ export function setupArtalk() {
     listUnreadHighlight: true,
     fetchCommentsOnInit: false,
   })
-
-  instance.on('created', () => {
-    instance.ctx.getApiHandlers().remove('need_captcha')
-  })
-
-  return instance
 }
 
 export async function syncArtalkUser(artalk: Context, router: Router) {

@@ -13,10 +13,9 @@
       }
       body {
         display: flex;
-        justify-content: center;
-        height: 100vh;
-        align-items: center;
-        background: {{if eq .theme "dark"}}#1e2224{{else}}#ffffff{{end}};
+        justify-content: flex-start;
+        align-items: flex-start;
+        background: transparent;
         color-scheme: {{if eq .theme "dark"}}dark{{else}}light{{end}};
       }
     </style>
@@ -52,6 +51,20 @@
           },
         })
       }
+    </script>
+    <script>
+      ;(function () {
+        function report() {
+          var h = Math.ceil(
+            document.body.getBoundingClientRect().height || document.body.scrollHeight
+          )
+          if (window.__artalkCaptchaH === h) return
+          window.__artalkCaptchaH = h
+          window.parent.postMessage({ type: 'artalk:captcha-height', height: h }, '*')
+        }
+        window.addEventListener('load', report)
+        if (window.ResizeObserver) new ResizeObserver(report).observe(document.body)
+      })()
     </script>
   </body>
 </html>

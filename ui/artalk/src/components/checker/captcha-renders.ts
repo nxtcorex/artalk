@@ -41,6 +41,17 @@ export function iframeBody(checker: CheckerCtx) {
   }
   $iframeWrap.append($iframe)
 
+  const onMessage = (e: MessageEvent) => {
+    if (e.source !== $iframe.contentWindow) return
+    const data = e.data as { type?: string; height?: number } | null
+    if (!data || data.type !== 'artalk:captcha-height') return
+    const height = Math.round(Number(data.height))
+    if (!Number.isFinite(height)) return
+    $iframe.style.height = `${Math.min(Math.max(height, 44), 420)}px`
+  }
+  window.addEventListener('message', onMessage)
+  checker.addCleanup(() => window.removeEventListener('message', onMessage))
+
   checker.hideInteractInput()
 
   // 轮询状态

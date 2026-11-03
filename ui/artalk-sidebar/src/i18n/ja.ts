@@ -139,9 +139,6 @@ export const ja: MessageSchema = {
   logoutConfirm: 'ログアウトしてもよろしいですか？',
   loginSelectHint: 'ログインするアカウントを選択してください：',
   close: '閉じる',
-  captchaTitle: 'CAPTCHA',
-  captchaCheck: 'CAPTCHA を入力してください',
-  captchaRefresh: 'クリックして CAPTCHA を更新',
 }
 
 export default ja

@@ -141,9 +141,6 @@ export const tr: MessageSchema = {
   logoutConfirm: 'Çıkış yapmak istediğinizden emin misiniz?',
   loginSelectHint: 'Lütfen giriş yapmak istediğiniz hesabı seçin:',
   close: 'Kapat',
-  captchaTitle: 'CAPTCHA',
-  captchaCheck: 'Devam etmek için CAPTCHA girin',
-  captchaRefresh: 'CAPTCHA yenilemek için tıklayın',
 }
 
 export default tr

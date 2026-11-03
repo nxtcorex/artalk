@@ -93,7 +93,11 @@ export class CheckerLauncher implements ICheckerManager {
     const editorLoading = editorEl.querySelector<HTMLElement>(':scope > .atk-loading')
     if (editorLoading) editorLoading.style.display = 'none'
 
-    const close = () => panel.remove()
+    const cleanups: (() => void)[] = []
+    const close = () => {
+      cleanups.forEach((fn) => fn())
+      panel.remove()
+    }
 
     const checkerStore: CheckerStore = {}
     let hideInteractInput = false
@@ -105,6 +109,9 @@ export class CheckerLauncher implements ICheckerManager {
       getOpts: () => this.opts,
       getUser: () => this.opts.getUser(),
       getApi: () => this.opts.getApi(),
+      addCleanup: (fn) => {
+        cleanups.push(fn)
+      },
       hideInteractInput: () => {
         hideInteractInput = true
       },
@@ -192,6 +199,7 @@ export interface CheckerCtx {
   getOpts(): CheckerLauncherOptions
   getApi(): Api
   getUser(): UserManager
+  addCleanup(fn: () => void): void
   hideInteractInput(): void
   triggerSuccess(): void
   cancel(): void
