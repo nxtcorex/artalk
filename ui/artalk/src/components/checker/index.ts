@@ -1,7 +1,6 @@
 import CaptchaChecker from './captcha'
 import AdminChecker from './admin'
 import type { Api } from '@/api'
-import Dialog from '@/components/dialog'
 import $t from '@/i18n'
 import * as Utils from '@/lib/utils'
 import type { UserManager, CheckerManager as ICheckerManager, LayerManager } from '@/types'
@@ -21,6 +20,7 @@ export interface CheckerLauncherOptions {
   getApi: () => Api
   getLayers: () => LayerManager
   getUser: () => UserManager
+  getEditorEl: () => HTMLElement | null
   getCaptchaIframeURL: () => string
   onReload: () => void
 }
@@ -60,15 +60,41 @@ export class CheckerLauncher implements ICheckerManager {
   })
 
   public check(checker: Checker, payload: CheckerPayload, beforeCheck?: (c: CheckerCtx) => void) {
-    // 显示层
-    const layer = this.opts.getLayers().create(`checker-${new Date().getTime()}`)
-    layer.show()
+    const editorEl = this.opts.getEditorEl()
+    if (!editorEl) throw new Error('editor element not found')
+    editorEl.querySelector('.atk-checker-inline')?.remove()
 
-    const close = () => {
-      layer.destroy()
-    }
+    const isAdmin = checker === AdminChecker
+    const panel = Utils.createElement(`
+      <div class="atk-checker-inline ${isAdmin ? 'admin' : 'captcha'}">
+        <div class="atk-checker-body"></div>
+        <div class="atk-checker-actions">
+          <input class="atk-checker-input" type="${checker.inputType || 'text'}" autocomplete="off" required>
+          <button type="button" class="atk-checker-btn atk-checker-confirm">${$t('confirm')}</button>
+          <button type="button" class="atk-checker-btn atk-checker-cancel">${$t('cancel')}</button>
+        </div>
+        <div class="atk-checker-error" hidden></div>
+      </div>
+    `)
 
-    // 构建 Checker 的上下文
+    const $body = panel.querySelector<HTMLElement>('.atk-checker-body')!
+    const $actions = panel.querySelector<HTMLElement>('.atk-checker-actions')!
+    const $input = panel.querySelector<HTMLInputElement>('.atk-checker-input')!
+    const $confirm = panel.querySelector<HTMLButtonElement>('.atk-checker-confirm')!
+    const $cancel = panel.querySelector<HTMLButtonElement>('.atk-checker-cancel')!
+    const $error = panel.querySelector<HTMLElement>('.atk-checker-error')!
+    const confirmText = $confirm.textContent
+
+    const host = isAdmin
+      ? editorEl.querySelector('.atk-header')
+      : editorEl.querySelector('.atk-textarea-wrap')
+    host?.insertAdjacentElement('afterend', panel)
+
+    const editorLoading = editorEl.querySelector<HTMLElement>(':scope > .atk-loading')
+    if (editorLoading) editorLoading.style.display = 'none'
+
+    const close = () => panel.remove()
+
     const checkerStore: CheckerStore = {}
     let hideInteractInput = false
     const checkerCtx: CheckerCtx = {
@@ -84,7 +110,7 @@ export class CheckerLauncher implements ICheckerManager {
       },
       triggerSuccess: () => {
         close()
-        if (checker.onSuccess) checker.onSuccess(checkerCtx, '', '', formEl)
+        if (checker.onSuccess) checker.onSuccess(checkerCtx, '', '', panel)
         if (payload.onSuccess) payload.onSuccess()
       },
       cancel: () => {
@@ -95,90 +121,53 @@ export class CheckerLauncher implements ICheckerManager {
 
     if (beforeCheck) beforeCheck(checkerCtx)
 
-    // 创建表单
-    const formEl = Utils.createElement()
-    formEl.appendChild(checker.body(checkerCtx))
+    $body.appendChild(checker.body(checkerCtx))
 
-    // 输入框
-    const $input = Utils.createElement<HTMLInputElement>(
-      `<input id="check" type="${checker.inputType || 'text'}" autocomplete="off" required placeholder="">`,
-    )
-    formEl.appendChild($input)
-    setTimeout(() => $input.focus(), 80) // 延迟 Focus
+    if (hideInteractInput) $actions.style.display = 'none'
 
-    // 绑定键盘事件
-    $input.onkeyup = (evt) => {
-      if (evt.key === 'Enter' || evt.keyCode === 13) {
-        // 按下回车键
-        evt.preventDefault()
-        layer.getEl().querySelector<HTMLButtonElement>('button[data-action="confirm"]')!.click()
-      }
-    }
-
-    let btnTextOrg: string | undefined
-    const dialog = new Dialog(formEl)
-
-    // 确认按钮
-    dialog.setYes((btnEl) => {
+    const submit = () => {
       const inputVal = $input.value.trim()
 
-      // 按钮操作
-      if (!btnTextOrg) btnTextOrg = btnEl.innerText
-      const btnTextSet = (btnText: string) => {
-        btnEl.innerText = btnText
-        btnEl.classList.add('error')
-      }
-      const btnTextRestore = () => {
-        btnEl.innerText = btnTextOrg || ''
-        btnEl.classList.remove('error')
-      }
+      $error.hidden = true
+      $confirm.disabled = true
+      $confirm.textContent = `${$t('loading')}...`
 
-      btnEl.innerText = `${$t('loading')}...`
-
-      // 发送请求
       checker
         .request(checkerCtx, inputVal)
         .then((data) => {
-          // 请求成功
           close()
 
-          if (checker.onSuccess) checker.onSuccess(checkerCtx, data, inputVal, formEl)
+          if (checker.onSuccess) checker.onSuccess(checkerCtx, data, inputVal, panel)
           if (payload.onSuccess) payload.onSuccess()
         })
         .catch((err) => {
-          // 请求失败
-          btnTextSet(String(err.message || String(err)))
+          $error.textContent = String(err.message || String(err))
+          $error.hidden = false
+          $confirm.disabled = false
+          $confirm.textContent = confirmText
 
-          if (checker.onError) checker.onError(checkerCtx, err, inputVal, formEl)
-
-          // 错误显示 3s 后恢复按钮
-          const tf = setTimeout(() => btnTextRestore(), 3000)
-          $input.onfocus = () => {
-            btnTextRestore()
-            clearTimeout(tf)
-          }
+          if (checker.onError) checker.onError(checkerCtx, err, inputVal, panel)
         })
-
-      return false
-    })
-
-    // 取消按钮
-    dialog.setNo(() => {
-      close()
-      if (payload.onCancel) payload.onCancel()
-      return false
-    })
-
-    if (hideInteractInput) {
-      $input.style.display = 'none'
-      dialog.$el.querySelector<HTMLElement>('.atk-layer-dialog-actions')!.style.display = 'none'
     }
 
-    // 层装载 dialog 元素
-    layer.getEl().append(dialog.$el)
+    $confirm.onclick = submit
+    $cancel.onclick = () => {
+      close()
+      if (payload.onCancel) payload.onCancel()
+    }
+    $input.onkeyup = (evt) => {
+      if (evt.key === 'Enter' || evt.keyCode === 13) {
+        evt.preventDefault()
+        submit()
+      }
+    }
+    $input.onfocus = () => {
+      $error.hidden = true
+    }
 
-    // onMount 回调
-    if (payload.onMount) payload.onMount(dialog.$el)
+    if (window.innerWidth >= 768) setTimeout(() => $input.focus(), 80)
+
+    if (payload.onMount) payload.onMount(panel)
   }
 }
 

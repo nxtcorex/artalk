@@ -9,7 +9,7 @@ import './style/tailwind.css'
 import './style.scss'
 import 'vue-sonner/style.css'
 import App from './App.vue'
-import { setArtalk } from './global'
+import { isOpenFromSidebar, setArtalk } from './global'
 import { setupArtalk, syncArtalkUser } from './artalk'
 import { useUserStore } from './stores/user'
 import './lib/promise-polyfill'
@@ -30,7 +30,9 @@ const router = createRouter({
 const pinia = createPinia()
 
 router.beforeEach((to) => {
-  if (to.meta.adminOnly && !useUserStore(pinia).is_admin) return '/comments'
+  const user = useUserStore(pinia)
+  if (to.path !== '/login' && !user.token && !isOpenFromSidebar()) return '/login'
+  if (to.meta.adminOnly && !user.is_admin) return '/comments'
 })
 
 // Artalk

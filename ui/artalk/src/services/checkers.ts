@@ -9,6 +9,7 @@ export const CheckersService: ArtalkPlugin = (ctx) => {
         getApi: () => api,
         getLayers: () => layers,
         getUser: () => user,
+        getEditorEl: () => ctx.getEl().querySelector<HTMLElement>('.atk-main-editor'),
         onReload: () => ctx.reload(),
 
         // make sure suffix with a slash, because it will be used as a base url when call `fetch`

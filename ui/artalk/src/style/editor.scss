@@ -2,19 +2,13 @@
   $editor-padding: 10px;
   position: relative;
   overflow: hidden;
-  background: var(--at-color-bg);
-  border: 1px solid var(--at-color-border);
-  border-radius: $block-radius;
+  background: var(--atk-card);
+  border: 1px solid var(--atk-border);
+  border-radius: var(--atk-radius);
   margin-bottom: 10px;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
-
-  // shadcn Input 规范：聚焦时展示 ring
-  &:focus-within {
-    border-color: var(--atk-ring);
-    box-shadow: 0 0 0 3px rgb(0 131 255 / 0.15);
-  }
 
   @media only screen and (max-width: 768px) {
     margin-bottom: 7px;
@@ -26,24 +20,37 @@
   }
 
   & > .atk-header {
-    display: flex;
-    flex-direction: row;
-    padding: 10px 14px 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px 12px 0;
 
     input {
-      flex: 1;
       width: 100%;
+      height: 36px;
       font-size: 14px;
+      color: var(--atk-foreground);
       background: transparent;
-      border: 2px solid transparent;
-      border-radius: calc($block-radius / 2);
-      padding: 6px 5px;
-      resize: none;
+      border: 1px solid var(--atk-input);
+      border-radius: var(--atk-radius-sm);
+      padding: 0 10px;
       outline: none;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 
-      &:not(:last-child) {
-        margin-right: 2px;
+      &::placeholder {
+        color: var(--atk-muted-foreground);
       }
+
+      &:focus {
+        border-color: var(--atk-ring);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--atk-ring) 25%, transparent);
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -53,29 +60,40 @@
     & > .atk-textarea {
       display: block;
       overflow: hidden;
-      color: var(--at-color-font);
+      width: calc(100% - 24px);
+      min-height: 110px;
+      margin: 8px 12px 0;
+      padding: 10px 12px;
+      color: var(--atk-foreground);
       font-size: 15px;
-      background-color: var(--at-color-bg);
-      border: 2px solid transparent;
-      border-radius: calc($block-radius / 2);
-      width: 100%;
-      min-height: 120px;
-      margin-top: 2px;
-      padding: 10px 20px;
-      resize: none;
+      background-color: transparent;
+      border: 1px solid var(--atk-input);
+      border-radius: var(--atk-radius-sm);
+      resize: vertical;
       word-wrap: break-word;
       outline: none;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &::placeholder {
+        color: var(--atk-muted-foreground);
+      }
+
+      &:focus {
+        border-color: var(--atk-ring);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--atk-ring) 25%, transparent);
+      }
     }
 
     & > .atk-comment-closed {
       pointer-events: none;
-      color: var(--at-color-meta);
+      color: var(--atk-muted-foreground);
       font-size: 12px;
-      background-color: var(--at-color-bg);
-      border-top: 1px solid var(--at-color-border);
+      background-color: var(--atk-background);
+      border-top: 1px solid var(--atk-border);
       padding: 5px 15px;
       margin-top: 10px;
-      // background: repeating-linear-gradient(145deg, #f2f2f2, #f2f2f2 15px, #fff 0, #fff 30px);
     }
   }
 
@@ -94,7 +112,7 @@
     flex-direction: row;
     row-gap: 5px;
     justify-content: space-between;
-    padding: 5px;
+    padding: 8px 12px 12px;
     flex-wrap: wrap;
 
     & > .atk-item {
@@ -218,7 +236,8 @@
       font-weight: 500;
       border: none;
       margin: 0;
-      height: 30px;
+      height: 36px;
+      padding: 0 18px;
       min-width: 7.3em;
       cursor: pointer;
       transition:
@@ -254,5 +273,110 @@
     bottom: 40px;
     width: 225px;
     opacity: 0.83;
+  }
+}
+
+.atk-checker-inline {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 12px 0;
+  padding: 12px;
+  background: var(--atk-muted);
+  border: 1px solid var(--atk-border);
+  border-radius: var(--atk-radius);
+
+  .atk-checker-body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--atk-muted-foreground);
+  }
+
+  .atk-captcha-img {
+    width: auto;
+    height: 40px;
+    background: #fff;
+    border: 1px solid var(--atk-border);
+    border-radius: var(--atk-radius-sm);
+    cursor: pointer;
+  }
+
+  .atk-checker-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .atk-checker-input {
+    flex: 1;
+    min-width: 140px;
+    height: 36px;
+    padding: 0 10px;
+    color: var(--atk-foreground);
+    background: var(--atk-background);
+    border: 1px solid var(--atk-input);
+    border-radius: var(--atk-radius-sm);
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: var(--atk-ring);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--atk-ring) 25%, transparent);
+    }
+  }
+
+  .atk-checker-btn {
+    height: 36px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: var(--atk-radius-sm);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .atk-checker-confirm {
+    color: var(--atk-primary-foreground);
+    background: var(--atk-primary);
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  .atk-checker-cancel {
+    color: var(--atk-muted-foreground);
+    background: transparent;
+    border-color: var(--atk-border);
+
+    &:hover {
+      color: var(--atk-accent-foreground);
+      background: var(--atk-accent);
+    }
+  }
+
+  .atk-checker-error {
+    font-size: 12px;
+    color: var(--atk-destructive);
+  }
+
+  .atk-checker-iframe-wrap {
+    position: relative;
+    min-height: 340px;
+    overflow: hidden;
+    background: var(--atk-background);
+    border-radius: var(--atk-radius-sm);
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 340px;
+      border: 0;
+    }
   }
 }

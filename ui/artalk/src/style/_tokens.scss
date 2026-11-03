@@ -18,24 +18,24 @@
 
   /* --- Light theme --- */
   --atk-background: #ffffff;
-  --atk-foreground: #2a2e2e;
+  --atk-foreground: #171717;
   --atk-card: #ffffff;
-  --atk-card-foreground: #2a2e2e;
+  --atk-card-foreground: #171717;
   --atk-popover: #ffffff;
-  --atk-popover-foreground: #2a2e2e;
-  --atk-primary: #0083ff;
-  --atk-primary-foreground: #ffffff;
-  --atk-secondary: #f3f4f5;
-  --atk-secondary-foreground: #2a2e2e;
-  --atk-muted: #f3f4f5;
-  --atk-muted-foreground: #697182;
-  --atk-accent: #eaf4ff;
-  --atk-accent-foreground: #005fb3;
-  --atk-destructive: #ff5652;
-  --atk-destructive-foreground: #ffffff;
-  --atk-border: #eceff2;
-  --atk-input: #eceff2;
-  --atk-ring: #0083ff;
+  --atk-popover-foreground: #171717;
+  --atk-primary: #171717;
+  --atk-primary-foreground: #fafafa;
+  --atk-secondary: #f5f5f5;
+  --atk-secondary-foreground: #171717;
+  --atk-muted: #f5f5f5;
+  --atk-muted-foreground: #737373;
+  --atk-accent: #f5f5f5;
+  --atk-accent-foreground: #171717;
+  --atk-destructive: #dc2626;
+  --atk-destructive-foreground: #fafafa;
+  --atk-border: #e5e5e5;
+  --atk-input: #e5e5e5;
+  --atk-ring: #a3a3a3;
   --atk-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 
   /* --- Legacy bridge (旧变量 -> 新 Token) --- */
@@ -59,32 +59,32 @@
   --at-color-gradient: linear-gradient(180deg, transparent, rgb(255 255 255));
 
   &.atk-dark-mode {
-    --atk-background: #1e2224;
-    --atk-foreground: #ffffff;
-    --atk-card: #23282b;
-    --atk-card-foreground: #ffffff;
-    --atk-popover: #23282b;
-    --atk-popover-foreground: #ffffff;
-    --atk-primary: #0083ff;
-    --atk-primary-foreground: #ffffff;
-    --atk-secondary: #46494e;
-    --atk-secondary-foreground: #ffffff;
-    --atk-muted: #2d3235;
-    --atk-muted-foreground: #a0a8b3;
-    --atk-accent: #2d3235;
-    --atk-accent-foreground: #7ab8ff;
-    --atk-destructive: #ff5652;
-    --atk-destructive-foreground: #ffffff;
-    --atk-border: #2d3235;
-    --atk-input: #2d3235;
-    --atk-ring: #0083ff;
+    --atk-background: #171717;
+    --atk-foreground: #fafafa;
+    --atk-card: #262626;
+    --atk-card-foreground: #fafafa;
+    --atk-popover: #262626;
+    --atk-popover-foreground: #fafafa;
+    --atk-primary: #e5e5e5;
+    --atk-primary-foreground: #171717;
+    --atk-secondary: #404040;
+    --atk-secondary-foreground: #fafafa;
+    --atk-muted: #404040;
+    --atk-muted-foreground: #a3a3a3;
+    --atk-accent: #404040;
+    --atk-accent-foreground: #fafafa;
+    --atk-destructive: #f87171;
+    --atk-destructive-foreground: #171717;
+    --atk-border: rgb(255 255 255 / 0.1);
+    --atk-input: rgb(255 255 255 / 0.15);
+    --atk-ring: #737373;
     --atk-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
 
-    --at-color-bg-transl: rgb(30 34 36 / 0.95);
+    --at-color-bg-transl: rgb(23 23 23 / 0.95);
     --at-color-bg-grey-transl: rgb(8 8 8 / 0.95);
     --at-color-pink: #fa5a57;
     --at-color-yellow: #ff7c37;
     --at-color-green: #4caf50;
-    --at-color-gradient: linear-gradient(180deg, transparent, rgb(30 34 36 / 1));
+    --at-color-gradient: linear-gradient(180deg, transparent, rgb(23 23 23 / 1));
   }
 }

@@ -1,4 +1,5 @@
 import SidebarHTML from './sidebar-layer.html?raw'
+import $t from '@/i18n'
 import type {
   SidebarShowPayload,
   ConfigManager,
@@ -57,6 +58,13 @@ export class SidebarLayer implements ISidebarLayer {
   /** 显示 */
   public async show(conf: SidebarShowPayload = {}) {
     this.$el.style.transform = '' // 动画清除，防止二次打开失效
+
+    const titleEl = this.$el.querySelector<HTMLElement>('.atk-sidebar-title')
+    if (titleEl) {
+      titleEl.textContent = this.opts.getUser().getData().is_admin
+        ? $t('ctrlCenter')
+        : $t('msgCenter')
+    }
 
     // init layer
     this.initLayer()
@@ -150,7 +158,7 @@ export class SidebarLayer implements ISidebarLayer {
 
     // 准备 Iframe 参数
     const baseURL = import.meta.env.DEV
-      ? 'http://localhost:23367/'
+      ? `http://${window.location.hostname}:23367/`
       : Utils.getURLBasedOnApi({
           base: this.opts.getConf().get().server,
           path: '/sidebar/',

@@ -41,15 +41,9 @@ export function iframeBody(checker: CheckerCtx) {
   }
   $iframeWrap.append($iframe)
 
-  const $closeBtn = Utils.createElement(
-    `<div class="atk-close-btn" aria-label="Close"><i class="atk-icon atk-icon-close" aria-hidden="true"></i></div>`,
-  )
-  $iframeWrap.append($closeBtn)
-
   checker.hideInteractInput()
 
   // 轮询状态
-  let stop = false // 打断
   const sleep = (ms: number) =>
     new Promise((resolve) => {
       window.setTimeout(() => {
@@ -58,7 +52,7 @@ export function iframeBody(checker: CheckerCtx) {
     })
   ;(async function queryStatus() {
     await sleep(1000)
-    if (stop) return
+    if (!$iframeWrap.isConnected) return
     let isPass: boolean
     try {
       const resp = await checker.getApi().captcha.getCaptchaStatus()
@@ -72,11 +66,6 @@ export function iframeBody(checker: CheckerCtx) {
       queryStatus()
     }
   })()
-
-  $closeBtn.onclick = () => {
-    stop = true
-    checker.cancel()
-  }
 
   return $iframeWrap
 }

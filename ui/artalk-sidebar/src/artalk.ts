@@ -1,7 +1,7 @@
 import Artalk, { type Context } from 'artalk'
 import { Router } from 'vue-router'
 import { restoreGuestCredential } from './lib/guest-handoff'
-import { bootParams } from './global'
+import { bootParams, isOpenFromSidebar } from './global'
 import { useUserStore } from './stores/user'
 
 export function setupArtalk() {
@@ -52,6 +52,11 @@ export async function syncArtalkUser(artalk: Context, router: Router) {
       logout()
       return
     }
+  }
+
+  if (!artalk.getUser().getData().token && !isOpenFromSidebar()) {
+    logout()
+    return
   }
 
   // Async check user status (no await)
