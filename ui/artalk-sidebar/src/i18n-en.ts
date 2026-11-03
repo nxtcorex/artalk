@@ -36,6 +36,7 @@ export const en = {
   overviewUpdated: 'Updated {time} · {timezone}',
   ctrlCenter: 'Admin',
   navMenu: 'Navigation',
+  close: 'Close',
   toggleTheme: 'Toggle theme',
   toggleSidebar: 'Toggle sidebar',
   navGeneral: 'General',
@@ -137,6 +138,9 @@ export const en = {
   logout: 'Logout',
   logoutConfirm: 'Are you sure you want to log out?',
   loginSelectHint: 'Please select the account you wish to log into:',
+  captchaTitle: 'CAPTCHA',
+  captchaCheck: 'Enter the CAPTCHA to continue',
+  captchaRefresh: 'Click to refresh the CAPTCHA',
 }
 
 export default en

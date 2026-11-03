@@ -37,6 +37,7 @@ export const zhCN: MessageSchema = {
   overviewUpdated: '更新于 {time} · {timezone}',
   ctrlCenter: '控制中心',
   navMenu: '导航',
+  close: '关闭',
   toggleTheme: '切换主题',
   toggleSidebar: '切换侧边栏',
   navGeneral: '通用',
@@ -134,6 +135,9 @@ export const zhCN: MessageSchema = {
   logout: '退出登录',
   logoutConfirm: '确定要退出登录吗？',
   loginSelectHint: '请选择您要登录的账户：',
+  captchaTitle: '人机验证',
+  captchaCheck: '请输入验证码继续',
+  captchaRefresh: '点击刷新验证码',
 }
 
 export default zhCN

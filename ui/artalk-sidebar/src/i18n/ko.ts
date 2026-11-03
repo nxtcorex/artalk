@@ -137,6 +137,10 @@ export const ko: MessageSchema = {
   logout: '로그아웃',
   logoutConfirm: '로그아웃하시겠습니까?',
   loginSelectHint: '로그인할 계정을 선택하세요:',
+  close: '닫기',
+  captchaTitle: 'CAPTCHA',
+  captchaCheck: 'CAPTCHA를 입력하세요',
+  captchaRefresh: 'CAPTCHA 새로고침',
 }
 
 export default ko

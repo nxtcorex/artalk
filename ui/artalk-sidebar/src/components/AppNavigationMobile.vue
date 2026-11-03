@@ -3,10 +3,11 @@
  * The part of the navigation bar that is displayed on mobile devices and the sidebar
  */
 import { storeToRefs } from 'pinia'
-import { ChevronDown, LogOut, Menu, Search } from 'lucide-vue-next'
+import { ChevronDown, LogOut, Search } from 'lucide-vue-next'
 import { NavGroupDefs, useNavigationMenu } from './AppNavigationMenu'
 import SiteSwitcher from './SiteSwitcher.vue'
 import { loadSettingsTree, settingsNavGroups } from '@/lib/settings-tree'
+import { useNavStore } from '@/stores/nav'
 import { useUserStore } from '@/stores/user'
 import {
   Sheet,
@@ -31,15 +32,15 @@ const router = useRouter()
 const route = useRoute()
 const user = useUserStore()
 const { is_admin: isAdmin, name: userName, email } = storeToRefs(user)
+const { mobileNavOpen } = storeToRefs(useNavStore())
 
-const pagesSheetOpen = ref(false)
 const settingsExpanded = ref(false)
 const transferExpanded = ref(false)
 const logoutConfirmOpen = ref(false)
 const tabListEl = ref<HTMLElement | null>(null)
 const nav = useNavigationMenu({
   onGoPage: () => {
-    pagesSheetOpen.value = false
+    mobileNavOpen.value = false
   },
 })
 
@@ -58,7 +59,7 @@ const userInitial = computed(() =>
 
 function confirmedLogout() {
   logoutConfirmOpen.value = false
-  pagesSheetOpen.value = false
+  mobileNavOpen.value = false
   user.logout()
   nextTick(() => {
     router.replace('/login')
@@ -81,7 +82,7 @@ const activeGroupPath = computed(() => {
   return Array.isArray(value) ? value[0] : value || ''
 })
 
-watch(pagesSheetOpen, (open) => {
+watch(mobileNavOpen, (open) => {
   if (!open) return
   if (nav.curtPage === 'settings') {
     settingsExpanded.value = true
@@ -100,23 +101,18 @@ function toggleTransfer() {
 }
 
 function goGroupAndClose(path: string) {
-  pagesSheetOpen.value = false
+  mobileNavOpen.value = false
   router.push(`/settings/${path}`)
 }
 
 function goTransferAndClose(section: string) {
-  pagesSheetOpen.value = false
+  mobileNavOpen.value = false
   router.push(`/transfer/${section}`)
 }
 
 function isNavEntryActive(entry: { key: string; paths: string[] }) {
   return entry.key === activeGroupPath.value || entry.paths.includes(activeGroupPath.value)
 }
-
-const curtPageLabel = computed(() => {
-  const page = nav.pages[nav.curtPage]
-  return page ? t(page.label) : ''
-})
 
 /**
  * For tab list for horizontal scroll
@@ -130,23 +126,13 @@ onUnmounted(() => tabListEl.value!.removeEventListener('wheel', wheelHandler))
 
 function goPageAndClose(pageName: string) {
   nav.goPage(pageName)
-  pagesSheetOpen.value = false
+  mobileNavOpen.value = false
 }
 </script>
 
 <template>
   <div class="top-navigation">
-    <Sheet v-model:open="pagesSheetOpen">
-      <button
-        type="button"
-        class="page"
-        aria-label="Open navigation"
-        @click="pagesSheetOpen = true"
-      >
-        <Menu class="size-4" />
-        <span v-if="curtPageLabel" class="text">{{ curtPageLabel }}</span>
-      </button>
-
+    <Sheet v-model:open="mobileNavOpen">
       <SheetContent side="left" class="flex w-64 flex-col p-0" :show-close="false">
         <SheetHeader class="border-b p-2 text-left">
           <SheetTitle class="sr-only">{{ t('ctrlCenter') }}</SheetTitle>
@@ -287,27 +273,6 @@ function goPageAndClose(pageName: string) {
 
   @media (min-width: 1024px) {
     display: none;
-  }
-}
-
-.page {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 100%;
-  padding: 0 16px;
-  border: 0;
-  border-right: 1px solid var(--border);
-  background: transparent;
-  color: var(--foreground);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: var(--muted);
   }
 }
 

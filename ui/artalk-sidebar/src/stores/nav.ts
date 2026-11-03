@@ -67,6 +67,8 @@ export const useNavStore = defineStore('nav', () => {
     darkMode.value = !darkMode.value
   }
 
+  const mobileNavOpen = ref(false)
+
   const sidebarCollapsed = ref(localStorage.getItem('ATK_SIDEBAR_COLLAPSED') === '1')
   watch(sidebarCollapsed, (val) => {
     localStorage.setItem('ATK_SIDEBAR_COLLAPSED', val ? '1' : '0')
@@ -104,6 +106,7 @@ export const useNavStore = defineStore('nav', () => {
     isMobile,
     darkMode,
     toggleDarkMode,
+    mobileNavOpen,
     sidebarCollapsed,
     toggleSidebar,
     expandSidebar,

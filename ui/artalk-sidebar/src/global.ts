@@ -63,6 +63,7 @@ function getBootParams() {
     view: p.get('view') || '',
     viewParams: <any>null,
     darkMode,
+    embedded: p.get('embedded') === '1',
   }
 }
 

@@ -142,6 +142,10 @@ export const fr: MessageSchema = {
   logout: 'Déconnexion',
   logoutConfirm: 'Êtes-vous sûr de vouloir vous déconnecter ?',
   loginSelectHint: 'Veuillez sélectionner le compte avec lequel vous souhaitez vous connecter :',
+  close: 'Fermer',
+  captchaTitle: 'CAPTCHA',
+  captchaCheck: 'Saisissez le CAPTCHA pour continuer',
+  captchaRefresh: 'Cliquez pour actualiser le CAPTCHA',
 }
 
 export default fr

@@ -1,5 +1,4 @@
 import SidebarHTML from './sidebar-layer.html?raw'
-import $t from '@/i18n'
 import type {
   SidebarShowPayload,
   ConfigManager,
@@ -28,21 +27,18 @@ export class SidebarLayer implements ISidebarLayer {
   private opts: SidebarLayerOptions
   public $el: HTMLElement
   public layer?: Layer
-  public $header: HTMLElement
-  public $closeBtn: HTMLElement
   public $iframeWrap: HTMLElement
   public $iframe?: HTMLIFrameElement
 
   constructor(opts: SidebarLayerOptions) {
     this.opts = opts
     this.$el = Utils.createElement(SidebarHTML)
-    this.$header = this.$el.querySelector('.atk-sidebar-header')!
-    this.$closeBtn = this.$header.querySelector('.atk-sidebar-close')!
     this.$iframeWrap = this.$el.querySelector('.atk-sidebar-iframe-wrap')!
 
-    this.$closeBtn.onclick = () => {
-      this.hide()
-    }
+    window.addEventListener('message', (e) => {
+      if (e.source !== this.$iframe?.contentWindow) return
+      if ((e.data as { type?: string } | null)?.type === 'artalk:sidebar-close') this.hide()
+    })
   }
 
   public async onUserChanged() {
@@ -58,13 +54,6 @@ export class SidebarLayer implements ISidebarLayer {
   /** 显示 */
   public async show(conf: SidebarShowPayload = {}) {
     this.$el.style.transform = '' // 动画清除，防止二次打开失效
-
-    const titleEl = this.$el.querySelector<HTMLElement>('.atk-sidebar-title')
-    if (titleEl) {
-      titleEl.textContent = this.opts.getUser().getData().is_admin
-        ? $t('ctrlCenter')
-        : $t('msgCenter')
-    }
 
     // init layer
     this.initLayer()
@@ -171,6 +160,7 @@ export class SidebarLayer implements ISidebarLayer {
       // Keep profile fields for older sidebars, but never put credentials here.
       user: JSON.stringify({ name, email, link, is_admin }),
       time: +new Date(),
+      embedded: '1',
     }
 
     if (view) query.view = view

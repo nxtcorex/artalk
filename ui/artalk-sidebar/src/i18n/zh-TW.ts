@@ -134,6 +134,10 @@ export const zhTW: MessageSchema = {
   logout: '登出',
   logoutConfirm: '確定要登出嗎？',
   loginSelectHint: '請選擇您要登入的帳號：',
+  close: '關閉',
+  captchaTitle: '人機驗證',
+  captchaCheck: '請輸入驗證碼繼續',
+  captchaRefresh: '點擊刷新驗證碼',
 }
 
 export default zhTW
