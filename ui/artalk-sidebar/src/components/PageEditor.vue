@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import type { ArtalkType } from 'artalk'
+import { toast } from 'vue-sonner'
 import { artalk } from '../global'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 const props = defineProps<{
   page: ArtalkType.PageData
@@ -18,6 +29,7 @@ const editFieldVal = computed(() =>
   String(editFieldKey.value ? page.value[editFieldKey.value!] || '' : ''),
 )
 const isLoading = ref(false)
+const deleteConfirmOpen = ref(false)
 const { t } = useI18n()
 
 function editTitle() {
@@ -39,7 +51,7 @@ async function editAdminOnly() {
       })
     ).data
   } catch (err: any) {
-    alert(err.message)
+    toast.error(err.message)
     console.error(err)
     return
   } finally {
@@ -54,7 +66,7 @@ async function sync() {
   try {
     p = (await artalk!.ctx.getApi().pages.fetchPage(page.value.id)).data
   } catch (err: any) {
-    alert(err.message)
+    toast.error(err.message)
     console.error(err)
     return
   } finally {
@@ -64,12 +76,22 @@ async function sync() {
 }
 
 function del() {
+  deleteConfirmOpen.value = true
+}
+
+function onDelConfirm(open: boolean) {
+  deleteConfirmOpen.value = open
+}
+
+function confirmedDel() {
+  deleteConfirmOpen.value = false
+
   const del = async () => {
     isLoading.value = true
     try {
       await artalk!.ctx.getApi().pages.deletePage(page.value.id)
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
       console.error(err)
       return
     } finally {
@@ -77,7 +99,7 @@ function del() {
     }
     emit('remove', page.value.id)
   }
-  if (window.confirm(t('pageDeleteConfirm', { title: page.value.title || page.value.key }))) del()
+  del()
 }
 
 function close() {
@@ -96,7 +118,7 @@ async function onFieldEditorYes(val: string) {
         })
       ).data
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
       console.error(err)
       return false
     } finally {
@@ -150,6 +172,27 @@ function onFiledEditorNo() {
       @yes="onFieldEditorYes"
       @no="onFiledEditorNo"
     />
+
+    <!-- Delete confirm -->
+    <AlertDialog :open="deleteConfirmOpen" @update:open="onDelConfirm">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{{ t('delete') }}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {{ t('pageDeleteConfirm', { title: page.title || page.key }) }}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+          <AlertDialogAction
+            class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            @click="confirmedDel()"
+          >
+            {{ t('delete') }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
 

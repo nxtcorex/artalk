@@ -199,15 +199,19 @@ defineExpose({ prev, next, reset })
   padding: 10px 0;
   position: relative;
 
+  /* shadcn Pagination 视觉：Ghost 按钮 + focus ring */
   & > .atk-btn,
   & > .atk-input {
     font-size: 15px;
-    height: 30px;
-    border: 1px solid var(--at-color-border);
-    border-radius: 3px;
-    padding: 0 5px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: var(--atk-radius-sm, 6px);
+    padding: 0 8px;
     text-align: center;
-    background: var(--at-color-bg);
+    background: transparent;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
   }
 
   & > .atk-btn {
@@ -217,13 +221,21 @@ defineExpose({ prev, next, reset })
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--at-color-font);
 
     &:hover {
-      background: var(--at-color-bg-grey);
+      background: var(--atk-accent);
+      color: var(--atk-accent-foreground);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--atk-ring);
+      outline-offset: 1px;
     }
 
     &.atk-disabled {
       color: var(--at-color-sub);
+      opacity: 0.5;
 
       &:hover {
         cursor: default;
@@ -233,14 +245,16 @@ defineExpose({ prev, next, reset })
   }
 
   & > .atk-input {
-    background: transparent;
+    background: var(--atk-background);
+    border-color: var(--at-color-border);
     color: var(--at-color-font);
-    font-size: 18px;
+    font-size: 16px;
     width: 60px;
     outline: none;
 
     &:focus {
-      border-color: var(--at-color-main);
+      border-color: var(--atk-ring);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 

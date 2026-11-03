@@ -1,6 +1,28 @@
 <script setup lang="ts">
 import type { ArtalkType } from 'artalk'
+import { toast } from 'vue-sonner'
 import { artalk } from '../global'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const props = defineProps<{
   site: ArtalkType.SiteData
@@ -15,7 +37,16 @@ const emit = defineEmits<{
 const { site } = toRefs(props)
 const isLoading = ref(false)
 const editFieldKey = ref<keyof ArtalkType.SiteData | null>(null)
-const editFieldVal = computed(() => {
+const editFieldVal = ref('')
+const deleteConfirmOpen = ref(false)
+
+const editFieldLabel = computed(() => {
+  if (editFieldKey.value === 'name') return t('siteName')
+  if (editFieldKey.value === 'urls') return t('siteUrls')
+  return ''
+})
+
+const origFieldVal = computed(() => {
   if (editFieldKey.value === 'urls') return site.value.urls_raw || ''
   return String(editFieldKey.value ? site.value[editFieldKey.value!] || '' : '')
 })
@@ -32,19 +63,23 @@ function openURL(url: string) {
 
 function rename() {
   editFieldKey.value = 'name'
+  editFieldVal.value = site.value.name || ''
 }
 
 function editURL() {
   editFieldKey.value = 'urls'
+  editFieldVal.value = site.value.urls_raw || ''
 }
 
 function del() {
+  deleteConfirmOpen.value = false
+
   const del = async () => {
     isLoading.value = true
     try {
       await artalk!.ctx.getApi().sites.deleteSite(site.value.id)
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
       console.error(err)
       return
     } finally {
@@ -52,13 +87,14 @@ function del() {
     }
     emit('remove', site.value.id)
   }
-  if (window.confirm(t('siteDeleteConfirm', { name: site.value.name }))) del()
+  del()
 }
 
-async function onFieldEditorYes(val: string) {
+async function onFieldEditorYes() {
   if (!editFieldKey.value) return
+  const val = editFieldVal.value
 
-  if (editFieldVal.value !== val) {
+  if (editFieldVal.value !== origFieldVal.value) {
     isLoading.value = true
     let s: ArtalkType.SiteData
     try {
@@ -75,7 +111,7 @@ async function onFieldEditorYes(val: string) {
         })
       ).data
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
       console.error(err)
       return false
     } finally {
@@ -94,45 +130,101 @@ function onFiledEditorNo() {
 </script>
 
 <template>
-  <div class="atk-site-edit">
-    <div class="atk-header">
-      <div class="atk-site-info">
-        <span class="atk-site-name" @click="!site.first_url || openURL(site.first_url)">
-          {{ site.name }}
-        </span>
-        <span class="atk-site-urls">
-          <div v-for="(url, i) in site.urls" :key="i" class="atk-url-item" @click="openURL(url)">
+  <Dialog :open="true" @update:open="(v) => !v && close()">
+    <DialogContent class="max-w-lg">
+      <DialogHeader>
+        <DialogTitle>
+          <span
+            class="cursor-pointer hover:text-primary"
+            title="Open site"
+            @click="!site.first_url || openURL(site.first_url)"
+          >
+            {{ site.name }}
+          </span>
+        </DialogTitle>
+        <DialogDescription v-if="site.urls.length" class="flex flex-wrap gap-1">
+          <button
+            v-for="(url, i) in site.urls"
+            :key="i"
+            type="button"
+            class="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            @click="openURL(url)"
+          >
             {{ url }}
-          </div>
-        </span>
-      </div>
-      <div class="atk-close-btn" @click="close()">
-        <i class="atk-icon atk-icon-close"></i>
-      </div>
-    </div>
-    <div class="atk-main">
-      <div class="atk-site-text-actions">
-        <div class="atk-item atk-rename-btn" @click="rename()">
-          {{ t('rename') }}
-        </div>
-        <div class="atk-item atk-edit-url-btn" @click="editURL()">{{ t('edit') }} URL</div>
-        <!--<div class="atk-item atk-export-btn">Export</div>
-        <div class="atk-item atk-import-btn">Import</div>-->
-      </div>
-      <div class="atk-site-btn-actions">
-        <div class="atk-item atk-del-btn" @click="del()">
-          <i class="atk-icon atk-icon-del"></i>
-        </div>
-      </div>
-      <LoadingLayer v-if="isLoading" style="z-index: 1000" />
-      <ItemTextEditor
+          </button>
+        </DialogDescription>
+        <DialogDescription v-else class="sr-only">{{ t('siteUrls') }}</DialogDescription>
+      </DialogHeader>
+
+      <!-- Inline field editor (rename / edit URLs) -->
+      <form
         v-if="!!editFieldKey"
-        :init-value="editFieldVal"
-        @yes="onFieldEditorYes"
-        @no="onFiledEditorNo"
-      />
-    </div>
-  </div>
+        class="atk-field-editor"
+        @submit.prevent="onFieldEditorYes()"
+      >
+        <div class="flex flex-col gap-1.5">
+          <Label>{{ editFieldLabel }}</Label>
+          <Input v-model="editFieldVal" type="text" autocomplete="off" />
+        </div>
+        <div class="flex gap-2">
+          <Button type="submit" size="sm" :disabled="isLoading">{{ t('save') }}</Button>
+          <Button type="button" size="sm" variant="outline" :disabled="isLoading" @click="onFiledEditorNo()">
+            {{ t('cancel') }}
+          </Button>
+        </div>
+      </form>
+
+      <DialogFooter class="sm:justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          :disabled="isLoading"
+          @click="editFieldKey === 'urls' ? onFiledEditorNo() : editURL()"
+        >
+          {{ t('edit') }} URL
+        </Button>
+        <div class="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            :disabled="isLoading"
+            @click="editFieldKey === 'name' ? onFiledEditorNo() : rename()"
+          >
+            {{ t('rename') }}
+          </Button>
+          <Button type="button" variant="destructive" :disabled="isLoading" @click="deleteConfirmOpen = true">
+            {{ t('delete') }}
+          </Button>
+        </div>
+      </DialogFooter>
+
+      <LoadingLayer v-if="isLoading" />
+    </DialogContent>
+  </Dialog>
+
+  <!-- Delete confirm -->
+  <AlertDialog :open="deleteConfirmOpen" @update:open="(v) => (deleteConfirmOpen = v)">
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{{ t('delete') }}</AlertDialogTitle>
+        <AlertDialogDescription>
+          {{ t('siteDeleteConfirm', { name: site.name }) }}
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+        <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90" @click="del()">
+          {{ t('delete') }}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.atk-field-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>

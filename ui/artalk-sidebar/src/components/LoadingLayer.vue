@@ -1,17 +1,19 @@
 <script setup lang="ts">
+import { Skeleton } from '@/components/ui/skeleton'
+
 const props = defineProps<{
   transparentBg?: boolean
   timeout?: number
 }>()
 
-const showSpinner = ref(false)
+const showSkeleton = ref(false)
 let timer: number | undefined
 
 onMounted(() => {
-  // spinner delay to prevent flash
-  // (no need to show spinner if loading is fast)
+  // skeleton delay to prevent flash
+  // (no need to show anything if loading is fast)
   timer = window.setTimeout(() => {
-    showSpinner.value = true
+    showSkeleton.value = true
     timer = undefined
   }, props.timeout || 700)
 })
@@ -26,12 +28,24 @@ onUnmounted(() => {
     class="atk-loading atk-fade-in"
     :style="{ background: props.transparentBg ? 'transparent' : undefined }"
   >
-    <div v-if="showSpinner" class="atk-loading-spinner">
-      <svg viewBox="25 25 50 50">
-        <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-      </svg>
+    <div v-if="showSkeleton" class="atk-skeleton-group">
+      <Skeleton class="h-5 w-[45%]" />
+      <Skeleton class="h-4 w-[80%]" />
+      <Skeleton class="h-4 w-[70%]" />
+      <Skeleton class="h-4 w-[76%]" />
     </div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.atk-skeleton-group {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 25px;
+}
+</style>

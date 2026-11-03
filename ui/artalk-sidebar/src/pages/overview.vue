@@ -15,6 +15,14 @@ import { useNavStore } from '../stores/nav'
 import { useUserStore } from '../stores/user'
 import { overviewURL } from '../lib/overview-navigation'
 import OverviewActivity from '../components/OverviewActivity.vue'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@/components/ui/select'
 
 type Overview = Awaited<ReturnType<ArtalkType.Api['admin']['getOverview']>>['data']
 
@@ -22,6 +30,14 @@ const nav = useNavStore()
 const { site } = storeToRefs(useUserStore())
 const { t, locale } = useI18n()
 const days = ref<7 | 30>(7)
+
+// shadcn Select only accepts string values
+const daysStr = computed({
+  get: () => String(days.value),
+  set: (v: string) => {
+    days.value = Number(v) as 7 | 30
+  },
+})
 const data = ref<Overview>()
 const loading = ref(false)
 const failed = ref(false)
@@ -87,31 +103,36 @@ function chartLabel(day: Overview['trend'][number]) {
         <h1>{{ t('overview') }}</h1>
       </div>
       <div class="controls">
-        <label>
-          <span class="sr-only">{{ t('overviewPeriod') }}</span>
-          <select v-model="days" data-testid="overview-period">
-            <option :value="7">{{ t('overviewDays', { days: 7 }) }}</option>
-            <option :value="30">{{ t('overviewDays', { days: 30 }) }}</option>
-          </select>
-        </label>
-        <button type="button" :disabled="loading" @click="refresh">
+        <Select v-model="daysStr">
+          <SelectTrigger class="w-[130px]" data-testid="overview-period">
+            <span class="sr-only">{{ t('overviewPeriod') }}</span>
+            <span class="overview-period-text">
+              {{ days === 7 ? t('overviewDays', { days: 7 }) : t('overviewDays', { days: 30 }) }}
+            </span>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">{{ t('overviewDays', { days: 7 }) }}</SelectItem>
+            <SelectItem value="30">{{ t('overviewDays', { days: 30 }) }}</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button type="button" variant="outline" :disabled="loading" @click="refresh">
           {{ t('overviewRefresh') }}
-        </button>
+        </Button>
       </div>
     </header>
 
     <p v-if="loading" class="state" role="status">{{ t('overviewLoading') }}</p>
     <div v-else-if="failed" class="state error" role="alert">
       <p>{{ t('overviewFailed') }}</p>
-      <button type="button" @click="load">{{ t('overviewRetry') }}</button>
+      <Button type="button" variant="outline" @click="load">{{ t('overviewRetry') }}</Button>
     </div>
 
     <template v-else-if="data">
       <div class="metrics">
-        <div class="metric">
+        <Card class="metric">
           <span>{{ t('overviewToday') }}</span>
           <strong>{{ number(data.metrics.today_comments) }}</strong>
-        </div>
+        </Card>
         <RouterLink
           class="metric pending-metric"
           :to="{ path: '/comments', query: { tab: 'pending' } }"
@@ -119,14 +140,14 @@ function chartLabel(day: Overview['trend'][number]) {
           <span>{{ t('overviewPending') }} <span aria-hidden="true">↗</span></span>
           <strong>{{ number(data.metrics.pending) }}</strong>
         </RouterLink>
-        <div class="metric">
+        <Card class="metric">
           <span>{{ t('overviewPublishedTotal') }}</span>
           <strong>{{ number(data.metrics.published) }}</strong>
-        </div>
-        <div class="metric">
+        </Card>
+        <Card class="metric">
           <span>{{ t('overviewParticipants') }}</span>
           <strong>{{ number(data.metrics.participants) }}</strong>
-        </div>
+        </Card>
       </div>
 
       <RouterLink
@@ -138,7 +159,7 @@ function chartLabel(day: Overview['trend'][number]) {
         <span>{{ t('overviewReview') }} →</span>
       </RouterLink>
 
-      <section class="panel trend-panel">
+      <Card class="panel trend-panel">
         <div class="panel-heading">
           <h2>{{ t('overviewTrend') }}</h2>
           <div class="legend">
@@ -226,10 +247,10 @@ function chartLabel(day: Overview['trend'][number]) {
             </tbody>
           </table>
         </details>
-      </section>
+      </Card>
 
       <div class="lists">
-        <section class="panel">
+        <Card class="panel">
           <div class="panel-heading">
             <h2>{{ t('overviewLatest') }}</h2>
             <RouterLink to="/comments">{{ t('overviewManage') }} →</RouterLink>
@@ -259,8 +280,8 @@ function chartLabel(day: Overview['trend'][number]) {
               </div>
             </li>
           </ol>
-        </section>
-        <section class="panel">
+        </Card>
+        <Card class="panel">
           <div class="panel-heading">
             <h2>{{ t('overviewPopular') }}</h2>
             <span class="period-label">{{ t('overviewDays', { days }) }}</span>
@@ -295,7 +316,7 @@ function chartLabel(day: Overview['trend'][number]) {
               ><strong>{{ number(data.metrics.pv) }}</strong>
             </div>
           </div>
-        </section>
+        </Card>
       </div>
     </template>
     <OverviewActivity :site="site" :refresh-key="activityRefreshKey" />
@@ -307,7 +328,7 @@ function chartLabel(day: Overview['trend'][number]) {
 
 <style scoped lang="scss">
 .overview {
-  --overview-accent: #3983de;
+  --overview-accent: var(--primary);
   --overview-pending: #ce8c23;
   padding: 28px;
   font-size: 14px;
@@ -339,9 +360,12 @@ function chartLabel(day: Overview['trend'][number]) {
     color: var(--at-color-font);
     background: var(--at-color-bg);
     border: 1px solid var(--at-color-border);
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 8px 11px;
     cursor: pointer;
+  }
+  .overview-period-text {
+    font-size: 14px;
   }
   button:disabled {
     opacity: 0.5;
@@ -390,8 +414,11 @@ function chartLabel(day: Overview['trend'][number]) {
 .metric,
 .panel {
   border: 1px solid var(--at-color-border);
-  border-radius: 10px;
+  border-radius: calc(var(--radius) + 4px);
   background: var(--at-color-bg);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 .metric {
   display: flex;

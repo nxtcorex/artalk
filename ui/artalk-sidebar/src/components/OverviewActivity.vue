@@ -55,9 +55,21 @@ onUnmounted(() => {
 const availableYears = computed(() =>
   [...new Set([...years.value, ...(year.value ? [year.value] : [])])].sort((a, b) => b - a),
 )
+
+const yearStr = computed({
+  get: () => String(year.value),
+  set: (value: string) => {
+    year.value = Number(value)
+  },
+})
+
+const yearLabel = computed(() =>
+  year.value ? String(year.value) : t('overviewActivityPastYear'),
+)
 const calendar = computed(() =>
   contributionCalendar(data.value?.days || [], data.value?.generated_at.slice(0, 10) || ''),
 )
+const dayByDate = computed(() => new Map(calendar.value.cells.map((day) => [day.date, day])))
 const total = computed(() => data.value?.days.reduce((sum, day) => sum + day.count, 0) || 0)
 const number = (value: number) => new Intl.NumberFormat(locale.value).format(value)
 const formatDate = (value: string, options: Intl.DateTimeFormatOptions) =>
@@ -71,13 +83,27 @@ const label = (day: { date: string; count: number }) =>
     count: number(day.count),
   })
 
-function showDay(event: Event, day: { date: string; count: number }) {
-  const rect = (event.currentTarget as SVGElement).getBoundingClientRect()
+function placeTooltip(el: Element, day: { date: string; count: number }) {
+  const rect = el.getBoundingClientRect()
   tooltip.value = {
     label: label(day),
     left: Math.max(120, Math.min(window.innerWidth - 120, rect.left + rect.width / 2)),
     top: rect.top - 8,
   }
+}
+
+function showDay(event: Event, day: { date: string; count: number }) {
+  placeTooltip(event.currentTarget as Element, day)
+}
+
+function onCalendarPointer(event: Event) {
+  const cell = (event.target as Element | null)?.closest?.('[data-date]') as SVGElement | null
+  const day = cell ? dayByDate.value.get(cell.dataset.date || '') : undefined
+  if (!cell || !day || day.future) {
+    tooltip.value = undefined
+    return
+  }
+  placeTooltip(cell, day)
 }
 
 function moveFocus(event: KeyboardEvent, index: number) {
@@ -107,15 +133,21 @@ function moveFocus(event: KeyboardEvent, index: number) {
   <section class="activity" :aria-busy="loading" aria-labelledby="overview-activity-title">
     <header class="activity-heading">
       <h2 id="overview-activity-title">{{ t('overviewActivity') }}</h2>
-      <label>
-        <span class="sr-only">{{ t('overviewActivityYear') }}</span>
-        <select v-model="year" data-testid="activity-year">
-          <option :value="0">{{ t('overviewActivityPastYear') }}</option>
-          <option v-for="option in availableYears" :key="option" :value="option">
+      <Select v-model="yearStr">
+        <SelectTrigger
+          class="w-[130px]"
+          data-testid="activity-year"
+          :aria-label="t('overviewActivityYear')"
+        >
+          <span>{{ yearLabel }}</span>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="0">{{ t('overviewActivityPastYear') }}</SelectItem>
+          <SelectItem v-for="option in availableYears" :key="option" :value="String(option)">
             {{ option }}
-          </option>
-        </select>
-      </label>
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </header>
     <p v-if="loading" class="activity-state" role="status">{{ t('overviewLoading') }}</p>
     <div v-else-if="failed" class="activity-state" role="alert">
@@ -131,6 +163,9 @@ function moveFocus(event: KeyboardEvent, index: number) {
           :viewBox="`0 0 ${40 + calendar.columns * 14} 128`"
           role="group"
           :aria-label="t('overviewActivity')"
+          @pointerover="onCalendarPointer"
+          @pointerleave="tooltip = undefined"
+          @click="onCalendarPointer"
         >
           <text
             v-for="month in calendar.months"
@@ -147,6 +182,7 @@ function moveFocus(event: KeyboardEvent, index: number) {
           <rect
             v-for="(day, index) in calendar.cells"
             :key="day.date"
+            v-memo="[day.date, day.level, day.future, day.date === focusedDate]"
             :x="42 + day.column * 14"
             :y="24 + day.row * 14"
             width="11"
@@ -160,11 +196,8 @@ function moveFocus(event: KeyboardEvent, index: number) {
             :aria-hidden="day.future || undefined"
             :aria-label="day.future ? undefined : label(day)"
             role="img"
-            @pointerenter="!day.future && showDay($event, day)"
-            @pointerleave="tooltip = undefined"
             @focus="showDay($event, day)"
             @blur="tooltip = undefined"
-            @click="!day.future && showDay($event, day)"
             @keydown="moveFocus($event, index)"
           />
         </svg>
@@ -203,24 +236,17 @@ function moveFocus(event: KeyboardEvent, index: number) {
 
 <style scoped lang="scss">
 .activity {
-  --activity-0: #ebedf0;
-  --activity-1: #9be9a8;
-  --activity-2: #40c463;
-  --activity-3: #30a14e;
-  --activity-4: #216e39;
+  --activity-0: var(--muted);
+  --activity-1: color-mix(in oklab, var(--primary) 20%, var(--background));
+  --activity-2: color-mix(in oklab, var(--primary) 40%, var(--background));
+  --activity-3: color-mix(in oklab, var(--primary) 65%, var(--background));
+  --activity-4: var(--primary);
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid var(--at-color-border);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--at-color-bg);
+  background: var(--card);
   min-width: 0;
-}
-.atk-dark-mode .activity {
-  --activity-0: #161b22;
-  --activity-1: #0e4429;
-  --activity-2: #006d32;
-  --activity-3: #26a641;
-  --activity-4: #39d353;
 }
 .activity-heading {
   display: flex;
@@ -234,7 +260,6 @@ function moveFocus(event: KeyboardEvent, index: number) {
   font-weight: 600;
   margin: 0;
 }
-.activity-heading select,
 .activity-state button {
   font: inherit;
   font-size: 13px;

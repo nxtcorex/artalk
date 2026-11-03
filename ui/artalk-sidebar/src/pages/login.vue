@@ -82,17 +82,29 @@ const versionInfo = computed(() => {
     <a href="https://artalk.js.org/" target="_blank">
       <img class="logo" src="../assets/favicon.png" alt="logo" draggable="false" />
     </a>
-    <form class="login-form" @submit.prevent="login()">
-      <input v-model="userForm.email" type="text" :placeholder="t('email')" @focus="onFocus" />
-      <input
-        v-model="userForm.password"
-        type="password"
-        :placeholder="t('password')"
-        @focus="onFocus"
-      />
-      <div v-if="!!loginErr" class="err-msg atk-fade-in">{{ loginErr }}</div>
-      <button type="submit">{{ t('login') }}</button>
-    </form>
+    <Card class="login-card">
+      <CardHeader class="text-center">
+        <CardTitle class="text-xl">{{ t('login') }}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form class="login-form" @submit.prevent="login()">
+          <Input
+            v-model="userForm.email"
+            type="text"
+            :placeholder="t('email')"
+            @focus="onFocus"
+          />
+          <Input
+            v-model="userForm.password"
+            type="password"
+            :placeholder="t('password')"
+            @focus="onFocus"
+          />
+          <div v-if="!!loginErr" class="err-msg atk-fade-in">{{ loginErr }}</div>
+          <Button type="submit" class="w-full">{{ t('login') }}</Button>
+        </form>
+      </CardContent>
+    </Card>
     <div class="copyright">
       Powered by
       <a href="https://artalk.js.org" target="_blank">Artalk</a>
@@ -114,7 +126,7 @@ const versionInfo = computed(() => {
 
 <style lang="scss" scoped>
 .login-dialog {
-  z-index: 11;
+  z-index: 60;
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -122,23 +134,22 @@ const versionInfo = computed(() => {
   justify-content: center;
   top: 0;
   left: 0;
-  background: var(--at-color-bg);
+  background: var(--background);
   width: 100%;
   height: 100%;
 
   .logo {
     user-select: none;
     display: inline-block;
-    width: 50px;
-    height: 50px;
-    margin-bottom: 50px;
-    margin-top: -50px;
-    border-radius: 2px;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 24px;
+    border-radius: 8px;
   }
 
   .copyright {
     font-size: 13px;
-    color: var(--at-color-meta);
+    color: var(--muted-foreground);
     position: fixed;
     height: 30px;
     bottom: 0;
@@ -147,49 +158,30 @@ const versionInfo = computed(() => {
   }
 }
 
+.login-card {
+  width: 360px;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 280px;
+  gap: 12px;
 
   input {
-    display: block;
-    border: 0;
-    background: transparent;
-    border-bottom: 1px solid var(--at-color-border);
-    padding: 0 20px;
-    line-height: 40px;
-    margin-bottom: 10px;
-
-    &:focus {
-      outline: none;
-    }
+    height: 40px;
   }
 
   button {
-    color: #fff;
-    background: #6e8392;
-    border-radius: 2px;
-    cursor: pointer;
-    border: 0;
-    line-height: 35px;
-    padding: 0 20px;
-    margin-top: 20px;
-    display: block;
-
-    &:hover {
-      opacity: 0.95;
-    }
+    margin-top: 8px;
   }
 
   .err-msg {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0 10px;
-    margin-top: 5px;
-    padding: 0 10px;
+    margin-top: 2px;
     color: var(--at-color-red);
+    font-size: 13px;
 
     &::before {
       content: '';
@@ -219,10 +211,15 @@ const versionInfo = computed(() => {
   left: 50%;
   top: 43.5%;
   transform: translate(-50%, -50%);
-  background: var(--at-color-bg);
+  background: var(--atk-popover);
   border: 1px solid var(--at-color-border);
+  border-radius: var(--atk-radius, 8px);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
   padding-bottom: 10px;
   width: 280px;
+  overflow: hidden;
 
   & > .text {
     font-size: 15px;
@@ -233,11 +230,11 @@ const versionInfo = computed(() => {
     & > .item {
       cursor: pointer;
       padding: 10px 20px;
-      transition: border 0.3s ease;
-      border-left: 2px solid transparent;
+      transition: background-color 0.15s ease;
 
       &:hover {
-        border-left: 2px solid #6e8392;
+        background: var(--atk-accent);
+        color: var(--atk-accent-foreground);
       }
     }
   }

@@ -6,6 +6,15 @@
   border: 1px solid var(--at-color-border);
   border-radius: $block-radius;
   margin-bottom: 10px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  // shadcn Input 规范：聚焦时展示 ring
+  &:focus-within {
+    border-color: var(--atk-ring);
+    box-shadow: 0 0 0 3px rgb(0 131 255 / 0.15);
+  }
 
   @media only screen and (max-width: 768px) {
     margin-bottom: 7px;
@@ -119,15 +128,19 @@
       color: var(--at-color-grey);
       font-size: $font-size;
       user-select: none;
-      border-radius: calc($block-radius / 2);
+      border-radius: var(--atk-radius-sm, 6px);
       word-break: keep-all;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
 
       &:not(:last-child) {
         margin-right: 5px;
       }
 
       &:hover {
-        background: var(--at-color-bg-grey);
+        background: var(--atk-accent);
+        color: var(--atk-accent-foreground);
       }
 
       &.active {
@@ -199,24 +212,37 @@
     }
 
     .atk-send-btn {
-      background: var(--at-color-main);
-      color: #fff;
+      background: var(--atk-primary);
+      color: var(--atk-primary-foreground);
       font-size: $font-size;
+      font-weight: 500;
       border: none;
       margin: 0;
       height: 30px;
       min-width: 7.3em;
       cursor: pointer;
-      transition: opacity 0.3s ease-in-out;
+      transition:
+        filter 0.15s ease-in-out,
+        opacity 0.3s ease-in-out;
       outline: none;
-      border-radius: calc($block-radius / 2);
+      border-radius: var(--atk-radius-sm, 6px);
+      box-shadow: var(--atk-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05));
 
       @media only screen and (max-width: 768px) {
         min-width: 6em;
       }
 
+      &:hover {
+        filter: brightness(0.92);
+      }
+
       &:active {
-        opacity: 0.9;
+        filter: brightness(0.85);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--atk-ring);
+        outline-offset: 2px;
       }
     }
   }

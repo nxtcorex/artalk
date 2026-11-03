@@ -2,16 +2,120 @@
 /**
  * The part of the navigation bar that is displayed on mobile devices and the sidebar
  */
-import { useNavigationMenu } from './AppNavigationMenu'
+import { storeToRefs } from 'pinia'
+import { ChevronDown, LogOut, Menu, Search } from 'lucide-vue-next'
+import { NavGroupDefs, useNavigationMenu } from './AppNavigationMenu'
+import SiteSwitcher from './SiteSwitcher.vue'
+import { loadSettingsTree, settingsNavGroups } from '@/lib/settings-tree'
+import { useUserStore } from '@/stores/user'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const user = useUserStore()
+const { is_admin: isAdmin, name: userName, email } = storeToRefs(user)
 
-const indicatorState = ref<'pages' | 'tabs'>('tabs')
+const pagesSheetOpen = ref(false)
+const settingsExpanded = ref(false)
+const transferExpanded = ref(false)
+const logoutConfirmOpen = ref(false)
 const tabListEl = ref<HTMLElement | null>(null)
 const nav = useNavigationMenu({
   onGoPage: () => {
-    indicatorState.value = 'tabs'
+    pagesSheetOpen.value = false
   },
+})
+
+const navGroups = computed(() =>
+  NavGroupDefs.map((group) => ({
+    key: group.key,
+    items: group.names
+      .map((name) => [name, nav.pages[name]] as const)
+      .filter(([, page]) => !!page),
+  })).filter((group) => group.items.length > 0),
+)
+
+const userInitial = computed(() =>
+  (userName.value || email.value || 'U').charAt(0).toUpperCase(),
+)
+
+function confirmedLogout() {
+  logoutConfirmOpen.value = false
+  pagesSheetOpen.value = false
+  user.logout()
+  nextTick(() => {
+    router.replace('/login')
+  })
+}
+
+const transferSections = [
+  { key: 'import', label: 'import' },
+  { key: 'export', label: 'export' },
+]
+
+const activeTransferSection = computed(() => {
+  const value = (route.params as Record<string, string | string[] | undefined>).section
+  const name = Array.isArray(value) ? value[0] : value || ''
+  return name === 'export' ? 'export' : 'import'
+})
+
+const activeGroupPath = computed(() => {
+  const value = (route.params as Record<string, string | string[] | undefined>).group
+  return Array.isArray(value) ? value[0] : value || ''
+})
+
+watch(pagesSheetOpen, (open) => {
+  if (!open) return
+  if (nav.curtPage === 'settings') {
+    settingsExpanded.value = true
+    loadSettingsTree()
+  }
+  if (nav.curtPage === 'transfer') transferExpanded.value = true
+})
+
+function toggleSettings() {
+  settingsExpanded.value = !settingsExpanded.value
+  if (settingsExpanded.value) loadSettingsTree()
+}
+
+function toggleTransfer() {
+  transferExpanded.value = !transferExpanded.value
+}
+
+function goGroupAndClose(path: string) {
+  pagesSheetOpen.value = false
+  router.push(`/settings/${path}`)
+}
+
+function goTransferAndClose(section: string) {
+  pagesSheetOpen.value = false
+  router.push(`/transfer/${section}`)
+}
+
+function isNavEntryActive(entry: { key: string; paths: string[] }) {
+  return entry.key === activeGroupPath.value || entry.paths.includes(activeGroupPath.value)
+}
+
+const curtPageLabel = computed(() => {
+  const page = nav.pages[nav.curtPage]
+  return page ? t(page.label) : ''
 })
 
 /**
@@ -24,52 +128,147 @@ const wheelHandler = (evt: WheelEvent) => {
 onMounted(() => tabListEl.value!.addEventListener('wheel', wheelHandler))
 onUnmounted(() => tabListEl.value!.removeEventListener('wheel', wheelHandler))
 
-/**
- * Toggle indicator
- */
-function toggleIndicator() {
-  indicatorState.value = indicatorState.value !== 'tabs' ? 'tabs' : 'pages'
+function goPageAndClose(pageName: string) {
+  nav.goPage(pageName)
+  pagesSheetOpen.value = false
 }
 </script>
 
 <template>
   <div class="top-navigation">
-    <div class="page" @click="toggleIndicator()">
-      <div class="icon" :class="indicatorState === 'tabs' ? 'menu' : 'arrow'"></div>
-      <div v-if="nav.pages[nav.curtPage]?.label" class="text">
-        {{ t(nav.pages[nav.curtPage].label) }}
-      </div>
-    </div>
+    <Sheet v-model:open="pagesSheetOpen">
+      <button
+        type="button"
+        class="page"
+        aria-label="Open navigation"
+        @click="pagesSheetOpen = true"
+      >
+        <Menu class="size-4" />
+        <span v-if="curtPageLabel" class="text">{{ curtPageLabel }}</span>
+      </button>
+
+      <SheetContent side="left" class="flex w-64 flex-col p-0" :show-close="false">
+        <SheetHeader class="border-b p-2 text-left">
+          <SheetTitle class="sr-only">{{ t('ctrlCenter') }}</SheetTitle>
+          <SheetDescription class="sr-only">{{ t('navMenu') }}</SheetDescription>
+          <SiteSwitcher v-if="isAdmin" />
+          <div v-else class="sheet-brand">{{ t('msgCenter') }}</div>
+        </SheetHeader>
+
+        <nav class="sheet-nav">
+          <div v-for="group in navGroups" :key="group.key" class="sheet-group">
+            <p class="group-label">{{ t(group.key) }}</p>
+            <template v-for="[pageName, page] in group.items" :key="pageName">
+              <button
+                type="button"
+                class="nav-item"
+                :class="{ active: pageName === nav.curtPage }"
+                @click="
+                  pageName === 'settings'
+                    ? toggleSettings()
+                    : pageName === 'transfer'
+                      ? toggleTransfer()
+                      : goPageAndClose(pageName as string)
+                "
+              >
+                <component :is="page.icon" class="size-4 shrink-0" />
+                <span class="truncate">{{ t(page.label) }}</span>
+                <ChevronDown
+                  v-if="pageName === 'settings' || pageName === 'transfer'"
+                  class="ml-auto size-4 shrink-0 transition-transform"
+                  :class="{
+                    'rotate-180':
+                      pageName === 'settings' ? settingsExpanded : transferExpanded,
+                  }"
+                />
+              </button>
+
+              <Transition name="subnav">
+                <div v-if="pageName === 'settings' && settingsExpanded" class="subnav">
+                  <button
+                    v-for="entry in settingsNavGroups"
+                    :key="entry.key"
+                    type="button"
+                    class="subnav-item"
+                    :class="{ active: isNavEntryActive(entry) }"
+                    @click="goGroupAndClose(entry.key)"
+                  >
+                    {{ entry.labelKey ? t(entry.labelKey) : entry.label }}
+                  </button>
+                </div>
+              </Transition>
+
+              <Transition name="subnav">
+                <div v-if="pageName === 'transfer' && transferExpanded" class="subnav">
+                  <button
+                    v-for="section in transferSections"
+                    :key="section.key"
+                    type="button"
+                    class="subnav-item"
+                    :class="{ active: section.key === activeTransferSection }"
+                    @click="goTransferAndClose(section.key)"
+                  >
+                    {{ t(section.label) }}
+                  </button>
+                </div>
+              </Transition>
+            </template>
+          </div>
+        </nav>
+
+        <div class="sheet-footer">
+          <div class="sheet-user">
+            <span class="sheet-avatar">{{ userInitial }}</span>
+            <div class="sheet-user-meta">
+              <span class="sheet-name">{{ userName }}</span>
+              <span class="sheet-email">{{ email }}</span>
+            </div>
+          </div>
+          <button type="button" class="sheet-logout" @click="logoutConfirmOpen = true">
+            <LogOut class="size-4" />
+            {{ t('logout') }}
+          </button>
+        </div>
+
+        <AlertDialog
+          :open="logoutConfirmOpen"
+          @update:open="(v) => (logoutConfirmOpen = v)"
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{{ t('logout') }}</AlertDialogTitle>
+              <AlertDialogDescription>{{ t('logoutConfirm') }}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+              <AlertDialogAction @click="confirmedLogout()">{{ t('logout') }}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </SheetContent>
+    </Sheet>
 
     <div ref="tabListEl" class="tab-list">
-      <!-- Tabs -->
-      <template v-if="indicatorState === 'tabs'">
-        <div
-          v-for="(tabLabel, tabName) in nav.tabs"
-          :key="tabName"
-          class="item"
-          :class="{ active: nav.curtTab === tabName }"
-          @click="nav.goTab(tabName as string)"
-        >
-          {{ t(tabLabel) }}
-        </div>
+      <button
+        v-for="(tabLabel, tabName) in nav.tabs"
+        :key="tabName"
+        type="button"
+        class="item"
+        :class="{ active: nav.curtTab === tabName }"
+        @click="nav.goTab(tabName as string)"
+      >
+        {{ t(tabLabel) }}
+      </button>
 
-        <div v-if="nav.isSearchEnabled" class="item search-btn" @click="nav.showSearch()"></div>
-      </template>
-
-      <!-- Pages -->
-      <template v-if="indicatorState === 'pages'">
-        <div
-          v-for="(page, pageName) in nav.pages"
-          v-show="!page.hideOnMobile"
-          :key="pageName"
-          class="item"
-          :class="{ active: pageName === nav.curtPage }"
-          @click="nav.goPage(pageName as string)"
-        >
-          {{ t(page.label) }}
-        </div>
-      </template>
+      <button
+        v-if="nav.isSearchEnabled"
+        type="button"
+        class="item search-btn"
+        :aria-label="t('searchHint')"
+        @click="nav.showSearch()"
+      >
+        <Search class="size-4" />
+      </button>
     </div>
 
     <AppNavigationSearch v-if="nav.isMobile" :state="nav.searchState" />
@@ -82,106 +281,272 @@ function toggleIndicator() {
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-bottom: 1px solid var(--at-color-border);
-  height: 41px;
+  height: 48px;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
 
   @media (min-width: 1024px) {
     display: none;
   }
+}
 
-  .icon {
-    width: 17px;
-    height: 100%;
-    background-color: var(--at-color-deep);
-    background-size: contain;
-    background-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
-    mask-size: 100%;
-    -webkit-mask-size: 100%;
+.page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 0 16px;
+  border: 0;
+  border-right: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 
-    &.menu {
-      $menuImg: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5 9H44V11.8182H5V9ZM5 23.0909H44V25.9091H5V23.0909ZM44 37.1818H5V40H44V37.1818Z' fill='black'/%3E%3C/svg%3E%0A");
-      mask-image: $menuImg;
-      -webkit-mask-image: $menuImg;
-    }
+  &:hover {
+    background: var(--muted);
+  }
+}
 
-    &.arrow {
-      $arrowImg: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M32.1433 7L15 24.4999L15.4676 24.9773L32.1433 42L34 40.1047L18.7133 24.5001L34 8.89529L32.1433 7Z' fill='black'/%3E%3C/svg%3E%0A");
-      mask-image: $arrowImg;
-      -webkit-mask-image: $arrowImg;
-    }
+.tab-list {
+  position: relative;
+  display: flex;
+  flex: auto;
+  flex-direction: row;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--muted) 50%, transparent);
   }
 
-  .page {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding: 0 20px;
-    border-right: 1px solid var(--at-color-border);
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
-
-    .icon {
-      margin-right: 10px;
-    }
-
-    .text {
-      color: var(--at-color-deep);
-    }
+  &.active {
+    color: var(--foreground);
+    font-weight: 500;
+    box-shadow: inset 0 -2px 0 var(--foreground);
   }
 
-  .tab-list {
-    position: relative;
-    flex: auto;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    overflow-y: auto;
+  &.search-btn {
+    margin-left: auto;
+    padding: 0 14px;
+  }
+}
 
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-      background: transparent;
-    }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: var(--muted);
+    color: var(--foreground);
   }
 
-  .item {
-    padding: 0 20px;
-    color: var(--at-color-sub);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    cursor: pointer;
-    white-space: nowrap;
+  &.active {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+}
 
-    &.active {
-      color: var(--at-color-deep);
-    }
+.sheet-brand {
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    &:hover {
-      background: var(--at-color-bg-grey);
-    }
+.sheet-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  padding: 8px;
+  overflow-y: auto;
+}
 
-    &.search-btn {
-      margin-left: auto;
-      padding: 0 20px;
-      border-left: 1px solid var(--at-color-border);
+.sheet-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-      &::after {
-        display: inline-block;
-        content: '';
-        height: 15px;
-        width: 15px;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' viewBox='0 0 15 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M9.89266 3.70572C8.18412 1.99718 5.41402 1.99718 3.70548 3.70572C1.99694 5.41427 1.99694 8.18436 3.70548 9.89291C5.41402 11.6015 8.18412 11.6015 9.89266 9.89291C11.6012 8.18436 11.6012 5.41427 9.89266 3.70572ZM2.8216 2.82184C5.0183 0.625142 8.57985 0.625142 10.7765 2.82184C12.8239 4.86916 12.9631 8.10202 11.1942 10.3106L13.4282 12.5446L12.5443 13.4284L10.3103 11.1945C8.10177 12.9633 4.86892 12.8241 2.8216 10.7768C0.624897 8.58009 0.624897 5.01854 2.8216 2.82184Z' fill='%23757575'/%3E%3C/svg%3E");
-      }
-    }
+.group-label {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin: 0;
+  padding: 0 8px;
+  color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sheet-footer {
+  padding: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.sheet-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+.sheet-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sheet-user-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.sheet-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sheet-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+.sheet-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+}
+
+.subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 1200px;
+  margin: 0 0 4px 19px;
+  padding-left: 9px;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+  transition:
+    max-height 0.25s ease,
+    opacity 0.15s ease,
+    margin 0.2s ease,
+    padding 0.2s ease;
+}
+
+.subnav-enter-active,
+.subnav-leave-active {
+  transition:
+    max-height 0.25s ease,
+    opacity 0.15s ease,
+    margin 0.2s ease,
+    padding 0.2s ease;
+}
+
+.subnav-enter-from,
+.subnav-leave-to {
+  max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+.subnav-item {
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+
+  &.active {
+    background: var(--muted);
+    color: var(--foreground);
+    font-weight: 500;
   }
 }
 </style>

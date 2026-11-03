@@ -3,7 +3,7 @@
   "version": "1.0.3",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://github.com/ArtalkJS/Artalk/tree/master/ui/eslint-plugin-artalk",
+  "homepage": "https://github.com/nxtcorex/artalk/tree/master/ui/eslint-plugin-artalk",
   "files": [
     "dist"
   ],

@@ -5,14 +5,18 @@
   padding: 10px 0;
   position: relative;
 
+  /* shadcn Pagination 视觉规范：Ghost 变体 + focus ring */
   & > .atk-btn,
   & > .atk-input {
     height: 30px;
-    border: 1px solid var(--at-color-border);
-    border-radius: 3px;
+    border: 1px solid transparent;
+    border-radius: var(--atk-radius-sm, 6px);
     padding: 0 5px;
     text-align: center;
-    background: var(--at-color-bg);
+    background: transparent;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
   }
 
   & > .atk-btn {
@@ -22,13 +26,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--at-color-font);
+    font-size: 14px;
 
     &:hover {
-      background: var(--at-color-bg-grey);
+      background: var(--atk-accent);
+      color: var(--atk-accent-foreground);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--atk-ring);
+      outline-offset: 1px;
     }
 
     &.atk-disabled {
       color: var(--at-color-sub);
+      opacity: 0.5;
 
       &:hover {
         cursor: default;
@@ -38,14 +51,16 @@
   }
 
   & > .atk-input {
-    background: transparent;
+    background: var(--atk-background);
+    border-color: var(--atk-border);
     color: var(--at-color-font);
     font-size: 18px;
     width: 60px;
     outline: none;
 
     &:focus {
-      border-color: var(--at-color-main);
+      border-color: var(--atk-ring);
+      box-shadow: 0 0 0 3px rgb(0 131 255 / 0.15);
     }
   }
 

@@ -1,0 +1,90 @@
+/*
+ * shadcn/ui Design Tokens (零运行时移植)
+ *
+ * 完整的语义 Token 体系（light / dark 双主题），命名与 shadcn 对齐：
+ *   --atk-background / --atk-foreground / --atk-primary / --atk-muted ...
+ * 挂载于 `.artalk` 与 `.atk-layer-wrap`，dark 主题跟随现有 `.atk-dark-mode` 机制。
+ *
+ * 兼容层：旧 `--at-color-*` 变量继续存在，但其取值桥接到新 Token，
+ * 用户既可以覆盖 `--atk-*`（推荐，shadcn 语义），也可以继续覆盖 `--at-color-*`。
+ */
+
+.artalk,
+.atk-layer-wrap {
+  /* --- Radius --- */
+  --atk-radius: 8px;
+  --atk-radius-sm: 6px;
+  --atk-radius-lg: 12px;
+
+  /* --- Light theme --- */
+  --atk-background: #ffffff;
+  --atk-foreground: #2a2e2e;
+  --atk-card: #ffffff;
+  --atk-card-foreground: #2a2e2e;
+  --atk-popover: #ffffff;
+  --atk-popover-foreground: #2a2e2e;
+  --atk-primary: #0083ff;
+  --atk-primary-foreground: #ffffff;
+  --atk-secondary: #f3f4f5;
+  --atk-secondary-foreground: #2a2e2e;
+  --atk-muted: #f3f4f5;
+  --atk-muted-foreground: #697182;
+  --atk-accent: #eaf4ff;
+  --atk-accent-foreground: #005fb3;
+  --atk-destructive: #ff5652;
+  --atk-destructive-foreground: #ffffff;
+  --atk-border: #eceff2;
+  --atk-input: #eceff2;
+  --atk-ring: #0083ff;
+  --atk-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  /* --- Legacy bridge (旧变量 -> 新 Token) --- */
+  --at-color-font: var(--atk-foreground);
+  --at-color-deep: var(--atk-foreground);
+  --at-color-sub: var(--atk-muted-foreground);
+  --at-color-grey: var(--atk-muted-foreground);
+  --at-color-meta: var(--atk-muted-foreground);
+  --at-color-border: var(--atk-border);
+  --at-color-light: var(--atk-primary);
+  --at-color-bg: var(--atk-background);
+  --at-color-bg-transl: rgb(255 255 255 / 0.94);
+  --at-color-bg-grey: var(--atk-muted);
+  --at-color-bg-grey-transl: rgb(244 244 244 / 0.75);
+  --at-color-bg-light: var(--atk-accent);
+  --at-color-main: var(--atk-primary);
+  --at-color-red: var(--atk-destructive);
+  --at-color-pink: #fa5a57;
+  --at-color-yellow: #ff7c37;
+  --at-color-green: #4caf50;
+  --at-color-gradient: linear-gradient(180deg, transparent, rgb(255 255 255));
+
+  &.atk-dark-mode {
+    --atk-background: #1e2224;
+    --atk-foreground: #ffffff;
+    --atk-card: #23282b;
+    --atk-card-foreground: #ffffff;
+    --atk-popover: #23282b;
+    --atk-popover-foreground: #ffffff;
+    --atk-primary: #0083ff;
+    --atk-primary-foreground: #ffffff;
+    --atk-secondary: #46494e;
+    --atk-secondary-foreground: #ffffff;
+    --atk-muted: #2d3235;
+    --atk-muted-foreground: #a0a8b3;
+    --atk-accent: #2d3235;
+    --atk-accent-foreground: #7ab8ff;
+    --atk-destructive: #ff5652;
+    --atk-destructive-foreground: #ffffff;
+    --atk-border: #2d3235;
+    --atk-input: #2d3235;
+    --atk-ring: #0083ff;
+    --atk-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+
+    --at-color-bg-transl: rgb(30 34 36 / 0.95);
+    --at-color-bg-grey-transl: rgb(8 8 8 / 0.95);
+    --at-color-pink: #fa5a57;
+    --at-color-yellow: #ff7c37;
+    --at-color-green: #4caf50;
+    --at-color-gradient: linear-gradient(180deg, transparent, rgb(30 34 36 / 1));
+  }
+}

@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import type { ArtalkType } from 'artalk'
+import { toast } from 'vue-sonner'
 import { artalk } from '../global'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 
 const { t } = useI18n()
 
@@ -33,7 +44,7 @@ async function submit() {
     .filter((v) => !!v)
 
   if (siteName === '') {
-    alert(t('siteNameInputHint'))
+    toast.warning(t('siteNameInputHint'))
     return
   }
 
@@ -47,7 +58,7 @@ async function submit() {
       })
     ).data
   } catch (err: any) {
-    window.alert(err.message)
+    toast.error(err.message)
     console.error(err)
     return
   } finally {
@@ -63,34 +74,45 @@ function close() {
 </script>
 
 <template>
-  <div class="atk-site-add">
-    <div class="atk-header">
-      <div class="atk-title">{{ t('createSite') }}</div>
-      <div class="atk-close-btn" @click="close()">
-        <i class="atk-icon atk-icon-close"></i>
-      </div>
-    </div>
-    <form class="atk-form" @submit.prevent="submit()">
-      <input
-        v-model="site.name"
-        type="text"
-        name="AtkSiteName"
-        :placeholder="t('siteName')"
-        autocomplete="off"
-      />
-      <input
-        v-model="site.urls"
-        type="text"
-        name="AtkSiteUrls"
-        :placeholder="`${t('siteUrls')} (${t('multiSepHint')})`"
-        autocomplete="off"
-      />
-      <button type="submit" class="atk-btn" name="AtkSubmit">
-        {{ t('add') }}
-      </button>
-    </form>
-    <LoadingLayer v-if="isLoading" />
-  </div>
+  <Dialog :open="true" @update:open="(v) => !v && close()">
+    <DialogContent class="max-w-md">
+      <DialogHeader>
+        <DialogTitle>{{ t('createSite') }}</DialogTitle>
+        <DialogDescription>{{ t('createSiteHint') }}</DialogDescription>
+      </DialogHeader>
+      <form class="atk-site-add-form" @submit.prevent="submit()">
+        <Input
+          v-model="site.name"
+          type="text"
+          name="AtkSiteName"
+          :placeholder="t('siteName')"
+          autocomplete="off"
+        />
+        <Input
+          v-model="site.urls"
+          type="text"
+          name="AtkSiteUrls"
+          :placeholder="`${t('siteUrls')} (${t('multiSepHint')})`"
+          autocomplete="off"
+        />
+        <DialogFooter>
+          <Button type="button" variant="outline" :disabled="isLoading" @click="close()">
+            {{ t('cancel') }}
+          </Button>
+          <Button type="submit" name="AtkSubmit" :disabled="isLoading">
+            {{ t('add') }}
+          </Button>
+        </DialogFooter>
+      </form>
+      <LoadingLayer v-if="isLoading" />
+    </DialogContent>
+  </Dialog>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.atk-site-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+</style>

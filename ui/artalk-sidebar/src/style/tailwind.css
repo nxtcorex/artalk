@@ -1,0 +1,181 @@
+/*
+ * Tailwind CSS 4 entry (CSS-first config, no tailwind.config needed).
+ * Provides the shadcn semantic token system (light/dark) mapped to
+ * Artalk's brand colors. Legacy `--at-color-*` variables keep working.
+ */
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* Dark mode is driven by the existing `.atk-dark-mode` class
+ * (kept in sync on <html> by App.vue, so teleported layers inherit tokens). */
+@custom-variant dark (&:is(.atk-dark-mode, .atk-dark-mode *));
+
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+.atk-dark-mode {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+/* The embedded Artalk widget ships its own `--atk-*` tokens; mirror the
+ * neutral palette onto them so comments/editor match the sidebar chrome. */
+.artalk.atk-sidebar {
+  --atk-background: var(--background);
+  --atk-foreground: var(--foreground);
+  --atk-card: var(--card);
+  --atk-card-foreground: var(--card-foreground);
+  --atk-popover: var(--popover);
+  --atk-popover-foreground: var(--popover-foreground);
+  --atk-primary: var(--primary);
+  --atk-primary-foreground: var(--primary-foreground);
+  --atk-secondary: var(--secondary);
+  --atk-secondary-foreground: var(--secondary-foreground);
+  --atk-muted: var(--muted);
+  --atk-muted-foreground: var(--muted-foreground);
+  --atk-accent: var(--muted);
+  --atk-accent-foreground: var(--foreground);
+  --atk-destructive: var(--destructive);
+  --atk-destructive-foreground: var(--destructive-foreground);
+  --atk-border: var(--border);
+  --atk-input: var(--input);
+  --atk-ring: var(--ring);
+}
+
+@theme inline {
+  --font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI',
+    Helvetica, 'PingFang SC', 'Microsoft YaHei', Helvetica, 'Apple Color Emoji', Arial, sans-serif,
+    'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Slim neutral scrollbars inside the sidebar and its layers. */
+.atk-sidebar-inner,
+.sidebar-navigation,
+.atk-layer-wrap,
+.atk-sidebar textarea {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent) transparent;
+}
+
+.atk-sidebar ::-webkit-scrollbar,
+.atk-layer-wrap ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.atk-sidebar ::-webkit-scrollbar-track,
+.atk-layer-wrap ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.atk-sidebar ::-webkit-scrollbar-thumb,
+.atk-layer-wrap ::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+  background-clip: padding-box;
+}
+
+.atk-sidebar ::-webkit-scrollbar-thumb:hover,
+.atk-layer-wrap ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+  background-clip: padding-box;
+}
+
+.atk-sidebar ::-webkit-scrollbar-corner,
+.atk-layer-wrap ::-webkit-scrollbar-corner {
+  background: transparent;
+}

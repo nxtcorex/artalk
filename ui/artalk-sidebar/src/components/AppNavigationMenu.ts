@@ -1,16 +1,24 @@
+import type { Component } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouteLocation } from 'vue-router'
-import CommentsIcon from '@/assets/nav-icon-comments.svg'
-import PagesIcon from '@/assets/nav-icon-pages.svg'
-import UsersIcon from '@/assets/nav-icon-users.svg'
-import SitesIcon from '@/assets/nav-icon-sites.svg'
-import TransferIcon from '@/assets/nav-icon-transfer.svg'
-import SettingsIcon from '@/assets/nav-icon-settings.svg'
-import OverviewIcon from '@/assets/nav-icon-overview.svg'
+import {
+  ArrowLeftRight,
+  FileText,
+  Globe,
+  LayoutDashboard,
+  MessageSquare,
+  Settings,
+  Users,
+} from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
 import { useNavStore } from '@/stores/nav'
 
-export type PageItem = { label: string; link: string; hideOnMobile?: boolean; icon: string }
+export type PageItem = {
+  label: string
+  link: string
+  hideOnMobile?: boolean
+  icon: Component
+}
 
 /**
  * Pages for admin
@@ -19,39 +27,39 @@ export const AdminPages: Record<string, PageItem> = {
   overview: {
     label: 'overview',
     link: '/overview',
-    icon: OverviewIcon,
+    icon: LayoutDashboard,
   },
   comments: {
     label: 'comment',
     link: '/comments',
-    icon: CommentsIcon,
+    icon: MessageSquare,
   },
   pages: {
     label: 'page',
     link: '/pages',
-    icon: PagesIcon,
+    icon: FileText,
   },
   users: {
     label: 'user',
     link: '/users',
-    icon: UsersIcon,
+    icon: Users,
   },
   sites: {
     label: 'site',
     link: '/sites',
     hideOnMobile: true,
-    icon: SitesIcon,
+    icon: Globe,
   },
   transfer: {
     label: 'transfer',
     link: '/transfer',
     hideOnMobile: true,
-    icon: TransferIcon,
+    icon: ArrowLeftRight,
   },
   settings: {
     label: 'settings',
     link: '/settings',
-    icon: SettingsIcon,
+    icon: Settings,
   },
 }
 
@@ -77,6 +85,16 @@ export interface SearchStateApi {
   showSearch: () => void
   hideSearch: () => void
 }
+
+export type NavGroupDef = {
+  key: string
+  names: string[]
+}
+
+export const NavGroupDefs: NavGroupDef[] = [
+  { key: 'navGeneral', names: ['overview', 'comments', 'pages', 'users'] },
+  { key: 'navSystem', names: ['sites', 'transfer', 'settings'] },
+]
 
 /**
  * Navigation menu hook only use for AppNavigation component
@@ -129,8 +147,10 @@ export const useNavigationMenu = (props: NavigationStoreProps = {}) => {
   /**
    * Sync current page name from route
    */
-  const syncCurtPage = (to?: RouteLocation) =>
-    (curtPage.value = String((to || useRoute()).name).replace(/^\//, ''))
+  const syncCurtPage = (to?: RouteLocation) => {
+    const name = String((to || useRoute()).name ?? '').replace(/^\//, '')
+    curtPage.value = name.split('/')[0]
+  }
 
   onMounted(() => {
     syncCurtPage()

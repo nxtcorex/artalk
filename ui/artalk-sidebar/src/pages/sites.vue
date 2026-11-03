@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { ArtalkType } from 'artalk'
+import { Plus } from 'lucide-vue-next'
 import { useNavStore } from '../stores/nav'
 import { artalk, bootParams } from '../global'
+import { Button } from '@/components/ui/button'
 
 const nav = useNavStore()
 const sites = ref<ArtalkType.SiteData[]>([])
@@ -83,6 +85,7 @@ function onSiteItemUpdate(site: ArtalkType.SiteData) {
 function onSiteItemRemove(id: number) {
   const index = sites.value.findIndex((p) => p.id === id)
   sites.value.splice(index, 1)
+  curtEditSite.value = null
   nav.refreshSites()
 }
 </script>
@@ -92,9 +95,9 @@ function onSiteItemRemove(id: number) {
     <div class="atk-header">
       <div class="atk-title">{{ t('siteCount', { count: sites.length }) }}</div>
       <div class="atk-actions">
-        <div class="atk-item atk-site-add-btn" @click="create()">
-          <i class="atk-icon atk-icon-plus"></i>
-        </div>
+        <Button variant="ghost" size="icon" :aria-label="t('createSite')" @click="create()">
+          <Plus />
+        </Button>
       </div>
     </div>
     <SiteCreate
@@ -103,30 +106,26 @@ function onSiteItemRemove(id: number) {
       @close="showSiteCreate = false"
       @done="onNewSiteCreated"
     />
+    <SiteEditor
+      v-if="curtEditSite !== null"
+      :site="curtEditSite"
+      @close="curtEditSite = null"
+      @update="onSiteItemUpdate"
+      @remove="onSiteItemRemove"
+    />
     <div class="atk-site-rows-wrap">
-      <template v-for="(ss, i) in sitesGrouped" :key="i">
-        <template v-if="curtEditSite !== null">
-          <SiteEditor
-            v-if="!!ss.includes(curtEditSite)"
-            :site="curtEditSite"
-            @close="curtEditSite = null"
-            @update="onSiteItemUpdate"
-            @remove="onSiteItemRemove"
-          />
-        </template>
-        <div class="atk-site-row">
-          <div
-            v-for="site in ss"
-            :key="site.id"
-            class="atk-site-item"
-            :class="{ 'atk-active': curtEditSite === site }"
-            @click="edit(site)"
-          >
-            <div class="atk-site-logo">{{ site.name.substring(0, 1) }}</div>
-            <div class="atk-site-name">{{ site.name }}</div>
-          </div>
+      <div v-for="(ss, i) in sitesGrouped" :key="i" class="atk-site-row">
+        <div
+          v-for="site in ss"
+          :key="site.id"
+          class="atk-site-item"
+          :class="{ 'atk-active': curtEditSite === site }"
+          @click="edit(site)"
+        >
+          <div class="atk-site-logo">{{ site.name.substring(0, 1) }}</div>
+          <div class="atk-site-name">{{ site.name }}</div>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -156,10 +155,12 @@ function onSiteItemRemove(id: number) {
         align-items: center;
         user-select: none;
         cursor: pointer;
-        border-radius: 2px;
+        border-radius: var(--atk-radius-sm, 6px);
+        transition: background-color 0.15s ease;
 
         &:hover {
-          background: var(--at-color-bg-grey);
+          background: var(--atk-accent);
+          color: var(--atk-accent-foreground);
         }
       }
     }
@@ -184,6 +185,10 @@ function onSiteItemRemove(id: number) {
       user-select: none;
       cursor: pointer;
       border: 1px solid transparent;
+      border-radius: var(--atk-radius, 8px);
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
 
       .atk-site-logo {
         margin: 15px;
@@ -192,9 +197,9 @@ function onSiteItemRemove(id: number) {
         height: 65px;
         width: 65px;
         line-height: 65px;
-        background: #5b6f7e;
-        color: #fff;
-        border-radius: 4px;
+        background: var(--atk-secondary);
+        color: var(--atk-secondary-foreground);
+        border-radius: var(--atk-radius-lg, 12px);
       }
 
       .atk-site-name {
@@ -206,147 +211,27 @@ function onSiteItemRemove(id: number) {
       }
 
       &.atk-active {
-        background-color: var(--at-color-bg-grey);
+        background-color: var(--atk-accent);
         border: 1px solid var(--at-color-border);
         margin-top: -1px;
-        border-radius: 0 0 4px 4px;
 
         .atk-site-name {
           color: var(--at-color-deep);
         }
+
+        .atk-site-logo {
+          background: var(--atk-primary);
+          color: var(--atk-primary-foreground);
+        }
       }
 
       &:hover {
+        background-color: color-mix(in srgb, var(--atk-accent) 45%, transparent);
+
         .atk-site-name {
           color: var(--at-color-font);
         }
       }
-    }
-  }
-
-  :deep(.atk-site-edit),
-  :deep(.atk-site-add) {
-    position: relative;
-    min-height: 120px;
-    width: 100%;
-    border-top: 1px solid var(--at-color-border);
-    border-bottom: 1px solid var(--at-color-border);
-    margin-bottom: -10px;
-
-    @media (min-width: 1024px) {
-      border-left: 1px solid var(--at-color-border);
-      border-right: 1px solid var(--at-color-border);
-      border-radius: 4px;
-      padding-top: 10px;
-    }
-
-    .atk-header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 10px 30px 0 35px;
-      justify-content: space-between;
-
-      .atk-site-info {
-        .atk-site-name {
-          cursor: pointer;
-          display: inline-block;
-          font-size: 23px;
-          position: relative;
-          line-height: 1.6em;
-
-          &:after {
-            content: ' ';
-            position: absolute;
-            width: 100%;
-            height: 6px;
-            background: var(--at-color-main);
-            opacity: 0.4;
-            left: 0;
-            bottom: 6px;
-          }
-        }
-
-        .atk-site-urls {
-          display: flex;
-          width: 100%;
-          margin-top: 6px;
-          flex-wrap: wrap;
-          min-height: 23px;
-          margin-bottom: 15px;
-
-          .atk-url-item {
-            background: var(--at-color-bg-grey);
-            color: var(--at-color-font);
-            border-radius: 2px;
-            padding: 0 8px;
-            font-size: 13px;
-            margin-bottom: 3px;
-            margin-right: 3px;
-            cursor: pointer;
-
-            &:hover {
-            }
-          }
-        }
-      }
-
-      .atk-close-btn {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        &:hover i::after {
-          background-color: var(--at-color-red);
-        }
-      }
-    }
-
-    .atk-main {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      padding: 0 30px 6px 35px;
-      padding-bottom: 10px;
-
-      .atk-site-text-actions {
-        @extend .atk-list-text-actions;
-        height: 90px;
-        padding: 0;
-        padding-left: 10px;
-
-        .atk-item {
-          margin-bottom: 17px;
-          margin-right: 25px;
-        }
-      }
-
-      .atk-site-btn-actions {
-        @extend .atk-list-btn-actions;
-
-        padding-right: 9px;
-      }
-
-      .atk-item-text-editor-layer {
-        padding: 10px 20px;
-      }
-    }
-  }
-
-  :deep(.atk-site-add) {
-    position: relative;
-
-    .atk-header {
-      .atk-title {
-        font-size: 20px;
-      }
-    }
-
-    .atk-form {
-      padding: 20px 40px;
     }
   }
 }

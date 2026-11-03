@@ -10,10 +10,10 @@
     "blog"
   ],
   "homepage": "https://artalk.js.org",
-  "bugs": "https://github.com/ArtalkJS/Artalk/issue",
+  "bugs": "https://github.com/nxtcorex/artalk/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArtalkJS/Artalk.git",
+    "url": "https://github.com/nxtcorex/artalk.git",
     "directory": "ui/artalk"
   },
   "license": "MIT",

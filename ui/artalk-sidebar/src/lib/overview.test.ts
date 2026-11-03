@@ -8,6 +8,14 @@ import { useUserStore } from '../stores/user'
 import { en } from '../i18n-en'
 
 const mocks = vi.hoisted(() => ({ getOverview: vi.fn(), updateTabs: vi.fn() }))
+
+// jsdom lacks the APIs reka-ui's Select (shadcn) relies on when its popper mounts
+;(globalThis as unknown as { ResizeObserver?: unknown }).ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+Element.prototype.scrollIntoView ??= function () {}
 vi.mock('../components/OverviewActivity.vue', () => ({ default: { render: () => null } }))
 vi.mock('../global', () => ({
   artalk: { ctx: { getApi: () => ({ admin: { getOverview: mocks.getOverview } }) } },
@@ -129,10 +137,22 @@ describe('overview', () => {
     mocks.getOverview.mockResolvedValue(payload())
     const { container } = mount()
     await flush()
-    const select = container.querySelector('select')!
-    select.value = '30'
-    select.dispatchEvent(new Event('change'))
+
+    // The period picker is a shadcn Select (reka-ui). Drive it by keyboard:
+    // open the listbox, move the highlight to the 30-day option and commit.
+    const trigger = container.querySelector<HTMLButtonElement>('[data-testid="overview-period"]')!
+    expect(trigger).not.toBeNull()
+    trigger.focus()
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     await flush()
+
+    const options = [...document.querySelectorAll('[role="option"]')]
+    expect(options.map((o) => o.textContent?.trim())).toEqual(['Last 7 days', 'Last 30 days'])
+    options[0]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
+    await flush()
+    options[1]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await flush()
+
     expect(mocks.getOverview).toHaveBeenLastCalledWith({ site_name: 'Site A', days: 30 })
   })
 

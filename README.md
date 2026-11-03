@@ -1,3 +1,5 @@
+# Frok 自 https://cnb.cool/pw.sh.cn/Artalk
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/22412567/171680920-6e74b77c-c565-487b-bff1-4f94976ecbe7.png" alt="Artalk" width="100%">
 </p>
@@ -5,9 +7,9 @@
 # Artalk
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/artalkjs/artalk/v2.svg)](https://pkg.go.dev/github.com/artalkjs/artalk/v2)
-[![Go Report Card](https://goreportcard.com/badge/github.com/ArtalkJS/Artalk?style=flat-square)](https://goreportcard.com/report/github.com/ArtalkJS/Artalk)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nxtcorex/artalk?style=flat-square)](https://goreportcard.com/report/github.com/nxtcorex/artalk)
 
-[官方网站](https://artalk.js.org) • [最新版本](https://cnb.cool/pw.sh.cn/Artalk/-/releases) • [更新日志](./CHANGELOG.md)
+[官方网站](https://artalk.js.org) • [最新版本](https://github.com/nxtcorex/artalk/releases) • [更新日志](./CHANGELOG.md)
 
 Artalk 是一款简单易用但功能丰富的评论系统，你可以开箱即用地部署并置入任何博客、网站、Web 应用。
 

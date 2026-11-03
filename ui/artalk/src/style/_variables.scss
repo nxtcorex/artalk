@@ -1,3 +1,4 @@
 $font-size: 14px;
 $line-height: 1.6em;
-$block-radius: 6px;
+// Radius 引用 shadcn 语义 Token（见 _tokens.scss），带兜底值防止脱离 token 作用域
+$block-radius: var(--atk-radius, 8px);

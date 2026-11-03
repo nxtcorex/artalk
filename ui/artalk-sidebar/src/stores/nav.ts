@@ -11,7 +11,6 @@ export const useNavStore = defineStore('nav', () => {
 
   const curtPage = ref('comments')
   const sites = ref<ArtalkType.SiteData[]>([])
-  const siteSwitcherShow = ref(false)
 
   const isSearchEnabled = ref(false)
   const searchEvent = ref<((val: string) => void) | null>(null)
@@ -35,18 +34,6 @@ export const useNavStore = defineStore('nav', () => {
 
   const setTabActive = (tabName: string) => {
     curtTab.value = tabName
-  }
-
-  const showSiteSwitcher = () => {
-    siteSwitcherShow.value = true
-  }
-
-  const hideSiteSwitcher = () => {
-    siteSwitcherShow.value = false
-  }
-
-  const toggleSiteSwitcher = () => {
-    siteSwitcherShow.value = !siteSwitcherShow.value
   }
 
   const scrollPageToTop = () => {
@@ -80,6 +67,17 @@ export const useNavStore = defineStore('nav', () => {
     darkMode.value = !darkMode.value
   }
 
+  const sidebarCollapsed = ref(localStorage.getItem('ATK_SIDEBAR_COLLAPSED') === '1')
+  watch(sidebarCollapsed, (val) => {
+    localStorage.setItem('ATK_SIDEBAR_COLLAPSED', val ? '1' : '0')
+  })
+  const toggleSidebar = () => {
+    sidebarCollapsed.value = !sidebarCollapsed.value
+  }
+  const expandSidebar = () => {
+    sidebarCollapsed.value = false
+  }
+
   useRouter().beforeEach((to, from) => {
     isSearchEnabled.value = false
   })
@@ -91,14 +89,10 @@ export const useNavStore = defineStore('nav', () => {
     curtPage,
     curtTab,
     tabs,
-    siteSwitcherShow,
     scrollableArea,
     isPageLoading,
     updateTabs,
     setTabActive,
-    showSiteSwitcher,
-    hideSiteSwitcher,
-    toggleSiteSwitcher,
     scrollPageToTop,
     scrollPageToEl,
     setPageLoading,
@@ -110,5 +104,8 @@ export const useNavStore = defineStore('nav', () => {
     isMobile,
     darkMode,
     toggleDarkMode,
+    sidebarCollapsed,
+    toggleSidebar,
+    expandSidebar,
   }
 })

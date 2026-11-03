@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import VueRouter from 'vue-router/vite'
 import { VueRouterAutoImports } from 'vue-router/unplugin'
@@ -21,6 +22,7 @@ export default defineConfig({
   plugins: [
     VueRouter({ importMode: 'sync', dts: resolve(__dirname, 'typed-router.d.ts') }),
     vue(),
+    tailwindcss(),
     Components({ resolvers: [HeadlessUiResolver()] }),
     AutoImport({
       imports: ['vue', VueRouterAutoImports, 'vue-i18n'],

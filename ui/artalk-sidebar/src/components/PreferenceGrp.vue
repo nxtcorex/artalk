@@ -1,31 +1,9 @@
 <script setup lang="ts">
 import type { OptionNode } from '../lib/settings'
 
-const props = defineProps<{
+defineProps<{
   node: OptionNode
 }>()
-
-const expanded = ref(true)
-
-const expandable = computed(() => {
-  return props.node.level === 1 && (props.node.type === 'object' || props.node.type === 'array')
-})
-
-onMounted(() => {
-  if (expandable.value) expanded.value = false
-})
-
-function onHeadClick(evt: Event) {
-  if (!expandable.value) return
-  if (!expanded.value) {
-    expanded.value = true
-    // nextTick(() => {
-    //   nav.scrollPageToEl(evt.target as HTMLElement)
-    // })
-  } else {
-    expanded.value = false
-  }
-}
 
 const hiddenNodes = ['admin_users']
 </script>
@@ -34,17 +12,16 @@ const hiddenNodes = ['admin_users']
   <div
     v-if="!hiddenNodes.includes(node.name)"
     class="pf-grp"
-    :class="[`level-${node.level}`, expanded ? 'expand' : '']"
+    :class="[`level-${node.level}`, 'expand']"
   >
     <div
       v-if="node.level > 0 && (node.type === 'object' || node.type === 'array')"
       class="pf-head"
-      @click="onHeadClick"
     >
       <div class="title">{{ node.title }}</div>
       <div v-if="!!node.subTitle" class="sub-title">{{ node.subTitle }}</div>
     </div>
-    <div v-show="expanded" class="pf-body">
+    <div class="pf-body">
       <!-- Grp -->
       <template v-if="node.items">
         <PreferenceGrp v-for="n in node.items" :key="n.path" :node="n" />
@@ -67,7 +44,6 @@ const hiddenNodes = ['admin_users']
   & > .pf-head {
     margin-top: 30px;
     margin-bottom: 20px;
-    cursor: pointer;
 
     .title {
       user-select: none;
@@ -84,7 +60,7 @@ const hiddenNodes = ['admin_users']
         content: '';
         height: 10px;
         width: 10px;
-        background: #8ecee2;
+        background: var(--muted-foreground);
         border-radius: 2px;
       }
     }

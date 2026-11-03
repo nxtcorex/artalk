@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import type { ArtalkType } from 'artalk'
 import { storeToRefs } from 'pinia'
+import { toast } from 'vue-sonner'
 import { useNavStore } from '../stores/nav'
 import { artalk } from '../global'
 import Pagination from '../components/Pagination.vue'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 const nav = useNavStore()
 const { curtTab } = storeToRefs(nav)
@@ -88,7 +99,7 @@ function onChangePage(offset: number) {
 
 function editUser(user: ArtalkType.UserDataForAdmin) {
   if (user.is_in_conf) {
-    alert(t('userInConfCannotEditHint'))
+    toast.warning(t('userInConfCannotEditHint'))
     return
   }
 
@@ -122,30 +133,38 @@ function closeUserEditor() {
   userEditorState.user = undefined
 }
 
-function delUser(user: ArtalkType.UserDataForAdmin) {
-  if (
-    window.confirm(
-      t('userDeleteConfirm', {
-        name: user.name,
-        email: user.email,
-      }),
-    )
-  ) {
-    artalk!.ctx
-      .getApi()
-      .users.deleteUser(user.id)
-      .then(() => {
-        const index = users.value.findIndex((u) => u.id === user.id)
-        users.value.splice(index, 1)
+const delConfirm = ref<{ open: boolean; user: ArtalkType.UserDataForAdmin | null }>({
+  open: false,
+  user: null,
+})
 
-        if (user.is_in_conf) {
-          alert(t('userDeleteManuallyHint'))
-        }
-      })
-      .catch((e: ArtalkType.FetchError) => {
-        alert(e.message)
-      })
-  }
+function delUser(user: ArtalkType.UserDataForAdmin) {
+  delConfirm.value = { open: true, user }
+}
+
+function onDelConfirm(open: boolean) {
+  if (!open) delConfirm.value = { open: false, user: null }
+}
+
+function confirmedDelUser() {
+  const user = delConfirm.value.user
+  delConfirm.value = { open: false, user: null }
+  if (!user) return
+
+  artalk!.ctx
+    .getApi()
+    .users.deleteUser(user.id)
+    .then(() => {
+      const index = users.value.findIndex((u) => u.id === user.id)
+      users.value.splice(index, 1)
+
+      if (user.is_in_conf) {
+        toast.info(t('userDeleteManuallyHint'))
+      }
+    })
+    .catch((e: ArtalkType.FetchError) => {
+      toast.error(e.message)
+    })
 }
 </script>
 
@@ -165,10 +184,10 @@ function delUser(user: ArtalkType.UserDataForAdmin) {
                 {{ user.badge_name }}
               </span>
               <span v-else-if="user.is_admin" class="badge admin" :title="t('userAdminHint')">
-                {{ t('Admin') }}
+                {{ t('admin') }}
               </span>
               <span v-if="user.is_in_conf" class="badge in-conf" :title="t('userInConfHint')">
-                {{ t('Config') }}
+                {{ t('config') }}
               </span>
             </span>
           </div>
@@ -195,6 +214,29 @@ function delUser(user: ArtalkType.UserDataForAdmin) {
       @update="updateUser"
       @close="closeUserEditor"
     />
+
+    <!-- Delete confirm -->
+    <AlertDialog :open="delConfirm.open" @update:open="onDelConfirm">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{{ t('delete') }}</AlertDialogTitle>
+          <AlertDialogDescription>
+            <template v-if="delConfirm.user">
+              {{ t('userDeleteConfirm', { name: delConfirm.user.name, email: delConfirm.user.email }) }}
+            </template>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+          <AlertDialogAction
+            class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            @click="confirmedDelUser()"
+          >
+            {{ t('delete') }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
 
@@ -203,6 +245,11 @@ function delUser(user: ArtalkType.UserDataForAdmin) {
   .user-list {
     .user-item {
       padding: 15px 30px;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background: color-mix(in srgb, var(--atk-accent) 45%, transparent);
+      }
 
       &:not(:last-child) {
         border-bottom: 1px solid var(--at-color-border);
@@ -222,21 +269,25 @@ function delUser(user: ArtalkType.UserDataForAdmin) {
           }
 
           .badge {
+            display: inline-flex;
+            align-items: center;
             margin-left: 6px;
-            font-size: 13px;
-            color: var(--at-color-meta);
-            background: var(--at-color-bg-grey);
+            height: 20px;
             padding: 0 6px;
-            line-height: 17px;
-            border-radius: 2px;
-            color: #fff;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
 
             &.admin {
-              background: #0083ff;
+              background: var(--primary);
+              color: var(--primary-foreground);
             }
 
             &.in-conf {
-              background: #89b1a5;
+              background: var(--secondary);
+              color: var(--secondary-foreground);
+              border-color: var(--border);
             }
           }
         }
@@ -261,7 +312,7 @@ function delUser(user: ArtalkType.UserDataForAdmin) {
           }
 
           &:hover {
-            color: var(--at-color-deep);
+            color: var(--atk-primary);
           }
         }
       }

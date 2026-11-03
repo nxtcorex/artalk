@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
 import { useUserStore } from '../stores/user'
 
 const { t } = useI18n()
@@ -64,7 +65,7 @@ async function startUploadFile(file: File) {
     const setErr = (msg: string): void => {
       reset()
       isUploading.value = false
-      alert(`File upload failed: ${msg}`)
+      toast.error(`File upload failed: ${msg}`)
     }
 
     if (!xhr) {
@@ -146,4 +147,100 @@ function abortUpload() {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.atk-file-upload-group {
+  width: 100%;
+}
+
+.atk-file-input-wrap {
+  input[type='file'] {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--ring);
+    }
+  }
+
+  input[type='file']::file-selector-button {
+    margin-right: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--secondary);
+    color: var(--foreground);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  input[type='file']::file-selector-button:hover {
+    background: var(--muted);
+  }
+
+  .atk-desc {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted-foreground);
+
+    a {
+      color: var(--foreground);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+}
+
+.atk-uploading-wrap {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  .atk-progress {
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--muted);
+  }
+
+  .atk-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+  }
+
+  .atk-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted-foreground);
+
+    .atk-curt {
+      color: var(--foreground);
+      font-weight: 500;
+    }
+
+    .atk-abort {
+      margin-left: auto;
+      color: var(--foreground);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+</style>

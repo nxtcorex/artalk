@@ -35,6 +35,10 @@ function onChange(event: Event) {
     return
   }
 
+  commit()
+}
+
+function commit() {
   const v = patchOptionValue(value.value, props.node)
   settings.get().setCustom(props.node.path, v)
   // console.log('[SET]', props.node.path, v)
@@ -42,6 +46,14 @@ function onChange(event: Event) {
 
 const envVariableName = computed(() => settings.get().getEnvKeyByPath(props.node.path))
 const isSensitive = computed(() => isSensitiveConfigPath(props.node.path))
+
+// boolean options are stored as 'true' / 'false' strings
+const valueBool = computed({
+  get: () => value.value === 'true',
+  set: (v: boolean) => {
+    value.value = v ? 'true' : 'false'
+  },
+})
 
 function toggleSensitiveHidden() {
   sensitiveHidden.value = !sensitiveHidden.value
@@ -67,16 +79,25 @@ function toggleSensitiveHidden() {
 
       <!-- Dropdown -->
       <template v-else-if="node.selector">
-        <select v-model="value" :disabled="disabled" @change="onChange">
-          <option v-for="(item, i) in node.selector" :key="i" :value="item">
-            {{ item }}
-          </option>
-        </select>
+        <Select v-model="value" :disabled="disabled" @update:model-value="commit()">
+          <SelectTrigger class="w-[200px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="(item, i) in node.selector" :key="i" :value="item">
+              {{ item }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </template>
 
       <!-- Toggle -->
       <template v-else-if="node.type === 'boolean'">
-        <input v-model="value" type="checkbox" :disabled="disabled" @change="onChange" />
+        <Switch
+          v-model="valueBool"
+          :disabled="disabled"
+          @update:model-value="commit()"
+        />
       </template>
 
       <!-- Text -->
@@ -121,7 +142,7 @@ function toggleSensitiveHidden() {
     .sub-title {
       font-size: 14px;
       margin-top: 4px;
-      color: #697182;
+      color: var(--muted-foreground);
     }
   }
 
@@ -133,6 +154,31 @@ function toggleSensitiveHidden() {
     justify-content: flex-end;
     align-items: center;
     min-height: 35px;
+
+    input:not([type='checkbox']) {
+      height: 36px;
+      max-width: 260px;
+      width: 100%;
+      padding: 0 10px;
+      border: 1px solid var(--atk-border);
+      border-radius: 8px;
+      background: transparent;
+      font-size: 14px;
+      outline: none;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:focus {
+        border-color: var(--atk-ring);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 30%, transparent);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
 
     &:hover {
       .disable-note {
@@ -163,7 +209,7 @@ function toggleSensitiveHidden() {
 
       .atk-icon {
         &::after {
-          background-color: #697182;
+          background-color: var(--muted-foreground);
         }
 
         &.atk-icon-eye-on::after {

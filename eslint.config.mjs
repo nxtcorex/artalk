@@ -88,9 +88,22 @@ export default defineConfig(
       },
       'import-x/resolver': {
         typescript: {
-          project: './tsconfig.json',
+          project: path.resolve(__dirname, 'tsconfig.json'),
+          extensions: [
+            '.ts',
+            '.tsx',
+            '.d.ts',
+            '.js',
+            '.jsx',
+            '.mjs',
+            '.cjs',
+            '.mts',
+            '.cts',
+            '.vue',
+            '.svg',
+            '.json',
+          ],
         },
-        node: true,
       },
     },
   },
@@ -135,6 +148,13 @@ export default defineConfig(
         useI18n: 'readonly',
         nextTick: 'readonly',
       },
+    },
+  },
+
+  {
+    files: ['ui/artalk-sidebar/src/components/ui/**/*.vue'],
+    rules: {
+      'vue/require-default-prop': 'off',
     },
   },
 

@@ -66,11 +66,11 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/settings': RouteRecordInfo<
-      '/settings',
-      '/settings',
-      Record<never, never>,
-      Record<never, never>,
+    '/settings/[[group]]': RouteRecordInfo<
+      '/settings/[[group]]',
+      '/settings/:group?',
+      { group?: ParamValueZeroOrOne<true> },
+      { group?: ParamValueZeroOrOne<false> },
       | never
     >,
     '/sites': RouteRecordInfo<
@@ -80,11 +80,11 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/transfer': RouteRecordInfo<
-      '/transfer',
-      '/transfer',
-      Record<never, never>,
-      Record<never, never>,
+    '/transfer/[[section]]': RouteRecordInfo<
+      '/transfer/[[section]]',
+      '/transfer/:section?',
+      { section?: ParamValueZeroOrOne<true> },
+      { section?: ParamValueZeroOrOne<false> },
       | never
     >,
     '/users': RouteRecordInfo<
@@ -147,13 +147,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/settings.vue': {
+    'src/pages/settings/[[group]].vue': {
       routes:
-        | '/settings'
+        | '/settings/[[group]]'
       views:
         | never
       pathParamNames:
-        | never
+        | 'group'
     }
     'src/pages/sites.vue': {
       routes:
@@ -163,13 +163,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/transfer.vue': {
+    'src/pages/transfer/[[section]].vue': {
       routes:
-        | '/transfer'
+        | '/transfer/[[section]]'
       views:
         | never
       pathParamNames:
-        | never
+        | 'section'
     }
     'src/pages/users.vue': {
       routes:
