@@ -65,5 +65,6 @@ func (c *CapJSCaptchaChecker) Get() ([]byte, error) {
 		"api_endpoint": c.APIEndpoint,
 		"key_id":       c.KeyID,
 		"secret_key":   c.SecretKey,
+		"theme":        c.User.Theme,
 	})
 }

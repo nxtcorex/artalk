@@ -20,11 +20,16 @@ func GetLimiter(c *fiber.Ctx) (lmt *limiter.Limiter, err error) {
 
 func NewCaptchaChecker(app *core.App, c *fiber.Ctx) captcha.Checker {
 	user, _ := GetUserByReq(app, c)
+	theme := c.Query("theme")
+	if theme != "dark" {
+		theme = "light"
+	}
 	return captcha.NewCaptchaChecker(&captcha.CheckerConf{
 		CaptchaConf: app.Conf().Captcha,
 		User: captcha.User{
-			ID: fmt.Sprint(user.ID),
-			IP: c.IP(),
+			ID:    fmt.Sprint(user.ID),
+			IP:    c.IP(),
+			Theme: theme,
 		},
 	})
 }

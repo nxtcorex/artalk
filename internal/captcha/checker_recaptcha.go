@@ -66,5 +66,6 @@ func (c *ReCaptchaChecker) Type() CaptchaType {
 func (c *ReCaptchaChecker) Get() ([]byte, error) {
 	return RenderIFrame("recaptcha.html", Map{
 		"site_key": c.SiteKey,
+		"theme":    c.User.Theme,
 	})
 }

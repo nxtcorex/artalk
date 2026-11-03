@@ -83,5 +83,6 @@ func (c *GeetestCaptchaChecker) Type() CaptchaType {
 func (c *GeetestCaptchaChecker) Get() ([]byte, error) {
 	return RenderIFrame("geetest.html", Map{
 		"gt_id": c.CaptchaID,
+		"theme": c.User.Theme,
 	})
 }

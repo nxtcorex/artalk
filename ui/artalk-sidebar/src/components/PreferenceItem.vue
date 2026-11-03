@@ -11,7 +11,7 @@ const props = defineProps<{
   node: OptionNode
 }>()
 
-const value = ref('')
+const value = ref<any>('')
 const sensitiveHidden = ref(true)
 
 const { t } = useI18n()
@@ -49,7 +49,7 @@ const isSensitive = computed(() => isSensitiveConfigPath(props.node.path))
 
 // boolean options are stored as 'true' / 'false' strings
 const valueBool = computed({
-  get: () => value.value === 'true',
+  get: () => value.value === true || value.value === 'true',
   set: (v: boolean) => {
     value.value = v ? 'true' : 'false'
   },

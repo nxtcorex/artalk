@@ -66,5 +66,6 @@ func (c *HCaptchaChecker) Type() CaptchaType {
 func (c *HCaptchaChecker) Get() ([]byte, error) {
 	return RenderIFrame("hcaptcha.html", Map{
 		"site_key": c.SiteKey,
+		"theme":    c.User.Theme,
 	})
 }

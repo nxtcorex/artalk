@@ -12,8 +12,9 @@ type CheckerConf struct {
 }
 
 type User struct {
-	ID string
-	IP string
+	ID    string
+	IP    string
+	Theme string
 }
 
 type CaptchaType = int

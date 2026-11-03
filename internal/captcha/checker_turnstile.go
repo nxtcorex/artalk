@@ -66,5 +66,6 @@ func (c *TurnstileChecker) Type() CaptchaType {
 func (c *TurnstileChecker) Get() ([]byte, error) {
 	return RenderIFrame("turnstile.html", Map{
 		"site_key": c.SiteKey,
+		"theme":    c.User.Theme,
 	})
 }

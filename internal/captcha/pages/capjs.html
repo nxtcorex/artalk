@@ -20,6 +20,8 @@
         justify-content: center;
         height: 100vh;
         align-items: center;
+        background: {{if eq .theme "dark"}}#1e2224{{else}}#ffffff{{end}};
+        color-scheme: {{if eq .theme "dark"}}dark{{else}}light{{end}};
       }
     </style>
   </head>
