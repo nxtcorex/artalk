@@ -34,7 +34,7 @@ func GetNewImageCaptchaBase64(ip string) ([]byte, error) {
 		o.CurveNumber = 2
 		o.FontDPI = 85.0
 		o.Noise = 0.7
-		o.BackgroundColor = color.White
+		o.BackgroundColor = color.Transparent
 	})
 	if err != nil {
 		return nil, err

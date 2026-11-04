@@ -7,6 +7,7 @@ import type {
 
 export interface CheckerManager {
   checkCaptcha: (payload: CheckerCaptchaPayload) => Promise<void>
+  startCaptchaGate: (payload: CheckerCaptchaPayload) => Promise<void>
   checkAdmin: (payload: CheckerPayload) => Promise<void>
   check: (checker: Checker, payload: CheckerPayload, beforeCheck?: (c: CheckerCtx) => void) => void
 }

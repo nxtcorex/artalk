@@ -54,6 +54,66 @@
     }
   }
 
+  & > .atk-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px 0;
+
+    .atk-plug-btn-wrap {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      row-gap: 5px;
+    }
+
+    .atk-plug-btn {
+      display: flex;
+      justify-content: center;
+      place-items: center;
+      padding: 0 10px;
+      line-height: 30px;
+      height: 30px;
+      cursor: pointer;
+      color: var(--at-color-grey);
+      font-size: $font-size;
+      user-select: none;
+      border-radius: var(--atk-radius-sm, 6px);
+      word-break: keep-all;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+
+      &:hover {
+        background: var(--atk-accent);
+        color: var(--atk-accent-foreground);
+      }
+
+      &.active {
+        color: var(--at-color-main);
+
+        svg.markdown path {
+          fill: var(--at-color-main);
+        }
+      }
+
+      i {
+        display: flex;
+        justify-content: center;
+        place-items: center;
+        color: var(--at-color-grey);
+
+        &:not(:first-child) {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
   & > .atk-textarea-wrap {
     position: relative;
 
@@ -110,7 +170,8 @@
   & > .atk-bottom {
     display: flex;
     flex-direction: row;
-    row-gap: 5px;
+    align-items: center;
+    gap: 8px;
     justify-content: space-between;
     padding: 8px 12px 12px;
     flex-wrap: wrap;
@@ -125,59 +186,46 @@
       & > .atk-state-wrap {
         margin-right: 5px;
       }
+    }
 
-      & > .atk-plug-btn-wrap {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        flex-wrap: wrap;
-        row-gap: 5px;
+    & > .atk-checker-inline {
+      flex: 1;
+      min-width: 0;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+
+      .atk-checker-body {
+        flex: none;
+        gap: 8px;
+      }
+
+      .atk-checker-actions {
+        flex: 1;
+        min-width: 0;
+        flex-wrap: nowrap;
+      }
+
+      .atk-checker-input {
+        min-width: 80px;
+      }
+
+      .atk-checker-error {
+        flex-basis: 100%;
+      }
+
+      @media only screen and (max-width: 600px) {
+        flex-basis: 100%;
+        flex-direction: column;
+        align-items: stretch;
       }
     }
 
-    .atk-plug-btn {
-      display: flex;
-      justify-content: center;
-      place-items: center;
-      padding: 0 10px;
-      line-height: 30px;
-      height: 30px;
-      cursor: pointer;
-      color: var(--at-color-grey);
-      font-size: $font-size;
-      user-select: none;
-      border-radius: var(--atk-radius-sm, 6px);
-      word-break: keep-all;
-      transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
-
-      &:not(:last-child) {
-        margin-right: 5px;
-      }
-
-      &:hover {
-        background: var(--atk-accent);
-        color: var(--atk-accent-foreground);
-      }
-
-      &.active {
-        color: var(--at-color-main);
-
-        svg.markdown path {
-          fill: var(--at-color-main);
-        }
-      }
-
-      i {
-        display: flex;
-        justify-content: center;
-        place-items: center;
-        color: var(--at-color-grey);
-
-        &:not(:first-child) {
-          margin-left: 4px;
-        }
+    & > .atk-bottom-right {
+      @media only screen and (max-width: 600px) {
+        margin-left: auto;
       }
     }
 
@@ -251,12 +299,19 @@
         min-width: 6em;
       }
 
-      &:hover {
+      &:hover:not(:disabled) {
         filter: brightness(0.92);
       }
 
-      &:active {
+      &:active:not(:disabled) {
         filter: brightness(0.85);
+      }
+
+      &:disabled {
+        background: var(--atk-muted);
+        color: var(--atk-muted-foreground);
+        box-shadow: none;
+        cursor: not-allowed;
       }
 
       &:focus-visible {
@@ -298,8 +353,8 @@
   .atk-captcha-img {
     width: auto;
     height: 40px;
-    background: #fff;
-    border: 1px solid var(--atk-border);
+    background: transparent;
+    border: 0;
     border-radius: var(--atk-radius-sm);
     cursor: pointer;
   }
@@ -356,6 +411,36 @@
     &:hover {
       color: var(--atk-accent-foreground);
       background: var(--atk-accent);
+    }
+  }
+
+  &.admin {
+    gap: 10px;
+    padding: 12px;
+    background: var(--atk-background);
+    border: 1px solid var(--atk-border);
+    border-radius: var(--atk-radius);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+    .atk-checker-body {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--atk-foreground);
+    }
+
+    .atk-checker-input {
+      height: 36px;
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    }
+
+    .atk-checker-confirm {
+      padding: 0 16px;
+    }
+
+    .atk-checker-cancel {
+      background: var(--atk-background);
+      border-color: var(--atk-input);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
     }
   }
 

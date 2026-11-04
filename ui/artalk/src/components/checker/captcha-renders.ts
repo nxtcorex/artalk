@@ -1,5 +1,4 @@
 import type { CheckerCtx } from '.'
-import $t from '@/i18n'
 import * as Utils from '@/lib/utils'
 import * as Ui from '@/lib/ui'
 
@@ -7,7 +6,7 @@ import * as Ui from '@/lib/ui'
 export function imgBody(checker: CheckerCtx) {
   // 图片验证方式
   const elem = Utils.createElement(
-    `<span><img alt="Captcha" class="atk-captcha-img" src="${checker.get('img_data') || ''}">${$t('captchaCheck')}</span>`,
+    `<span><img alt="Captcha" class="atk-captcha-img" src="${checker.get('img_data') || ''}"></span>`,
   )
 
   // 刷新验证码

@@ -12,8 +12,9 @@ export interface CheckerCaptchaPayload extends CheckerPayload {
 
 export interface CheckerPayload {
   onSuccess?: () => void
-  onMount?: (dialogEl: HTMLElement) => void
+  onMount?: (dialogEl: HTMLElement, ctx: CheckerCtx) => void
   onCancel?: () => void
+  gate?: boolean
 }
 
 export interface CheckerLauncherOptions {
@@ -55,6 +56,15 @@ export class CheckerLauncher implements ICheckerManager {
     })
   })
 
+  public startCaptchaGate: (payload: CheckerCaptchaPayload) => Promise<void> = wrapPromise(
+    (p) => {
+      this.check(CaptchaChecker, { ...p, gate: true }, (ctx) => {
+        ctx.set('img_data', p.img_data)
+        ctx.set('iframe', p.iframe)
+      })
+    },
+  )
+
   public checkAdmin: (payload: CheckerPayload) => Promise<void> = wrapPromise((p) => {
     this.check(AdminChecker, p)
   })
@@ -62,7 +72,10 @@ export class CheckerLauncher implements ICheckerManager {
   public check(checker: Checker, payload: CheckerPayload, beforeCheck?: (c: CheckerCtx) => void) {
     const editorEl = this.opts.getEditorEl()
     if (!editorEl) throw new Error('editor element not found')
-    editorEl.querySelector('.atk-checker-inline')?.remove()
+    editorEl.querySelectorAll('.atk-checker-inline').forEach((el) => {
+      if (checker === CaptchaChecker && el.classList.contains('admin')) return
+      el.remove()
+    })
 
     const isAdmin = checker === AdminChecker
     const panel = Utils.createElement(`
@@ -85,10 +98,19 @@ export class CheckerLauncher implements ICheckerManager {
     const $error = panel.querySelector<HTMLElement>('.atk-checker-error')!
     const confirmText = $confirm.textContent
 
-    const host = isAdmin
-      ? editorEl.querySelector('.atk-header')
-      : editorEl.querySelector('.atk-textarea-wrap')
-    host?.insertAdjacentElement('afterend', panel)
+    if (isAdmin) {
+      editorEl.querySelector('.atk-header')?.insertAdjacentElement('afterend', panel)
+    } else {
+      const adminPanel = editorEl.querySelector('.atk-checker-inline.admin')
+      if (adminPanel) {
+        adminPanel.insertAdjacentElement('afterend', panel)
+      } else {
+        const bottom = editorEl.querySelector('.atk-bottom')
+        const sendItem = bottom?.querySelector('.atk-item.atk-bottom-right')
+        if (bottom && sendItem) bottom.insertBefore(panel, sendItem)
+        else bottom?.insertAdjacentElement('beforebegin', panel)
+      }
+    }
 
     const editorLoading = editorEl.querySelector<HTMLElement>(':scope > .atk-loading')
     if (editorLoading) editorLoading.style.display = 'none'
@@ -109,6 +131,7 @@ export class CheckerLauncher implements ICheckerManager {
       getOpts: () => this.opts,
       getUser: () => this.opts.getUser(),
       getApi: () => this.opts.getApi(),
+      submit: () => submit(),
       addCleanup: (fn) => {
         cleanups.push(fn)
       },
@@ -131,21 +154,26 @@ export class CheckerLauncher implements ICheckerManager {
     $body.appendChild(checker.body(checkerCtx))
 
     if (hideInteractInput) $actions.style.display = 'none'
+    if (payload.gate) {
+      $cancel.style.display = 'none'
+      $confirm.style.display = 'none'
+    }
 
-    const submit = () => {
+    const submit = (): Promise<boolean> => {
       const inputVal = $input.value.trim()
 
       $error.hidden = true
       $confirm.disabled = true
       $confirm.textContent = `${$t('loading')}...`
 
-      checker
+      return checker
         .request(checkerCtx, inputVal)
         .then((data) => {
           close()
 
           if (checker.onSuccess) checker.onSuccess(checkerCtx, data, inputVal, panel)
           if (payload.onSuccess) payload.onSuccess()
+          return true
         })
         .catch((err) => {
           $error.textContent = String(err.message || String(err))
@@ -154,10 +182,13 @@ export class CheckerLauncher implements ICheckerManager {
           $confirm.textContent = confirmText
 
           if (checker.onError) checker.onError(checkerCtx, err, inputVal, panel)
+          return false
         })
     }
 
-    $confirm.onclick = submit
+    $confirm.onclick = () => {
+      submit()
+    }
     $cancel.onclick = () => {
       close()
       if (payload.onCancel) payload.onCancel()
@@ -174,7 +205,7 @@ export class CheckerLauncher implements ICheckerManager {
 
     if (window.innerWidth >= 768) setTimeout(() => $input.focus(), 80)
 
-    if (payload.onMount) payload.onMount(panel)
+    if (payload.onMount) payload.onMount(panel, checkerCtx)
   }
 }
 
@@ -199,6 +230,7 @@ export interface CheckerCtx {
   getOpts(): CheckerLauncherOptions
   getApi(): Api
   getUser(): UserManager
+  submit(): Promise<boolean>
   addCleanup(fn: () => void): void
   hideInteractInput(): void
   triggerSuccess(): void

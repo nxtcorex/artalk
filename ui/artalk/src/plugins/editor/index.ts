@@ -3,6 +3,7 @@ import LocalStorage from './local-storage'
 import Textarea from './textarea'
 import SubmitBtn from './submit-btn'
 import Submit from './submit'
+import CaptchaGate from './captcha-gate'
 import StateReply from './state-reply'
 import StateEdit from './state-edit'
 import Closable from './closable'
@@ -25,6 +26,7 @@ const EDITOR_PLUGS: (typeof EditorPlugin)[] = [
   Textarea,
   Submit,
   SubmitBtn,
+  CaptchaGate,
   Mover,
   StateReply,
   StateEdit,
