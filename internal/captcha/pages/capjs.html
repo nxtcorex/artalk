@@ -22,6 +22,14 @@
         background: transparent;
         color-scheme: {{if eq .theme "dark"}}dark{{else}}light{{end}};
       }
+      cap-widget {
+        --cap-background: transparent;
+        --cap-border-color: transparent;
+        --cap-border-radius: 0;
+        --cap-color: {{if eq .theme "dark"}}#fafafa{{else}}#212121{{end}};
+        --cap-checkbox-background: {{if eq .theme "dark"}}#262626{{else}}#fafafa{{end}};
+        --cap-checkbox-border: 1px solid {{if eq .theme "dark"}}#404040{{else}}#aaaaaa{{end}};
+      }
     </style>
   </head>
   <body>

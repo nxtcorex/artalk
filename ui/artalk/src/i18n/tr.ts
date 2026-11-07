@@ -64,7 +64,10 @@ export default defineLocaleExternal(
     now: 'az önce',
 
     /* Checker */
-    adminCheck: 'Yönetici şifresini girin:',
+    adminCheck: 'Yönetici şifresini girin',
+    login: 'Giriş yap',
+    orContinueWith: 'Veya şununla devam edin',
+    adminRequired: 'Bu hesap yönetici değil',
     captchaCheck: 'Devam etmek için CAPTCHA kodunu girin:',
     confirm: 'Onayla',
     cancel: 'İptal',

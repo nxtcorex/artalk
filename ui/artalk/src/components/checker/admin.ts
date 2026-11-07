@@ -4,6 +4,8 @@ import * as Utils from '@/lib/utils'
 
 const AdminChecker: Checker<{ token: string }> = {
   inputType: 'password',
+  submitText: () => $t('login'),
+  inputPlaceholder: () => $t('password'),
 
   async request(checker, inputVal) {
     return (
@@ -15,14 +17,16 @@ const AdminChecker: Checker<{ token: string }> = {
     ).data
   },
 
-  body(checker) {
-    return Utils.createElement(`<span>${$t('adminCheck')}</span>`)
+  body() {
+    return Utils.createElement(
+      `<div class="atk-checker-head"><div class="atk-checker-title">${$t('login')}</div><div class="atk-checker-desc">${$t('adminCheck')}</div></div>`,
+    )
   },
 
-  onSuccess(checker, res, inputVal, formEl) {
+  onSuccess(checker, res) {
     checker.getUser().update({
       is_admin: true,
-      token: res.token,
+      token: res?.token || checker.getUser().getData().token,
     })
     checker.getOpts().onReload()
   },

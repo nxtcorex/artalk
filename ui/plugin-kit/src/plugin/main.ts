@@ -179,7 +179,7 @@ export const ViteArtalkPluginKit = (opts: ViteArtalkPluginKitOptions = {}): Plug
     },
 
     transform(code, id) {
-      if (tsRE.test(id) && id === ctx.entryPath) {
+      if (tsRE.test(id) && path.resolve(id) === ctx.entryPath) {
         return {
           code: `${code}
           // Mount plugin to browser window global

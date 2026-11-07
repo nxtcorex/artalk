@@ -62,7 +62,10 @@ const zhCN: I18n = {
   now: '刚刚',
 
   /* Checker */
-  adminCheck: '键入密码来验证管理员身份：',
+  adminCheck: '键入密码来验证管理员身份',
+  login: '登录',
+  orContinueWith: '或使用以下方式登录',
+  adminRequired: '该账户不是管理员',
   captchaCheck: '键入验证码继续：',
   confirm: '确认',
   cancel: '取消',

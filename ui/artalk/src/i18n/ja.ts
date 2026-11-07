@@ -64,7 +64,10 @@ export default defineLocaleExternal(
     now: 'たった今',
 
     /* Checker */
-    adminCheck: '管理者として認証するにはパスワードを入力してください：',
+    adminCheck: '管理者として認証するにはパスワードを入力してください',
+    login: 'ログイン',
+    orContinueWith: 'または以下でログイン',
+    adminRequired: 'このアカウントは管理者ではありません',
     captchaCheck: '続行するにはキャプチャを入力してください：',
     confirm: '確認',
     cancel: 'キャンセル',

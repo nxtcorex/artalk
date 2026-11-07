@@ -404,6 +404,8 @@
   $formInputHeight: 30px;
   @extend .atk-full-layer;
   background-color: var(--at-color-bg-transl);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 
   & > .atk-layer-dialog {
     width: 25%;
@@ -538,6 +540,8 @@
     height: 100%;
     z-index: 99998;
     background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .atk-layer-item {

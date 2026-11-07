@@ -78,6 +78,33 @@
       .social > a:not(:last-child) {
         margin-right: 2px;
       }
+      .card-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+      }
+      .demo-btn {
+        height: 34px;
+        padding: 0 14px;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        background: #fff;
+        color: #171717;
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .demo-btn:hover {
+        background: #f5f5f5;
+      }
+      body.dark-mode .demo-btn {
+        border-color: #404040;
+        background: #262626;
+        color: #fafafa;
+      }
+      body.dark-mode .demo-btn:hover {
+        background: #404040;
+      }
       @media only screen and (max-width: 768px) {
         body {
           padding: 0;
@@ -195,6 +222,9 @@
       </div>
     </div>
     <div class="card atk-fade-in">
+      <div class="card-toolbar">
+        <button type="button" class="demo-btn" id="open-login">打开登录弹窗</button>
+      </div>
       <div id="comments"></div>
     </div>
     <div class="float-btn to-night atk-fade-in">Blink</div>
@@ -212,6 +242,10 @@
 
       window.artalk = artalk
       window.Artalk = Artalk
+
+      document.getElementById('open-login').addEventListener('click', () => {
+        artalk.ctx.checkAdmin({}).catch(() => {})
+      })
       ;(function () {
         const toTopElem = document.querySelector('.to-top')
         toTopElem.addEventListener('click', () => {

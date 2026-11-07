@@ -64,7 +64,10 @@ export default defineLocaleExternal(
     now: 'à l’instant',
 
     /* Checker */
-    adminCheck: 'Entrez le mot de passe administrateur :',
+    adminCheck: 'Entrez le mot de passe administrateur ',
+    login: 'Se connecter',
+    orContinueWith: 'Ou continuer avec',
+    adminRequired: 'Ce compte n’est pas administrateur',
     captchaCheck: 'Entrez le CAPTCHA pour continuer :',
     confirm: 'Confirmer',
     cancel: 'Annuler',

@@ -108,16 +108,19 @@ export class SidebarLayer implements ISidebarLayer {
       this.refreshWhenShow = true
 
       // show checker layer
-      this.opts.getCheckers().checkAdmin({
-        onSuccess: () => {
-          setTimeout(() => {
-            opts.onSuccess()
-          }, 500)
-        },
-        onCancel: () => {
-          this.hide()
-        },
-      })
+      this.opts
+        .getCheckers()
+        .checkAdmin({
+          onSuccess: () => {
+            setTimeout(() => {
+              opts.onSuccess()
+            }, 500)
+          },
+          onCancel: () => {
+            this.hide()
+          },
+        })
+        .catch(() => {})
 
       // hide sidebar layer
       this.hide()

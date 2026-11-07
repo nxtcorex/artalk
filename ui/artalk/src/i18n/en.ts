@@ -60,7 +60,10 @@ const en = {
   now: 'just now',
 
   /* Checker */
-  adminCheck: 'Enter admin password:',
+  adminCheck: 'Enter admin password',
+  login: 'Log in',
+  orContinueWith: 'Or continue with',
+  adminRequired: 'This account is not an administrator',
   captchaCheck: 'Enter the CAPTCHA to continue:',
   confirm: 'Confirm',
   cancel: 'Cancel',

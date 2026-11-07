@@ -62,7 +62,10 @@ export default defineLocaleExternal('zh-TW', {
   now: '剛剛',
 
   /* Checker */
-  adminCheck: '輸入密碼來驗證管理員身份：',
+  adminCheck: '輸入密碼來驗證管理員身份',
+  login: '登入',
+  orContinueWith: '或使用以下方式登入',
+  adminRequired: '該帳戶不是管理員',
   captchaCheck: '輸入驗證碼繼續：',
   confirm: '確認',
   cancel: '取消',

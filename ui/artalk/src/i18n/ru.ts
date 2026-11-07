@@ -64,7 +64,10 @@ export default defineLocaleExternal(
     now: 'только что',
 
     /* Checker */
-    adminCheck: 'Введите пароль администратора:',
+    adminCheck: 'Введите пароль администратора',
+    login: 'Войти',
+    orContinueWith: 'Или войдите через',
+    adminRequired: 'Эта учетная запись не является администратором',
     captchaCheck: 'Введите CAPTCHA для продолжения:',
     confirm: 'Подтвердить',
     cancel: 'Отмена',
